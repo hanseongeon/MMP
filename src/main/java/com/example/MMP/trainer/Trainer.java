@@ -1,24 +1,35 @@
 package com.example.MMP.trainer;
 
+import com.example.MMP.siteuser.SiteUser;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Getter
 @Setter
+@Getter
 public class Trainer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String name;
-    private String gender;
-    private String phone_number;
-    private String birthDate;
+    private Long id;
+
+    @Column(unique = true)
     private String trainerId;
+
     private String password;
-    @Email
+
     @Column(unique = true)
     private String email;
+
+    private String gender;
+
+    private String number;
+
+    private String birthDay;
+
+    @ManyToMany
+    List<SiteUser> memberList = new ArrayList<>();
 }
