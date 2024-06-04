@@ -18,5 +18,6 @@ public class DayPassDto {
     private int dayPassPrice;
 
 
+
     private int dayPassDays;
 }
