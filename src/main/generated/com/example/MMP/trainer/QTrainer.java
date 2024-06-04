@@ -36,6 +36,8 @@ public class QTrainer extends EntityPathBase<Trainer> {
 
     public final StringPath trainerId = createString("trainerId");
 
+    public final StringPath userRole = createString("userRole");
+
     public QTrainer(String variable) {
         super(Trainer.class, forVariable(variable));
     }
