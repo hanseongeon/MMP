@@ -1,15 +1,11 @@
 package com.example.MMP.siteuser;
 
+import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.daypass.DayPass;
 import com.example.MMP.ptpass.PtPass;
 import com.example.MMP.trainer.Trainer;
 import com.example.MMP.wod.Wod;
 import jakarta.persistence.*;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -54,5 +50,8 @@ public class SiteUser {
 
     @OneToMany
     private List<Wod> wodList;
+
+    @OneToMany
+    private List<Challenge> challenges = new ArrayList<> ();
 
 }
