@@ -1,4 +1,4 @@
-package global;
+package com.example.MMP.global;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
