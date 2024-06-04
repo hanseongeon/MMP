@@ -27,7 +27,9 @@ public class SecurityConfig{
                             .logoutSuccessUrl("/")
                             .invalidateHttpSession(true))
                     .csrf(c -> c.ignoringRequestMatchers(
-                            new AntPathRequestMatcher("/pt/**")
+                            new AntPathRequestMatcher("/pt/**"),
+                            new AntPathRequestMatcher("/totalPass/**"),
+                            new AntPathRequestMatcher("/day/**")
                     ))
             ;
 
