@@ -19,9 +19,7 @@ public class QPtPass extends EntityPathBase<PtPass> {
 
     public static final QPtPass ptPass = new QPtPass("ptPass");
 
-    public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
-
-    public final NumberPath<Long> passCount = createNumber("passCount", Long.class);
+    public final NumberPath<Integer> passCount = createNumber("passCount", Integer.class);
 
     public final DateTimePath<java.time.LocalDateTime> passFinish = createDateTime("passFinish", java.time.LocalDateTime.class);
 
