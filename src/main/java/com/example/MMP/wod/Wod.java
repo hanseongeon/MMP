@@ -14,12 +14,12 @@ import java.util.List;
 public class Wod {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne
     private SiteUser writer;
 
-    private String image;
+    private String imagePath;
 
     @Column(columnDefinition = "TEXT")
     private String content;
@@ -27,7 +27,7 @@ public class Wod {
     @ManyToMany
     private List<SiteUser> likeList;
 
-    private int like;
+    private Long like;
 
     private LocalDateTime createDate;
 }

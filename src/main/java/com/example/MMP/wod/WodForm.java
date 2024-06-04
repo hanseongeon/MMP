@@ -12,6 +12,6 @@ public class WodForm {
     private String content;
 
     @NotEmpty(message = "이미지 경로는 필수항목입니다.")
-    private String image;
+    private String imagePath;
 
 }
