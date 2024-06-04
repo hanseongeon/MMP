@@ -40,13 +40,9 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final ListPath<com.example.MMP.ptpass.PtPass, com.example.MMP.ptpass.QPtPass> ptPassList = this.<com.example.MMP.ptpass.PtPass, com.example.MMP.ptpass.QPtPass>createList("ptPassList", com.example.MMP.ptpass.PtPass.class, com.example.MMP.ptpass.QPtPass.class, PathInits.DIRECT2);
 
-    public final ListPath<com.example.MMP.trainer.Trainer, com.example.MMP.trainer.QTrainer> trainerList = this.<com.example.MMP.trainer.Trainer, com.example.MMP.trainer.QTrainer>createList("trainerList", com.example.MMP.trainer.Trainer.class, com.example.MMP.trainer.QTrainer.class, PathInits.DIRECT2);
-
     public final StringPath userId = createString("userId");
 
     public final StringPath userRole = createString("userRole");
-
-    public final ListPath<com.example.MMP.wod.Wod, com.example.MMP.wod.QWod> wodList = this.<com.example.MMP.wod.Wod, com.example.MMP.wod.QWod>createList("wodList", com.example.MMP.wod.Wod.class, com.example.MMP.wod.QWod.class, PathInits.DIRECT2);
 
     public QSiteUser(String variable) {
         super(SiteUser.class, forVariable(variable));
