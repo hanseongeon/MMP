@@ -1,15 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>오운완 등록</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<div>
-    <form action="">
-        <input type="text" class="input" placeholder="글 작성">
+<body class="h-screen flex items-center justify-center bg-black">
+<div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+    <form th:object="${wodForm}" method="post">
+        <div class="mb-3 w-full">
+            <img th:src="@{'/uploads/' + ${username} + '/' + ${profileImagePath}}" alt="프로필 사진">
+        </div>
+        <div class="mb-3 w-full">
+            <input type="file" class="file-input file-input-bordered w-full max-w-xl" id="image" name="image"/>
+            <!-- 프로필 사진 선택 여부에 따라 파일 이름 출력 -->
+            <!-- <div th:if="${wodForm.image != null}" th:text="|현재 프로필 이미지 : ${wodForm.image}|"></div> -->
+        </div>
+        <div class="mb-3 w-full">
+            <input type="text" class="input w-full input-bordered" id="content" placeholder="글 작성">
+        </div>
+        <button type="submit" class="btn btn-error">수정 완료</button>
     </form>
 </div>
 </body>

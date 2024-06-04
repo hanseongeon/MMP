@@ -26,6 +26,7 @@ public class WodController {
 
     @PostMapping("/create")
     private String createWod(@Valid WodForm wodForm){
+        wodService.create(wodForm.getImage(), wodForm.getContent());
 
         return "/wod/form";
     }
