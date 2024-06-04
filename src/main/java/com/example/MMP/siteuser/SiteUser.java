@@ -3,6 +3,7 @@ package com.example.MMP.siteuser;
 import com.example.MMP.daypass.DayPass;
 import com.example.MMP.ptpass.PtPass;
 import com.example.MMP.trainer.Trainer;
+import com.example.MMP.wod.Wod;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -47,5 +48,8 @@ public class SiteUser {
 
     @OneToMany
     List<DayPass> dayPassList = new ArrayList<>();
+
+    @OneToMany
+    private List<Wod> wodList;
 
 }

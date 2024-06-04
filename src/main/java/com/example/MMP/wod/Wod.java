@@ -16,6 +16,7 @@ public class Wod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @ManyToOne
     private SiteUser writer;
 
     private String image;
@@ -23,6 +24,7 @@ public class Wod {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @ManyToMany
     private List<SiteUser> likeList;
 
     private int like;
