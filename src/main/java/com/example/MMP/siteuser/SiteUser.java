@@ -1,11 +1,14 @@
 package com.example.MMP.siteuser;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.MMP.daypass.DayPass;
+import com.example.MMP.ptpass.PtPass;
+import com.example.MMP.trainer.Trainer;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,5 +34,14 @@ public class SiteUser {
     private String email;
 
     private String userRole;
+
+    @ManyToMany
+    List<Trainer> trainerList = new ArrayList<>();
+
+    @OneToMany
+    List<PtPass> ptPassList = new ArrayList<>();
+
+    @OneToMany
+    List<DayPass> dayPassList = new ArrayList<>();
 
 }
