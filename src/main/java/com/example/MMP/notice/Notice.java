@@ -1,5 +1,4 @@
-package com.example.MMP.siteuser;
-
+package com.example.MMP.notice;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,29 +7,27 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
-public class SiteUser {
+public class Notice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String userId;
+    private String title;
 
-    private String password;
+    private String content;
 
-    private String name;
+    private int hit;
 
-    private String gender;
+    private LocalDateTime notificationDate;
 
-    private String number;
-
-    private String birthDate;
-
-    private String email;
-
-    private String userRole;
+    public void increaseHit(){
+        this.hit++;
+    }
 
 }

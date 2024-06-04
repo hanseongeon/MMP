@@ -22,7 +22,11 @@ public class SecurityConfig{
                             .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                             .logoutSuccessUrl("/")
                             .invalidateHttpSession(true))
-            ;
+                    .csrf(csrf -> csrf
+                            .ignoringRequestMatchers(
+                                    new AntPathRequestMatcher("/notice/**") // CSRF 보호에서 제외
+                            )
+                    );
 
             return http.build();
         }
