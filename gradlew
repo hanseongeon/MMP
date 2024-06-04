@@ -54,7 +54,7 @@
 #       There are tweaks for specific operating systems such as AIX, CygWin,
 #       Darwin, MinGW, and NonStop.
 #
-#   (3) This script is generated from the Groovy template
+#   (3) This script is generated from the Groovy templates
 #       https://github.com/gradle/gradle/blob/HEAD/subprojects/plugins/src/main/resources/org/gradle/api/internal/plugins/unixStartScript.txt
 #       within the Gradle project.
 #
@@ -199,7 +199,7 @@ if "$cygwin" || "$msys" ; then
 fi
 
 
-# Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to ptpass JVM options to this script.
+# Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
 DEFAULT_JVM_OPTS='"-Xmx64m" "-Xms64m"'
 
 # Collect all arguments for the java command:
