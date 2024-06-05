@@ -13,7 +13,7 @@
                 <a href="#" class="recommend btn btn-sm btn-outline-secondary w-[20%]" onclick="toggleIcon(event)">
                     <i class="fa-regular fa-heart"></i>
                 </a>
-                <p class="btn w-[80%] text-black" th:text="${wod.content}"></p>
+                <a th:href="@{|/wod/detail/${wod.id}|}" class="btn w-[80%] text-black" th:text="${wod.content}"></a>
             </div>
         </div>
     </div>
