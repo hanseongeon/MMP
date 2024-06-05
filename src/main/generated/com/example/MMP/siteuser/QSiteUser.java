@@ -22,6 +22,8 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final StringPath birthDate = createString("birthDate");
 
+    public final ListPath<com.example.MMP.challenge.challenge.Challenge, com.example.MMP.challenge.challenge.QChallenge> challenges = this.<com.example.MMP.challenge.challenge.Challenge, com.example.MMP.challenge.challenge.QChallenge>createList("challenges", com.example.MMP.challenge.challenge.Challenge.class, com.example.MMP.challenge.challenge.QChallenge.class, PathInits.DIRECT2);
+
     public final ListPath<com.example.MMP.daypass.DayPass, com.example.MMP.daypass.QDayPass> dayPassList = this.<com.example.MMP.daypass.DayPass, com.example.MMP.daypass.QDayPass>createList("dayPassList", com.example.MMP.daypass.DayPass.class, com.example.MMP.daypass.QDayPass.class, PathInits.DIRECT2);
 
     public final StringPath email = createString("email");
@@ -38,13 +40,9 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final ListPath<com.example.MMP.ptpass.PtPass, com.example.MMP.ptpass.QPtPass> ptPassList = this.<com.example.MMP.ptpass.PtPass, com.example.MMP.ptpass.QPtPass>createList("ptPassList", com.example.MMP.ptpass.PtPass.class, com.example.MMP.ptpass.QPtPass.class, PathInits.DIRECT2);
 
-    public final ListPath<com.example.MMP.trainer.Trainer, com.example.MMP.trainer.QTrainer> trainerList = this.<com.example.MMP.trainer.Trainer, com.example.MMP.trainer.QTrainer>createList("trainerList", com.example.MMP.trainer.Trainer.class, com.example.MMP.trainer.QTrainer.class, PathInits.DIRECT2);
-
     public final StringPath userId = createString("userId");
 
     public final StringPath userRole = createString("userRole");
-
-    public final ListPath<com.example.MMP.wod.Wod, com.example.MMP.wod.QWod> wodList = this.<com.example.MMP.wod.Wod, com.example.MMP.wod.QWod>createList("wodList", com.example.MMP.wod.Wod.class, com.example.MMP.wod.QWod.class, PathInits.DIRECT2);
 
     public QSiteUser(String variable) {
         super(SiteUser.class, forVariable(variable));
