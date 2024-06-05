@@ -1,10 +1,9 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3">
+<div layout:fragment="content" class="container my-3 justify-center translate-x-1/4">
     <div class="flex justify-center items-center">
         <figure>
             <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD">
         </figure>
-        
     </div>
     <div class="flex justify-center items-center h-[50px]">
         <a href="#" class="recommend w-[10%] h-[100%] btn btn-sm btn-outline-secondary" onclick="toggleIcon(event)">
@@ -12,7 +11,6 @@
         </a>
         <p class="btn text-black w-[90%]" th:text="${wod.content}"></p>
     </div>
-
     <!-- 댓글 작성 -->
     <form th:action="@{|/comment/create/${wod.id}|}" th:object="${commentForm}" method="post" class="my-3 text-black">
         <div class="flex justify-center items-center">
