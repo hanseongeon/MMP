@@ -37,4 +37,9 @@ public class SiteUserController {
         }
         return "redirect:/";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "user/login_form";
+    }
 }
