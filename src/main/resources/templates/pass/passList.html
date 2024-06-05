@@ -67,7 +67,7 @@
             <p th:text="${day.dayPassDays}+'일'"></p>
             <p th:text="'가격 : '+${day.dayPassPrice}"></p>
             <div class="card-actions justify-end">
-                <button class="btn btn-primary">Buy Now</button>
+                <a href="/order/checkout" class="btn btn-primary">Buy Now</a>
             </div>
         </div>
     </div>
