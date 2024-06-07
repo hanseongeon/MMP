@@ -17,4 +17,6 @@ public class PtPassDto {
 
     private int passPrice;
 
+    private int passDays;
+
 }

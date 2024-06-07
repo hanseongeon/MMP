@@ -2,5 +2,9 @@ package com.example.MMP.ptpass;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PtPassRepository extends JpaRepository<PtPass, Long> {
+import java.util.Optional;
+
+public interface PtPassRepository extends JpaRepository<PtPass,Long> {
+    Optional<PtPass> findByPassName(String name);
+
 }
