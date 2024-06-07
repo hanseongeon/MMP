@@ -2,6 +2,7 @@ package com.example.MMP.siteuser;
 
 import com.example.MMP.attendance.Attendance;
 import com.example.MMP.challenge.challenge.Challenge;
+import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserPtPass;
 import jakarta.persistence.*;
@@ -9,7 +10,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -51,5 +54,8 @@ public class SiteUser {
 
     @OneToMany
     private List<Challenge> challenges = new ArrayList<> ();
+
+    @ManyToMany
+    private Set<HomeTraining> saveTraining = new HashSet<>();
 
 }

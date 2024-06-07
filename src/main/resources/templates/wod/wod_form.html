@@ -12,7 +12,7 @@
             <div class="flex">
                 <a href="#" class="recommend w-[10%] h-[100%] btn btn-sm btn-outline-secondary" onclick="toggleIcon(event)">
                     <i class="fa-regular fa-heart" id="heartIcon"></i>
-                    <span class="badge rounded-pill bg-success" id="likeCountSpan" th:text="${wod.likeCount}"></span>
+                    <span class="badge bg-error" id="likeCountSpan" th:text="${wod.likeCount}"></span>
                     <div class="hidden" th:data-wod-id="${wod.id}"></div>
                 </a>
                 <a th:href="@{|/wod/detail/${wod.id}|}" class="btn w-[80%] text-black" th:text="${wod.content}"></a>

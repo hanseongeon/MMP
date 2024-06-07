@@ -9,7 +9,7 @@
         <div class="flex justify-center items-center h-[50px]">
             <a href="#" class="recommend w-[10%] h-[100%] btn btn-sm btn-outline-secondary" onclick="toggleIcon(event)">
                 <i class="fa-regular fa-heart" id="heartIcon"></i>
-                <span class="badge rounded-pill bg-success" id="likeCountSpan" th:text="${wod.likeCount}"></span>
+                <span class="badge bg-error" id="likeCountSpan" th:text="${wod.likeCount}"></span>
                 <div class="hidden" th:data-wod-id="${wod.id}"></div>
             </a>
             <div class="h-full bg-white text-black rounded-lg border border-gray-300 w-[80%]" th:utext="${wod.content}">
@@ -63,21 +63,6 @@
                         <a th:href="@{|/comment/update/${comment.id}|}" class="btn btn-primary my-2">수정</a>
                     </div>
                 </div>
-                <!-- <div class="my-3">
-                    <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
-                        th:data-uri="@{|/answer/vote/${answer.id}|}">
-                        추천
-                        <span class="badge rounded-pill bg-success" th:text="${#lists.size(answer.voter)}"></span>
-                    </a>
-                    <a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
-                        sec:authorize="isAuthenticated()"
-                        th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
-                        th:text="수정"></a>
-                    <a href="javascript:void(0);" th:data-uri="@{|/answer/delete/${answer.id}|}"
-                        class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
-                        th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
-                        th:text="삭제"></a>
-                </div> -->
             </div>
         </div>
     </div>
