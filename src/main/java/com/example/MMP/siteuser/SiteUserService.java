@@ -50,6 +50,7 @@ public class SiteUserService {
         }
     }
 
+
     public void changePassword(Long userId, String currentPassword, String newPassword) throws Exception {
         SiteUser user = siteUserRepository.findById(userId).orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다."));
 
@@ -59,6 +60,11 @@ public class SiteUserService {
 
         user.setPassword(passwordEncoder.encode(newPassword));
         siteUserRepository.save(user);
+    }
+
+
+    public SiteUser findByUserName(String username){
+        return siteUserRepository.findByUserId(username).orElseThrow();
     }
 
 }
