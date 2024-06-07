@@ -32,6 +32,8 @@ public class QComment extends EntityPathBase<Comment> {
 
     public final com.example.MMP.wod.QWod wod;
 
+    public final com.example.MMP.siteuser.QSiteUser writer;
+
     public QComment(String variable) {
         this(Comment.class, forVariable(variable), INITS);
     }
@@ -50,7 +52,8 @@ public class QComment extends EntityPathBase<Comment> {
 
     public QComment(Class<? extends Comment> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.wod = inits.isInitialized("wod") ? new com.example.MMP.wod.QWod(forProperty("wod")) : null;
+        this.wod = inits.isInitialized("wod") ? new com.example.MMP.wod.QWod(forProperty("wod"), inits.get("wod")) : null;
+        this.writer = inits.isInitialized("writer") ? new com.example.MMP.siteuser.QSiteUser(forProperty("writer")) : null;
     }
 
 }
