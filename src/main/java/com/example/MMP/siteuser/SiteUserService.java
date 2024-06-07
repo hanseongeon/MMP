@@ -37,6 +37,11 @@ public class SiteUserService {
         siteUser.setUserRole(userRole);
         siteUserRepository.save(siteUser);
     }
+
+    public SiteUser getUser(String name) {
+        SiteUser siteUser = siteUserRepository.findByUserId(name).get();
+        return siteUser;
+    }
 }
 
 
