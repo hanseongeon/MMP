@@ -11,16 +11,16 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QchallengeUser is a Querydsl query type for challengeUser
+ * QChallengeUser is a Querydsl query type for ChallengeUser
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QchallengeUser extends EntityPathBase<challengeUser> {
+public class QChallengeUser extends EntityPathBase<ChallengeUser> {
 
-    private static final long serialVersionUID = 465004852L;
+    private static final long serialVersionUID = 1263966484L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QchallengeUser challengeUser = new QchallengeUser("challengeUser");
+    public static final QChallengeUser challengeUser = new QChallengeUser("challengeUser");
 
     public final NumberPath<Double> achievementRate = createNumber("achievementRate", Double.class);
 
@@ -36,23 +36,23 @@ public class QchallengeUser extends EntityPathBase<challengeUser> {
 
     public final BooleanPath success = createBoolean("success");
 
-    public QchallengeUser(String variable) {
-        this(challengeUser.class, forVariable(variable), INITS);
+    public QChallengeUser(String variable) {
+        this(ChallengeUser.class, forVariable(variable), INITS);
     }
 
-    public QchallengeUser(Path<? extends challengeUser> path) {
+    public QChallengeUser(Path<? extends ChallengeUser> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QchallengeUser(PathMetadata metadata) {
+    public QChallengeUser(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QchallengeUser(PathMetadata metadata, PathInits inits) {
-        this(challengeUser.class, metadata, inits);
+    public QChallengeUser(PathMetadata metadata, PathInits inits) {
+        this(ChallengeUser.class, metadata, inits);
     }
 
-    public QchallengeUser(Class<? extends challengeUser> type, PathMetadata metadata, PathInits inits) {
+    public QChallengeUser(Class<? extends ChallengeUser> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.challenge = inits.isInitialized("challenge") ? new com.example.MMP.challenge.challenge.QChallenge(forProperty("challenge")) : null;
         this.siteUser = inits.isInitialized("siteUser") ? new com.example.MMP.siteuser.QSiteUser(forProperty("siteUser")) : null;
