@@ -9,6 +9,7 @@
         <div class="flex justify-center items-center h-[50px]">
             <a href="#" class="recommend w-[10%] h-[100%] btn btn-sm btn-outline-secondary" onclick="toggleIcon(event)">
                 <i class="fa-regular fa-heart"></i>
+                <span class="badge rounded-pill bg-success" th:text="${#lists.size(wod.likeList)}"></span>
             </a>
             <div class="h-full bg-white text-black rounded-lg border border-gray-300 w-[80%]" th:utext="${wod.content}">
             </div>

@@ -25,10 +25,10 @@ public class Wod {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-//    @ManyToMany
-//    private List<SiteUser> likeList;
+    @ManyToMany
+    private List<SiteUser> likeList;
 
-//    private Long likeCount;
+    private Long likeCount;
 
     private LocalDateTime createDate;
 

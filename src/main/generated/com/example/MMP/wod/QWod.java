@@ -32,6 +32,10 @@ public class QWod extends EntityPathBase<Wod> {
 
     public final StringPath imagePath = createString("imagePath");
 
+    public final NumberPath<Long> likeCount = createNumber("likeCount", Long.class);
+
+    public final ListPath<com.example.MMP.siteuser.SiteUser, com.example.MMP.siteuser.QSiteUser> likeList = this.<com.example.MMP.siteuser.SiteUser, com.example.MMP.siteuser.QSiteUser>createList("likeList", com.example.MMP.siteuser.SiteUser.class, com.example.MMP.siteuser.QSiteUser.class, PathInits.DIRECT2);
+
     public final com.example.MMP.siteuser.QSiteUser writer;
 
     public QWod(String variable) {
