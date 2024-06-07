@@ -18,6 +18,8 @@ public class QWod extends EntityPathBase<Wod> {
 
     private static final long serialVersionUID = -1755339685L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QWod wod = new QWod("wod");
 
     public final ListPath<com.example.MMP.Comment.Comment, com.example.MMP.Comment.QComment> commentList = this.<com.example.MMP.Comment.Comment, com.example.MMP.Comment.QComment>createList("commentList", com.example.MMP.Comment.Comment.class, com.example.MMP.Comment.QComment.class, PathInits.DIRECT2);
@@ -30,16 +32,31 @@ public class QWod extends EntityPathBase<Wod> {
 
     public final StringPath imagePath = createString("imagePath");
 
+    public final NumberPath<Long> likeCount = createNumber("likeCount", Long.class);
+
+    public final ListPath<com.example.MMP.siteuser.SiteUser, com.example.MMP.siteuser.QSiteUser> likeList = this.<com.example.MMP.siteuser.SiteUser, com.example.MMP.siteuser.QSiteUser>createList("likeList", com.example.MMP.siteuser.SiteUser.class, com.example.MMP.siteuser.QSiteUser.class, PathInits.DIRECT2);
+
+    public final com.example.MMP.siteuser.QSiteUser writer;
+
     public QWod(String variable) {
-        super(Wod.class, forVariable(variable));
+        this(Wod.class, forVariable(variable), INITS);
     }
 
     public QWod(Path<? extends Wod> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QWod(PathMetadata metadata) {
-        super(Wod.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QWod(PathMetadata metadata, PathInits inits) {
+        this(Wod.class, metadata, inits);
+    }
+
+    public QWod(Class<? extends Wod> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.writer = inits.isInitialized("writer") ? new com.example.MMP.siteuser.QSiteUser(forProperty("writer")) : null;
     }
 
 }
