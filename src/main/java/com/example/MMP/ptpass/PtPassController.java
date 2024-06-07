@@ -3,7 +3,6 @@ package com.example.MMP.ptpass;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,8 +30,4 @@ private final PtPassService ptPassService;
         ptPassService.createPt(ptPassDto.getPassName(),ptPassDto.getPassTitle(),ptPassDto.getPassCount(),ptPassDto.getPassPrice());
         return "redirect:/";
     }
-
-
-
-
 }

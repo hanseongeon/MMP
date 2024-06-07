@@ -10,7 +10,7 @@ import java.util.List;
 public class PtPassService {
     public final PtPassRepository ptPassRepository;
 
-    public void createPt(String passName,String passTitle,int passCount,int passPrice){
+    public void createPt(String passName, String passTitle, int passCount, int passPrice) {
         PtPass ptPass = new PtPass();
         ptPass.setPassName(passName);
         ptPass.setPassTitle(passTitle);
@@ -19,7 +19,7 @@ public class PtPassService {
         ptPassRepository.save(ptPass);
     }
 
-    public List<PtPass> findAll(){
+    public List<PtPass> findAll() {
         return ptPassRepository.findAll();
     }
 }
