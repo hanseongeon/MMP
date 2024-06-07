@@ -1,5 +1,6 @@
 package com.example.MMP.wod;
 
+import com.example.MMP.siteuser.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +12,12 @@ import java.util.List;
 public class WodService {
     private final WodRepository wodRepository;
 
-    public void create(String imagePath, String content) {
+    public void create(String imagePath, String content, SiteUser writer) {
         Wod wod = new Wod();
         wod.setImagePath(imagePath);
         wod.setContent(content);
         wod.setCreateDate(LocalDateTime.now());
+        wod.setWriter(writer);
 
         this.wodRepository.save(wod);
     }

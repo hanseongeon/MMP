@@ -1,8 +1,11 @@
 package com.example.MMP.wod;
 
+import com.example.MMP.siteuser.SiteUser;
+import com.example.MMP.siteuser.SiteUserService;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -19,6 +22,7 @@ import java.util.List;
 public class WodController {
     private final WodService wodService;
     private final FileUploadUtil fileUploadUtil;
+    private final SiteUserService siteUserService;
 
     @GetMapping("/form")
     private String wod(Model model){
@@ -33,12 +37,14 @@ public class WodController {
         return "wod/wod_create";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    private String createWod(@Valid WodForm wodForm, BindingResult bindingResult, @RequestParam("image") MultipartFile image, Model model){
+    private String createWod(@Valid WodForm wodForm, BindingResult bindingResult, @RequestParam("image") MultipartFile image, Model model, Principal principal){
         if (bindingResult.hasErrors()) {
             return "wod/wod_create";
         }
 
+        SiteUser writer = siteUserService.getUser(principal.getName());
         // 이미지 파일의 경로가 비어있지 않으면 업로드를 시도합니다.
         if (image != null && !image.isEmpty()) {
             String fileName = StringUtils.cleanPath(image.getOriginalFilename());
@@ -54,7 +60,7 @@ public class WodController {
 
                 return "wod/wod_create"; // 업로드 실패 시 처리하는 방법에 따라 변경
             }
-            wodService.create(fileName, wodForm.getContent());
+            wodService.create(fileName, wodForm.getContent(), writer);
         }
 
         List<Wod> wodList = wodService.getList();
@@ -71,9 +77,13 @@ public class WodController {
         return "wod/wod_detail";
     }
 
-    @PostMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id){
-        wodService.delete(id);
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id, Principal principal){
+        Wod wod = wodService.getWod(id);
+        if (wod.getWriter().getUserId().equals(principal.getName())){
+            wodService.delete(id);
+        }
         return "redirect:/wod/form";
     }
 
@@ -86,12 +96,16 @@ public class WodController {
         return "wod/wod_create";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/update/{id}")
-    public String update(@Valid WodForm wodForm, BindingResult bindingResult, @PathVariable("id") Long id){
+    public String update(@Valid WodForm wodForm, BindingResult bindingResult, @PathVariable("id") Long id, Principal principal){
         if (bindingResult.hasErrors()) {
             return "wod/wod_create";
         }
-        wodService.update(id, wodForm.getContent());
+        Wod wod = wodService.getWod(id);
+        if (wod.getWriter().getUserId().equals(principal.getName())){
+            wodService.update(id, wodForm.getContent());
+        }
         return "redirect:/wod/detail/" + id;
     }
 }
