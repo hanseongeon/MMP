@@ -1,7 +1,7 @@
-package com.example.MMP.challenge.challengeUser;
+package com.example.MMP.challenge.challengeActivity;
 
+import com.example.MMP.attendance.Attendance;
 import com.example.MMP.challenge.challenge.Challenge;
-import com.example.MMP.siteuser.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,24 +11,26 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-public class challengeUser {
+public class ChallengeActivity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private boolean success;
+    private LocalDateTime activeDate;
 
-    private LocalDateTime startDate;
+    private int duration;
 
-    private LocalDateTime endDate;
+    private int weight;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "site_user_id")
-    private SiteUser siteUser;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "attendance_id", nullable = true)
+    private Attendance attendance;
+
+    private int exerciseTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
-    private double achievementRate; // 달성률 추가
 }
