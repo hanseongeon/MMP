@@ -12,6 +12,8 @@
         <a href="/user/signup">회원만들기</a>
         <br>
         <a href="/homeTraining/home">홈트레이닝</a>
+        <br>
+        <a href="/trainer/create">트레이너 생성</a>
 
         <!--        &lt;!&ndash; 관리자 권한이 있는 경우 &ndash;&gt;-->
         <!--        <div th:if="${#authorization.expression('hasRole('ADMIN')')}">-->
@@ -24,6 +26,10 @@
         <br>
         <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
         <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
+        <br>
+        <a href="attendance/calendar">출석체크</a>
+        <br>
+        <a  sec:authorize="isAuthenticated()" href="user/changePassword">비밀번호 변경</a>
 
 
     </div>
