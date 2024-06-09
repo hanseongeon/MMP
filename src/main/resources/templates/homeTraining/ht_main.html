@@ -1,6 +1,13 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container-fluid my-3 flex justify-center">
-    <div class="flex flex-start">
+    <div class="row my-3 h-[10%]">
+        <a class="btn btn-ghost text-xs" th:href="@{|/homeTraining/home|}">전체</a>
+        <div th:each="category : ${categoryList}">
+            <a class="btn btn-ghost text-xs" th:href="@{|/homeTraining/home?categoryId=${category.id}|}"
+               th:text="${category.name}"></a>
+        </div>
+        <a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{|/category/create|}"
+           class="btn btn-primary">카테고리 추가</a>
         <a class="btn btn-error text-white justify-start" th:href="@{/homeTraining/create}">추가</a>
     </div>
     <div class="flex w-full">

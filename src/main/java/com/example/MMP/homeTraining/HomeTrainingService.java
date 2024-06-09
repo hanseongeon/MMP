@@ -1,5 +1,7 @@
 package com.example.MMP.homeTraining;
 
+import com.example.MMP.homeTraining.category.Category;
+import com.example.MMP.homeTraining.category.CategoryRepository;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
 import com.example.MMP.siteuser.SiteUserService;
@@ -17,6 +19,7 @@ import java.util.Set;
 public class HomeTrainingService {
     private final HomeTrainingRepository homeTrainingRepository;
     private final SiteUserRepository siteUserRepository;
+    private final CategoryRepository categoryRepository;
 
     public void create(String content, String videoUrl, SiteUser writer) {
         HomeTraining homeTraining = new HomeTraining();
@@ -83,5 +86,11 @@ public class HomeTrainingService {
             return true;
         }
         return false;
+    }
+
+    public List<HomeTraining> getCategoryList(int id){
+        Category category = categoryRepository.findById(id);
+        List<HomeTraining> homeTrainingList = homeTrainingRepository.findByCategory(category);
+        return homeTrainingList;
     }
 }

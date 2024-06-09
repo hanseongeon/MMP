@@ -1,5 +1,7 @@
 package com.example.MMP.homeTraining;
 
+import com.example.MMP.homeTraining.category.Category;
+import com.example.MMP.homeTraining.category.CategoryService;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
 import jakarta.persistence.SequenceGenerator;
@@ -13,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,10 +26,27 @@ import java.util.Map;
 public class HomeTrainingController {
     private final HomeTrainingService homeTrainingService;
     private final SiteUserService siteUserService;
+    private final CategoryService categoryService;
 
     @GetMapping("/home")
-    public String main(Model model){
-        List<HomeTraining> homeTrainingList = homeTrainingService.getList();
+    public String main(Model model, @RequestParam(value = "categoryId", defaultValue = "0") int categoryId){
+//        List<HomeTraining> homeTrainingList = homeTrainingService.getList();
+        List<HomeTraining> homeTrainingList = new ArrayList<>();
+
+        List<Category> categoryList = categoryService.getList();
+
+        for (Category category : categoryList){
+            if (categoryId == 0){
+//                homeTrainingList.addAll(category.getHomeTrainingList());
+                homeTrainingList = homeTrainingService.getList();
+            }else {
+                if (categoryId == category.getId()){
+                    homeTrainingList = homeTrainingService.getCategoryList(categoryId);
+                    break;
+                }
+            }
+        }
+        model.addAttribute("categoryList", categoryList);
         model.addAttribute("homeTrainingList", homeTrainingList);
 
         return "homeTraining/ht_main";
