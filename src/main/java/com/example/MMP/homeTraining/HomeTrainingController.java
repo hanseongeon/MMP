@@ -30,15 +30,14 @@ public class HomeTrainingController {
 
     @GetMapping("/home")
     public String main(Model model, @RequestParam(value = "categoryId", defaultValue = "0") int categoryId){
-//        List<HomeTraining> homeTrainingList = homeTrainingService.getList();
         List<HomeTraining> homeTrainingList = new ArrayList<>();
 
         List<Category> categoryList = categoryService.getList();
 
         for (Category category : categoryList){
             if (categoryId == 0){
-//                homeTrainingList.addAll(category.getHomeTrainingList());
-                homeTrainingList = homeTrainingService.getList();
+                homeTrainingList.addAll(category.getHomeTrainingList());
+//                homeTrainingList = homeTrainingService.getList();
             }else {
                 if (categoryId == category.getId()){
                     homeTrainingList = homeTrainingService.getCategoryList(categoryId);
