@@ -7,7 +7,7 @@
     </div>
     <form th:object="${categoryForm}" method="post">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-<!--        <div th:replace="~{form_errors :: formErrorsFragment}"></div>-->
+        <div th:replace="~{homeTraining/form_errors :: formErrorsFragment}"></div>
         <div class="mb-3">
             <input type="text" th:field="*{name}" placeholder="카테고리 이름을 입력해주세요." id="name" class="input input-bordered w-full max-w-xs" />
         </div>

@@ -8,6 +8,8 @@
         </div>
         <a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{|/category/create|}"
            class="btn btn-primary">카테고리 추가</a>
+<!--        <a th:if="${#authorization.expression('hasRole(''admin'')')}" th:href="@{|/category/create|}"-->
+<!--           class="btn btn-primary">카테고리 추가</a>-->
         <a class="btn btn-error text-white justify-start" th:href="@{/homeTraining/create}">추가</a>
     </div>
     <div class="flex w-full">
