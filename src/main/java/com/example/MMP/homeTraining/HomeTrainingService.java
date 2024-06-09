@@ -21,12 +21,13 @@ public class HomeTrainingService {
     private final SiteUserRepository siteUserRepository;
     private final CategoryRepository categoryRepository;
 
-    public void create(String content, String videoUrl, SiteUser writer) {
+    public void create(String content, String videoUrl, SiteUser writer, Category category) {
         HomeTraining homeTraining = new HomeTraining();
         homeTraining.setContent(content);
         homeTraining.setVideoUrl(videoUrl);
         homeTraining.setCreateDate(LocalDateTime.now());
         homeTraining.setWriter(writer);
+        homeTraining.setCategory(category);
 
         String videoId = videoUrl.split("v=")[1];
         String thumbnailUrl = "https://img.youtube.com/vi/" + videoId + "/0.jpg";

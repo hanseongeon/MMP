@@ -54,17 +54,30 @@ public class HomeTrainingController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
-    private String create(HomeTrainingForm homeTrainingForm){
+    private String create(HomeTrainingForm homeTrainingForm, Model model){
+        List<Category> categoryList = this.categoryService.getList(); // 모든 카테고리를 가져옴
+        model.addAttribute("categoryList", categoryList); // 카테고리 목록을 모델에 추가
         return "homeTraining/ht_create";
     }
 
     @PostMapping("/create")
-    private String create(@Valid HomeTrainingForm homeTrainingForm, BindingResult bindingResult, Principal principal){
+    private String create(@Valid HomeTrainingForm homeTrainingForm, BindingResult bindingResult, Principal principal, Model model){
+        List<Category> categoryList = this.categoryService.getList(); // 모든 카테고리를 가져옴
+        model.addAttribute("categoryList", categoryList); // 카테고리 목록을 모델에 추가
         if(bindingResult.hasErrors()){
             return "homeTraining/ht_create";
         }
         SiteUser writer = siteUserService.getUser(principal.getName());
-        homeTrainingService.create(homeTrainingForm.getContent(), homeTrainingForm.getVideoUrl(), writer);
+
+        Category category = this.categoryService.getCategory(homeTrainingForm.getCategoryID());
+
+        if (category == null) {
+            // 해당 ID에 해당하는 카테고리가 없는 경우
+            bindingResult.rejectValue("categoryID", "category.error", "유효하지 않은 카테고리입니다.");
+            return "product_form";
+        }
+
+        homeTrainingService.create(homeTrainingForm.getContent(), homeTrainingForm.getVideoUrl(), writer, category);
 
         return "redirect:/homeTraining/home";
     }
