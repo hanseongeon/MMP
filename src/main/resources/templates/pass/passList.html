@@ -5,10 +5,10 @@
     <title>회원권 리스트</title>
     <style>
         :root {
-          --custom-scale: 0.70;
+            --custom-scale: 0.70;
         }
         .custom-scale {
-          transform: scale(var(--custom-scale));
+            transform: scale(var(--custom-scale));
         }
         .scroll-button {
             position: absolute;
@@ -39,14 +39,13 @@
             display: flex;
             flex-wrap: nowrap;
             overflow-x: auto;
-            overflow:hidden;
-            margin-bottom: 20px;
+            overflow: hidden;
         }
         .card {
             width: 500px;
             flex: 0 0 auto;
-            margin-right: 20px;
         }
+
     </style>
 </head>
 <body>
@@ -54,9 +53,9 @@
 <div layout:fragment="content" class="w-full mx-auto h-screen relative overflow-hidden">
 
     <!-- PT Pass Section -->
-    <div th:if="${#lists.size(ptPassList) != 0}" class="custom-scale relative mb-12">
-        <button class="scroll-button " id="ptScrollLeftButton">&#8249;</button>
-        <button class="scroll-button " id="ptScrollRightButton">&#8250;</button>
+    <div th:if="${#lists.size(ptPassList) != 0}" class="custom-scale relative">
+        <button class="scroll-button text-4xl" id="ptScrollLeftButton">&#8249;</button>
+        <button class="scroll-button text-4xl" id="ptScrollRightButton">&#8250;</button>
         <div class="card-container">
             <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="pt:${ptPassList}">
                 <figure><img src="https://i.imgur.com/kW3S5se.png" alt="PT" /></figure>
@@ -75,8 +74,8 @@
 
     <!-- Day Pass Section -->
     <div class="custom-scale relative" th:if="${#lists.size(dayPassList) != 0}">
-        <button class="scroll-button left-0 ml-4" id="dayScrollLeftButton">&#8249;</button>
-        <button class="scroll-button right-0 mr-4" id="dayScrollRightButton">&#8250;</button>
+        <button class="scroll-button text-4xl left-0 ml-4" id="dayScrollLeftButton">&#8249;</button>
+        <button class="scroll-button text-4xl right-0 mr-4" id="dayScrollRightButton">&#8250;</button>
         <div class="card-container">
             <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="day:${dayPassList}">
                 <figure><img src="https://i.imgur.com/VFPjR6P.png" alt="Day" /></figure>
