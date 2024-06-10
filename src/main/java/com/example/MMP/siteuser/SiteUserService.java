@@ -32,7 +32,7 @@ public class SiteUserService {
         siteUserRepository.save(siteUser);
     }
 
-    public void userSignup(String name,String number,String gender, String birthDay, String email, String userRole){
+    public SiteUser userSignup(String name,String number,String gender, String birthDay, String email, String userRole){
         SiteUser siteUser = new SiteUser();
         siteUser.setUserId(number);
         siteUser.setPassword(passwordEncoder.encode(birthDay));
@@ -42,7 +42,7 @@ public class SiteUserService {
         siteUser.setGender(gender);
         siteUser.setEmail(email);
         siteUser.setUserRole(userRole);
-        siteUserRepository.save(siteUser);
+        return siteUserRepository.save(siteUser);
     }
 
     public SiteUser getUser(String name) {
