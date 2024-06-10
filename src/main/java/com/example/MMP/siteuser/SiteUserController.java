@@ -29,6 +29,27 @@ public class SiteUserController {
     private final SiteUserRepository siteUserRepository;
     private final MailService mailService;
 
+    @GetMapping("/resetPassword")
+    public String resetPasswordForm(Model model) {
+        model.addAttribute("passwordResetRequestDto", new PasswordResetRequestDto());
+        return "user/resetPassword";
+    }
+
+    @PostMapping("/resetPassword")
+    public String resetPassword(@Valid PasswordResetRequestDto passwordResetRequestDto, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "user/resetPassword";
+        }
+        try {
+            siteUserService.resetPassword(passwordResetRequestDto.getUserId(), passwordResetRequestDto.getEmail());
+        } catch (Exception e) {
+            bindingResult.reject("resetPasswordFailed", e.getMessage());
+            model.addAttribute("errorMessage", e.getMessage());
+            return "user/resetPassword";
+        }
+        return "redirect:/";
+    }
+
     @GetMapping("/adminSignup")
     public String AdminSignup(AdminDto adminDto) {
 
