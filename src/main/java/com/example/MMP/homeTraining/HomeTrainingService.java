@@ -1,5 +1,7 @@
 package com.example.MMP.homeTraining;
 
+import com.example.MMP.homeTraining.category.Category;
+import com.example.MMP.homeTraining.category.CategoryRepository;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
 import com.example.MMP.siteuser.SiteUserService;
@@ -17,13 +19,15 @@ import java.util.Set;
 public class HomeTrainingService {
     private final HomeTrainingRepository homeTrainingRepository;
     private final SiteUserRepository siteUserRepository;
+    private final CategoryRepository categoryRepository;
 
-    public void create(String content, String videoUrl, SiteUser writer) {
+    public void create(String content, String videoUrl, SiteUser writer, Category category) {
         HomeTraining homeTraining = new HomeTraining();
         homeTraining.setContent(content);
         homeTraining.setVideoUrl(videoUrl);
         homeTraining.setCreateDate(LocalDateTime.now());
         homeTraining.setWriter(writer);
+        homeTraining.setCategory(category);
 
         String videoId = videoUrl.split("v=")[1];
         String thumbnailUrl = "https://img.youtube.com/vi/" + videoId + "/0.jpg";
@@ -62,16 +66,16 @@ public class HomeTrainingService {
         if (homeTraining != null) {
             if (homeTrainingSet.contains(homeTraining)) {
                 // 이미 책갈피가 있는 경우, 책갈피를 제거합니다.
-                homeTrainingSet.remove(homeTraining);
-                user.setSaveTraining(homeTrainingSet);
-                siteUserRepository.save(user);
-                return false; // 책갈피가 제거되었음을 반환합니다.
+//                homeTrainingSet.remove(homeTraining);
+//                user.setSaveTraining(homeTrainingSet);
+//                siteUserRepository.save(user);
+                return true; // 책갈피가 제거되었음을 반환합니다.
             } else {
                 // 책갈피가 없는 경우, 책갈피를 추가합니다.
-                homeTrainingSet.add(homeTraining);
-                user.setSaveTraining(homeTrainingSet);
-                siteUserRepository.save(user);
-                return true; // 책갈피가 추가되었음을 반환합니다.
+//                homeTrainingSet.add(homeTraining);
+//                user.setSaveTraining(homeTrainingSet);
+//                siteUserRepository.save(user);
+                return false; // 책갈피가 추가되었음을 반환합니다.
             }
         }
         return false; // 책갈피를 찾을 수 없는 경우, 실패를 반환합니다.
@@ -83,5 +87,11 @@ public class HomeTrainingService {
             return true;
         }
         return false;
+    }
+
+    public List<HomeTraining> getCategoryList(int id){
+        Category category = categoryRepository.findById(id);
+        List<HomeTraining> homeTrainingList = homeTrainingRepository.findByCategory(category);
+        return homeTrainingList;
     }
 }
