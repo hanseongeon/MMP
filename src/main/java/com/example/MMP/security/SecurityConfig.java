@@ -22,7 +22,7 @@ public class SecurityConfig{
         SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http
                     .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                            .requestMatchers("/user/login", "/user/signup", "/user/adminSignup").permitAll().anyRequest().authenticated())
+                            .requestMatchers("/user/**").permitAll().anyRequest().authenticated())
                     .formLogin((formLogin) -> formLogin
                             .loginPage("/user/login")
                             .defaultSuccessUrl("/"))
@@ -32,7 +32,7 @@ public class SecurityConfig{
                             .invalidateHttpSession(true))
                     .rememberMe((rememberMe) -> rememberMe
                             .key("uniqueAndSecret")
-                            .tokenValiditySeconds(60 * 60) // 30 days
+                            .tokenValiditySeconds(30 * 24 * 60 * 60) // 30 days
                             .rememberMeParameter("remember-me")
                             .userDetailsService(userDetailService))
                     .csrf(c -> c.ignoringRequestMatchers(
