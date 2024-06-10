@@ -32,7 +32,7 @@ public class SecurityConfig{
                             .invalidateHttpSession(true))
                     .rememberMe((rememberMe) -> rememberMe
                             .key("uniqueAndSecret")
-                            .tokenValiditySeconds(5 * 60) // 30 days
+                            .tokenValiditySeconds(60 * 60) // 30 days
                             .rememberMeParameter("remember-me")
                             .userDetailsService(userDetailService))
                     .csrf(c -> c.ignoringRequestMatchers(
