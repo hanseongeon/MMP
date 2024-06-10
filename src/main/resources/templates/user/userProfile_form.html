@@ -1,18 +1,5 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content">
-<div>
-    <div class="flex flex-col gap-4">
-        <h1 sec:authorize="isAuthenticated()" th:text="${#authentication.principal.username}">User Profile</h1>
-        <div class="flex flex-col gap-1">
-            <p sec:authorize="isAuthenticated()" th:text="${email}">user@example.com</p>
-        </div>
-        <div class="flex flex-col gap-1">
-            <p sec:authorize="isAuthenticated()" th:text="${userNickname}">User Nickname</p>
-        </div>
-    </div>
-</div>
-<<<<<<< HEAD
-=======
     <div class="h-full bg-black p-8">
         <div class="bg-white rounded-lg shadow-xl pb-8">
             <div class="w-full h-[250px]">
@@ -99,7 +86,5 @@
             document.getElementById('image_form').submit();
         });
     </script>
->>>>>>> 2e9c5d7f298238e4900ffec75e4ff685c6265129
->>>>>>> f456404e5105ebce8a3943af0c9c71a3cf72f516
 </div>
 </html>

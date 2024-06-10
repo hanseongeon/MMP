@@ -151,20 +151,6 @@ public class SiteUserController {
     }
 
     @GetMapping("/profile")
-<<<<<<< HEAD
-    public String getUserProfile(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userId = authentication.getName ();
-        Optional<SiteUser> userOptional = siteUserRepository.findByUserId (userId);
-
-        if (userOptional.isPresent()) {
-            model.addAttribute("user", userOptional.get());
-            return "/user/userProfile_form";
-        } else {
-            model.addAttribute("단순 에러", "유저를 찾을 수 없습니다");
-            return "errorPage";  // Make sure you have an errorPage.html to display errors
-        }
-=======
 
     public String getUserProfile(Model model, Principal principal) {
         SiteUser user = this.siteUserService.getUser(principal.getName());
@@ -172,6 +158,5 @@ public class SiteUserController {
         model.addAttribute("wodList",wodList);
 
         return "user/userProfile_form" ;
->>>>>>> f456404e5105ebce8a3943af0c9c71a3cf72f516
     }
 }
