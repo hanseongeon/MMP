@@ -93,6 +93,7 @@ public class HomeTrainingController {
     @DeleteMapping("/bookmark")
     public ResponseEntity<Map<String, Object>> unBookmarkHomeTraining(@RequestBody Map<String, Long> payload, Principal principal) {
         Long htId = payload.get("htId");
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + htId);
         homeTrainingService.removeBookmark(htId, principal.getName());
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
