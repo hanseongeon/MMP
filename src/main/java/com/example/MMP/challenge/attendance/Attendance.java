@@ -1,4 +1,4 @@
-package com.example.MMP.attendance;
+package com.example.MMP.challenge.attendance;
 
 
 import com.example.MMP.challenge.challengeActivity.ChallengeActivity;
@@ -28,6 +28,7 @@ public class Attendance {
     private boolean present;
 
     @OneToOne(mappedBy = "attendance", fetch = FetchType.LAZY)
+    @JsonBackReference
     private ChallengeActivity challengeActivity;
 
 }
