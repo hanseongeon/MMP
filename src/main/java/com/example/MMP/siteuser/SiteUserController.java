@@ -163,11 +163,14 @@ public class SiteUserController {
     }
 
     @GetMapping("/profile")
-
     public String getUserProfile(Model model, Principal principal) {
         SiteUser user = this.siteUserService.getUser(principal.getName());
         List<Wod> wodList = wodService.findByUserWod(user);
         List<HomeTraining> saveTraining = homeTrainingService.getSaveTraining(user);
+
+        for (Wod wod : wodList){
+            System.out.println("111111111111111111111111111111" + wod.getId());
+        }
 
         model.addAttribute("wodList",wodList);
         model.addAttribute("saveTraining",saveTraining);
