@@ -10,4 +10,14 @@ public class MapController {
     public String showMap() {
         return "map"; // map.html 뷰를 반환
     }
+
+    @GetMapping("/heremap")
+    public String hereMap() {
+        return "heremap"; // map.html 뷰를 반환
+    }
+
+    @GetMapping("/game")
+    public String game() {
+        return "game";
+    }
 }

@@ -1,8 +1,9 @@
 package com.example.MMP.siteuser;
 
-import com.example.MMP.attendance.Attendance;
+import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.homeTraining.HomeTraining;
+import com.example.MMP.point.Point;
 import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserPtPass;
 import com.example.MMP.wod.Wod;
@@ -61,8 +62,12 @@ public class SiteUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "training_id")
     )
-    private Set<HomeTraining> saveTraining = new HashSet<>();
+    private List<HomeTraining> saveTraining = new ArrayList<>();
 
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
     private List<Wod> wodList;
+
+
+    @OneToOne(mappedBy = "siteUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    private Point point;
 }

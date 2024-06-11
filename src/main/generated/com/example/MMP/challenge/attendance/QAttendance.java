@@ -1,4 +1,4 @@
-package com.example.MMP.attendance;
+package com.example.MMP.challenge.attendance;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QAttendance extends EntityPathBase<Attendance> {
 
-    private static final long serialVersionUID = 1236114879L;
+    private static final long serialVersionUID = 841262388L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -51,7 +51,7 @@ public class QAttendance extends EntityPathBase<Attendance> {
     public QAttendance(Class<? extends Attendance> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.challengeActivity = inits.isInitialized("challengeActivity") ? new com.example.MMP.challenge.challengeActivity.QChallengeActivity(forProperty("challengeActivity"), inits.get("challengeActivity")) : null;
-        this.siteUser = inits.isInitialized("siteUser") ? new com.example.MMP.siteuser.QSiteUser(forProperty("siteUser")) : null;
+        this.siteUser = inits.isInitialized("siteUser") ? new com.example.MMP.siteuser.QSiteUser(forProperty("siteUser"), inits.get("siteUser")) : null;
     }
 
 }
