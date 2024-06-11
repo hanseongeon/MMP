@@ -100,25 +100,35 @@
 <body>
     <nav th:replace="~{navbar :: navbarFragment}"></nav>
     <div layout:fragment="content" class="w-full mx-auto h-screen relative overflow-y-auto">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <div class="h-full bg-black p-8">
             <div class="bg-white rounded-lg shadow-xl pb-8">
                 <div class="w-full h-[250px]">
                     <img src="https://vojislavd.com/ta-template-demo/assets/img/profile-background.jpg"
                         class="w-full h-full rounded-tl-lg rounded-tr-lg">
                 </div>
-                <form id="image_form" th:action="@{|/user/imageform|}" method="post" enctype="multipart/form-data">
-                    <input id="file" type="file" name="file" value="이미지 등록" style="display: none;">
-                </form>
-                <form id="image_save_form" th:action="@{|/user/imagesaveform|}" method="post">
-                    <input type="hidden" name="url" th:value="${url}">
-                    <input type="submit" value="이미지 저장">
-                </form>
-            </div>
+                <div class="flex flex-col items-center -mt-20">
+                    <img alt="Tailwind CSS Navbar component" class="w-40 border-4 border-white rounded-full"
+                        th:src="${url != null ? url : '/1715046707.gif'}" loop="infinite" id="profile_img" />
+                    <div class="flex items-center space-x-2 mt-2">
+                        <li class="flex border-y py-2">
+                            <span class="font-bold w-auto text-black inline-block">Name : </span>
+                            <span class="text-gray-700" sec:authorize="isAuthenticated()"
+                                th:text="${#authentication.principal.username}"></span>
+                        </li>
+                    </div>
+                    <form id="image_form" th:action="@{|/user/imageform|}" method="post" enctype="multipart/form-data">
+                        <input id="file" type="file" name="file" value="이미지 등록" style="display: none;">
+                    </form>
+                    <form id="image_save_form" th:action="@{|/user/imagesaveform|}" method="post">
+                        <input type="hidden" name="url" th:value="${url}">
+                        <input type="submit" value="이미지 저장">
+                    </form>
+                </div>
 
-            <div class="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
-                <div class="flex items-center space-x-4 mt-2">
-                    <button class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                <div class="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
+                    <div class="flex items-center space-x-4 mt-2">
+                        <button
+                            class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
                                 fill="currentColor">
                                 <path fill-rule="evenodd"
@@ -130,65 +140,66 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 h-[450px]">
-            <div class="w-full flex flex-col 2xl:w-1/3">
-                <div class="flex-1 bg-white rounded-lg shadow-xl p-8"></div>
-            </div>
-            <div class="flex flex-col w-full 2xl:w-2/3">
-                <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
-                    <h4 class="text-xl text-gray-900 font-bold">Activity log</h4>
-                    <!-- 스크롤링을 위해 최대 높이와 오버플로우 설정 -->
-                    <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
-                        <button class="scroll-button " id="ptScrollLeftButton">&#8249;</button>
-                        <button class="scroll-button " id="ptScrollRightButton">&#8250;</button>
-                        <div class="flex w-full card-container border-gray-300">
-                            <!-- ptPassList 요소들 -->
-                            <div class="card w-60 h-60 bg-base-100 shadow-2xl m-4 block h-[300px] w-[250px]" th:each="wod:${wodList}">
-                                <div th:replace="wod/wodCard :: wodCard(${wod})"></div>
+            <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 h-[450px]">
+                <div class="w-full flex flex-col 2xl:w-1/3">
+                    <div class="flex-1 bg-white rounded-lg shadow-xl p-8"></div>
+                </div>
+                <div class="flex flex-col w-full 2xl:w-2/3">
+                    <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
+                        <h4 class="text-xl text-gray-900 font-bold">Activity log</h4>
+                        <!-- 스크롤링을 위해 최대 높이와 오버플로우 설정 -->
+                        <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
+                            <button class="scroll-button " id="ptScrollLeftButton">&#8249;</button>
+                            <button class="scroll-button " id="ptScrollRightButton">&#8250;</button>
+                            <div class="flex w-full card-container border-gray-300">
+                                <!-- ptPassList 요소들 -->
+                                <div class="wodCard card w-60 h-60 bg-base-100 shadow-2xl m-4 block h-[300px] w-[250px]"
+                                    th:each="wod:${wodList}">
+                                    <div th:replace="wod/wodCard :: wodCard(${wod})"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 h-[450px]">
-            <div class="w-full flex flex-col 2xl:w-1/3">
-                <div class="flex-1 bg-white rounded-lg shadow-xl p-8"></div>
-            </div>
-            <div class="flex flex-col w-full 2xl:w-2/3">
-                <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
-                    <h4 class="text-xl text-gray-900 font-bold">Save log</h4>
-                    <!-- 스크롤링을 위해 최대 높이와 오버플로우 설정 -->
-                    <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
-                        <button class="scroll-button2 " id="ptScrollLeftButton2">&#8249;</button>
-                        <button class="scroll-button2 " id="ptScrollRightButton2">&#8250;</button>
-                        <div class="flex w-full card-container2 border-gray-300">
-                            <!-- ptPassList 요소들 -->
-                            <div class="card  bg-base-100 shadow-2xl m-4 block h-[300px] w-[300px]" th:each="homeTraining:${saveTraining}">
-                                <div th:replace="homeTraining/htCard :: htCard(${homeTraining})"></div>
+            <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 h-[450px]">
+                <div class="w-full flex flex-col 2xl:w-1/3">
+                    <div class="flex-1 bg-white rounded-lg shadow-xl p-8"></div>
+                </div>
+                <div class="flex flex-col w-full 2xl:w-2/3">
+                    <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
+                        <h4 class="text-xl text-gray-900 font-bold">Save log</h4>
+                        <!-- 스크롤링을 위해 최대 높이와 오버플로우 설정 -->
+                        <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
+                            <button class="scroll-button2 " id="ptScrollLeftButton2">&#8249;</button>
+                            <button class="scroll-button2 " id="ptScrollRightButton2">&#8250;</button>
+                            <div class="flex w-full card-container2 border-gray-300">
+                                <!-- ptPassList 요소들 -->
+                                <div class="htCard card bg-base-100 shadow-2xl m-4 block h-[300px] w-[300px]"
+                                    th:each="homeTraining:${saveTraining}">
+                                    <div th:replace="homeTraining/htCard :: htCard(${homeTraining})"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 h-[450px]">
-            <div class="w-full flex flex-col 2xl:w-1/3">
-                <div class="flex-1 bg-white rounded-lg shadow-xl p-8"></div>
-            </div>
-            <div class="flex flex-col w-full 2xl:w-2/3">
-                <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
-                    <h4 class="text-xl text-gray-900 font-bold">My Pass</h4>
-                    <!-- 스크롤링을 위해 최대 높이와 오버플로우 설정 -->
-                    <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
-                        <button class="scroll-button3 " id="ptScrollLeftButton3">&#8249;</button>
-                        <button class="scroll-button3 " id="ptScrollRightButton3">&#8250;</button>
-                        <div class="flex w-full card-container3 border-gray-300">
-                            <!-- ptPassList 요소들 -->
+            <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 h-[450px]">
+                <div class="w-full flex flex-col 2xl:w-1/3">
+                    <div class="flex-1 bg-white rounded-lg shadow-xl p-8"></div>
+                </div>
+                <div class="flex flex-col w-full 2xl:w-2/3">
+                    <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
+                        <h4 class="text-xl text-gray-900 font-bold">My Pass</h4>
+                        <!-- 스크롤링을 위해 최대 높이와 오버플로우 설정 -->
+                        <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
+                            <button class="scroll-button3 " id="ptScrollLeftButton3">&#8249;</button>
+                            <button class="scroll-button3 " id="ptScrollRightButton3">&#8250;</button>
+                            <div class="flex w-full card-container3 border-gray-300">
+                                <!-- ptPassList 요소들 -->
                                 <div th:replace="pass/passDto :: passDto(${user})"></div>
                             </div>
                         </div>
@@ -196,7 +207,6 @@
                 </div>
             </div>
         </div>
-
         <script>
             const profile_img = document.getElementById('profile_img');
             profile_img.addEventListener('click', () => {
@@ -207,7 +217,6 @@
                 document.getElementById('image_form').submit();
             });
         </script>
-
         <script>
             // PT Pass 스크롤링 함수
             function ptScrollLeft() {
@@ -259,16 +268,18 @@
 
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                const wodCards = document.querySelectorAll('.wodCard');
-                console.log(wodCards);
                 updateInitialIconState();
+                updateIconState();
+            });
 
-                wodCards.forEach(card => {
-                    const hiddenDiv = card.querySelector('.hidden');
+            function updateIconState() {
+                const wodCards = document.querySelectorAll('.wodCard');
+
+                wodCards.forEach(wod => {
+                    const hiddenDiv = wod.querySelector('.hidden');
                     const wodId = hiddenDiv.getAttribute('data-wod-id');
                     const heartIcon = document.getElementById(`heartIcon-${wodId}`);
                     const likeCountSpan = document.getElementById(`likeCountSpan-${wodId}`);
-                    console.log("WOD : " + wodId);
 
                     // 페이지 로드 시 초기 아이콘 상태 설정
                     fetch(`/wod/like-status?wodId=${wodId}`)
@@ -284,46 +295,44 @@
                             likeCountSpan.innerText = data.likeCount;
                         })
                         .catch(error => console.error('Error:', error));
-
-                    // 아이콘 클릭 이벤트
-                    window.toggleIcon = function (event, wodId) {
-                        event.preventDefault(); // 링크의 기본 동작을 방지
-
-                        const heartIcon = document.getElementById(`heartIcon-${wodId}`);
-                        const likeCountSpan = document.getElementById(`likeCountSpan-${wodId}`);
-                        const isLiked = heartIcon.classList.contains('fa-solid');
-                        console.log("WOD2 : " + wodId);
-
-                        fetch('/wod/like', {
-                            method: isLiked ? 'DELETE' : 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
-                            },
-                            body: JSON.stringify({ wodId: wodId }) // `wodId`를 JSON으로 전달
-                        })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Network response was not ok');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                if (data.success) {
-                                    if (isLiked) {
-                                        heartIcon.classList.remove('fa-solid');
-                                        heartIcon.classList.add('fa-regular');
-                                    } else {
-                                        heartIcon.classList.remove('fa-regular');
-                                        heartIcon.classList.add('fa-solid');
-                                    }
-                                    likeCountSpan.innerText = data.likeCount;
-                                }
-                            })
-                            .catch(error => console.error('Error:', error));
-                    };
                 });
-            });
+            }
+
+            function toggleIcon(event, wodId) {
+                event.preventDefault(); // 링크의 기본 동작을 방지
+
+                const heartIcon = document.getElementById(`heartIcon-${wodId}`);
+                const likeCountSpan = document.getElementById(`likeCountSpan-${wodId}`);
+                const isLiked = heartIcon.classList.contains('fa-solid');
+
+                fetch('/wod/like', {
+                    method: isLiked ? 'DELETE' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
+                    },
+                    body: JSON.stringify({ wodId: wodId }) // `wodId`를 JSON으로 전달
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            if (isLiked) {
+                                heartIcon.classList.remove('fa-solid');
+                                heartIcon.classList.add('fa-regular');
+                            } else {
+                                heartIcon.classList.remove('fa-regular');
+                                heartIcon.classList.add('fa-solid');
+                            }
+                            likeCountSpan.innerText = data.likeCount;
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
 
             function updateInitialIconState() {
                 const bookmarks = document.querySelectorAll('.recommend');
@@ -331,7 +340,6 @@
                     const icon = bookmark.querySelector('i');
                     const hiddenDiv = bookmark.querySelector('.hidden');
                     const htId = hiddenDiv.getAttribute('data-ht-id');
-                    console.log("homeTraining : " + htId);
 
                     fetch(`/homeTraining/bookmark/${htId}`)
                         .then(response => response.json())
@@ -354,7 +362,6 @@
                 const isBookmarked = icon.classList.contains('fa-solid');
                 const hiddenDiv = event.currentTarget.querySelector('.hidden');
                 const htId = hiddenDiv.getAttribute('data-ht-id');
-                console.log("homeTraining2 : " + htId);
 
                 fetch('/homeTraining/bookmark', {
                     method: isBookmarked ? 'DELETE' : 'POST',
@@ -363,29 +370,27 @@
                         'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
                     },
                     body: JSON.stringify({ htId: htId }) // `htId`를 JSON으로 전달
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
+                }).then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                }).then(data => {
+                    if (data.success) {
+                        if (isBookmarked) {
+                            icon.classList.remove('fa-solid', 'fa-bookmark');
+                            icon.classList.add('fa-regular', 'fa-bookmark');
+                        } else {
+                            icon.classList.remove('fa-regular', 'fa-bookmark');
+                            icon.classList.add('fa-solid', 'fa-bookmark');
                         }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            if (isBookmarked) {
-                                icon.classList.remove('fa-solid', 'fa-bookmark');
-                                icon.classList.add('fa-regular', 'fa-bookmark');
-                            } else {
-                                icon.classList.remove('fa-regular', 'fa-bookmark');
-                                icon.classList.add('fa-solid', 'fa-bookmark');
-                            }
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
             }
         </script>
+    </div>
 </body>
 
 </html>
