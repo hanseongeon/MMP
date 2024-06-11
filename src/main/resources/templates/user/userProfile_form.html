@@ -347,7 +347,6 @@
                     const icon = bookmark.querySelector('i');
                     const hiddenDiv = bookmark.querySelector('.hidden');
                     const htId = hiddenDiv.getAttribute('data-ht-id');
-                    console.log("Home Training ID: ", htId); // 올바른 변수 사용
 
                     fetch(`/homeTraining/bookmark/${htId}`)
                         .then(response => response.json())
