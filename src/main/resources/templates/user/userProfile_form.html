@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <script src="https://kit.fontawesome.com/bccde956fc.js" crossorigin="anonymous"></script>
     <title>회원권 리스트</title>
     <style>
         :root {
@@ -123,7 +124,6 @@
                     <img src="https://vojislavd.com/ta-template-demo/assets/img/profile-background.jpg"
                         class="w-full h-full rounded-tl-lg rounded-tr-lg">
                 </div>
-
                 <div class="flex flex-col items-center -mt-20">
                     <img alt="Tailwind CSS Navbar component" class="w-40 border-4 border-white rounded-full"
                         th:src="${url != null ? url : '/1715046707.gif'}" loop="infinite" id="profile_img" />
@@ -161,7 +161,23 @@
 
             <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 h-[450px]">
                 <div class="w-full flex flex-col 2xl:w-1/3">
-                    <div class="flex-1 bg-white rounded-lg shadow-xl p-8"></div>
+                    <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
+                        <h4 class="text-xl text-gray-900 font-bold">내 게시물 최근 댓글</h4>
+                        <div th:each="comment: ${topSevenComment}" class="flex items-center w-full my-6 -ml-1.5">
+                            <div class="w-1/12 z-10">
+                                <div class="w-3.5 h-3.5 bg-red-600 rounded-full"></div>
+                            </div>
+                            <div class="w-11/12">
+                                <a th:href="@{|/wod/detail/${comment.wod.id}|}"
+                                   class="text-sm text-black font-bold hover:underline"
+                                   th:text="|${comment.content}|"></a>
+                                <!-- <p class="text-sm text-gray-700" th:text="|답변 : ${comment.content}|"></p> -->
+                                <!-- <p class="text-xs text-gray-500"
+                                   th:text="${answer.modifyDate == null ? #temporals.format(answer.modifyDate, 'yyyy-MM-dd HH:mm') : #temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm') }">
+                                </p> -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="flex flex-col w-full 2xl:w-2/3">
                     <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
@@ -211,7 +227,14 @@
                 </div>
                 <div class="flex flex-col w-full 2xl:w-2/3">
                     <div class="flex-1 bg-white rounded-lg shadow-xl p-8 ">
-                        <h4 class="text-xl text-gray-900 font-bold">My Pass</h4>
+
+                        <div class="flex items-center space-x-4 mt-2">
+                            <h4 class="text-xl text-gray-900 font-bold">My Pass</h4>
+                            <a th:href="@{|/totalPass/transfer/${user.id}|}" class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>양도해볼까</span>
+                            </a>
+                        </div>
                         <!-- 스크롤링을 위해 최대 높이와 오버플로우 설정 -->
                         <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
                             <button class="scroll-button3 " id="ptScrollLeftButton3">&#8249;</button>
@@ -224,10 +247,7 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
-
         <script>
             const profile_img = document.getElementById('profile_img');
             profile_img.addEventListener('click', () => {
@@ -238,8 +258,6 @@
                 document.getElementById('image_form').submit();
             });
         </script>
-
-
         <script>
             // PT Pass 스크롤링 함수
             function ptScrollLeft() {
@@ -359,7 +377,6 @@
 
             function updateInitialIconState() {
                 const bookmarks = document.querySelectorAll('.recommend');
-
                 bookmarks.forEach(bookmark => {
                     const icon = bookmark.querySelector('i');
                     const hiddenDiv = bookmark.querySelector('.hidden');
