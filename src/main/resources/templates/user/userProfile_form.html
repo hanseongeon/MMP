@@ -104,8 +104,8 @@
                 </div>
                 <div class="flex items-center space-x-2 mt-2">
                     <li class="flex border-y py-2">
-                        <span class="font-bold w-auto text-black inline-block">Points : </span>
-                        <span class="text-gray-700" sec:authorize="isAuthenticated()" th:text="${#authentication.principal.username}"></span>
+                        <span class="font-bold w-auto text-black inline-block">Points: </span>
+                        <span class="text-gray-700" sec:authorize="isAuthenticated()" th:text="${points}"></span>
                     </li>
                     <div class="border-l border-gray-300 h-6"></div> <!-- Vertical line -->
                     <li class="flex border-y py-2">

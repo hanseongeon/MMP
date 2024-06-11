@@ -163,15 +163,18 @@ public class SiteUserController {
     }
 
     @GetMapping("/profile")
-
     public String getUserProfile(Model model, Principal principal) {
         SiteUser user = this.siteUserService.getUser(principal.getName());
         List<Wod> wodList = wodService.findByUserWod(user);
         List<HomeTraining> saveTraining = homeTrainingService.getSaveTraining(user);
+        int points = user.getPoint().getPoints(); // 포인트 가져오기
+
 
         model.addAttribute("wodList",wodList);
         model.addAttribute("saveTraining",saveTraining);
         model.addAttribute("user",user);
+        model.addAttribute("points", points); // 모델에 포인트 추가
+
         return "user/userProfile_form" ;
     }
 }
