@@ -280,14 +280,12 @@
 
             function updateIconState() {
                 const wodCards = document.querySelectorAll('.wodCard');
-                console.log("wodCards: ", wodCards); // 배열 객체를 출력하기 위해 , 사용
 
                 wodCards.forEach(wod => {
                     const hiddenDiv = wod.querySelector('.hidden');
                     const wodId = hiddenDiv.getAttribute('data-wod-id');
                     const heartIcon = document.getElementById(`heartIcon-${wodId}`);
                     const likeCountSpan = document.getElementById(`likeCountSpan-${wodId}`);
-                    console.log("WOD ID: ", wodId); // 올바른 변수 사용
 
                     // 페이지 로드 시 초기 아이콘 상태 설정
                     fetch(`/wod/like-status?wodId=${wodId}`)
@@ -312,7 +310,6 @@
                 const heartIcon = document.getElementById(`heartIcon-${wodId}`);
                 const likeCountSpan = document.getElementById(`likeCountSpan-${wodId}`);
                 const isLiked = heartIcon.classList.contains('fa-solid');
-                console.log("WOD ID: ", wodId); // 올바른 변수 사용
 
                 fetch('/wod/like', {
                     method: isLiked ? 'DELETE' : 'POST',
@@ -345,7 +342,6 @@
 
             function updateInitialIconState() {
                 const bookmarks = document.querySelectorAll('.recommend');
-                console.log("bookmarks: ", bookmarks); // 배열 객체를 출력하기 위해 , 사용
 
                 bookmarks.forEach(bookmark => {
                     const icon = bookmark.querySelector('i');
@@ -374,7 +370,6 @@
                 const isBookmarked = icon.classList.contains('fa-solid');
                 const hiddenDiv = event.currentTarget.querySelector('.hidden');
                 const htId = hiddenDiv.getAttribute('data-ht-id');
-                console.log("Home Training ID: ", htId); // 올바른 변수 사용
 
                 fetch('/homeTraining/bookmark', {
                     method: isBookmarked ? 'DELETE' : 'POST',
