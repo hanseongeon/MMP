@@ -15,6 +15,8 @@ import com.example.MMP.mail.MailService;
 import com.example.MMP.ptpass.PtPass;
 import com.example.MMP.ptpass.PtPassService;
 import com.example.MMP.security.UserDetail;
+import com.example.MMP.transPass.TransPass;
+import com.example.MMP.transPass.TransPassService;
 import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserDayPassService;
 import com.example.MMP.userPass.UserPtPass;
@@ -34,6 +36,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.*;
@@ -49,6 +52,7 @@ public class SiteUserController {
     private final HomeTrainingService homeTrainingService;
     private final CommentService commentService;
     private final ChallengeService challengeService;
+    private final TransPassService transPassService;
 
     @GetMapping("/resetPassword")
     public String resetPasswordForm(Model model) {
@@ -166,38 +170,57 @@ public class SiteUserController {
     }
 
     @GetMapping("/profile")
-    public String getUserProfile(Model model, Principal principal) {
+    public String getUserProfile(Model model, Principal principal, @RequestParam(value = "passFilter",defaultValue = "pt") String passFilter) {
 
-        SiteUser user = this.siteUserService.getUser(principal.getName());
-        List<Wod> wodList = wodService.findByUserWod(user);
-        List<HomeTraining> saveTraining = homeTrainingService.getSaveTraining(user);
-        int points = user.getPoint().getPoints();
+        try {
+            SiteUser user = this.siteUserService.getUser (principal.getName ());
+            List<Wod> wodList = wodService.findByUserWod (user);
+            List<HomeTraining> saveTraining = homeTrainingService.getSaveTraining (user);
+            int points = user.getPoint ().getPoints ();
 
-        List<Comment> commentList;
-        List<Comment> topComment = new ArrayList<>();
-        for (Wod wod : wodList){
-            commentList = commentService.getCommentsByWodOrderByCreateDateDesc(wod);
-            for (Comment comment : commentList){
-                topComment.add(comment);
+            List<Comment> commentList;
+            List<Comment> topComment = new ArrayList<> ();
+            for (Wod wod : wodList) {
+                commentList = commentService.getCommentsByWodOrderByCreateDateDesc (wod);
+                topComment.addAll (commentList);
             }
+
+            Map<String, List<Challenge>> challengesByStatus = challengeService.getChallengesByStatus (user.getId ());
+            List<Challenge> ongoingChallenges = challengesByStatus.get ("ongoing");
+            List<Challenge> successfulChallenges = challengesByStatus.get ("successful");
+            List<Challenge> failedChallenges = challengesByStatus.get ("failed");
+            int challengeCount = ongoingChallenges.size () + successfulChallenges.size () + failedChallenges.size ();
+
+            if(passFilter.equals("pt")) {
+                List<TransPass> MySendPass = transPassService.MySendPass(user);
+                if(MySendPass == null){
+                    model.addAttribute("MySendPass",null);
+                }
+                model.addAttribute("MySendPass",MySendPass);
+            }else{
+                List<TransPass> MyAcceptPass = transPassService.MyAcceptPass(user);
+                if(MyAcceptPass == null){
+                    model.addAttribute("MyAcceptPass",null);
+                }
+                model.addAttribute("MyAcceptPass",MyAcceptPass);
+            }
+
+
+            model.addAttribute ("wodList", wodList);
+            model.addAttribute ("saveTraining", saveTraining);
+            model.addAttribute ("user", user);
+            model.addAttribute ("points", points);
+            model.addAttribute ("topSevenComment", commentService.getTop7Comments (topComment));
+            model.addAttribute ("ongoingChallenges", ongoingChallenges);
+            model.addAttribute ("successfulChallenges", successfulChallenges);
+            model.addAttribute ("failedChallenges", failedChallenges);
+            model.addAttribute ("challengeCount", challengeCount);
+
+            return "user/userProfile_form";
+        } catch (Exception e) {
+            model.addAttribute ("errorMessage", "프로필 정보를 불러오는 중 오류가 발생했습니다.");
+            return "error";
         }
-
-        Map<String, List<Challenge>> challengesByStatus = challengeService.getChallengesByStatus(user.getId()); // 참여한 챌린지 목록 가져오기
-        List<Challenge> ongoingChallenges = challengesByStatus.get("ongoing");
-        List<Challenge> successfulChallenges = challengesByStatus.get("successful");
-        List<Challenge> failedChallenges = challengesByStatus.get("failed");
-        int challengeCount = ongoingChallenges.size() + successfulChallenges.size() + failedChallenges.size(); // 총 챌린지 개수
-
-        model.addAttribute("wodList",wodList);
-        model.addAttribute("saveTraining",saveTraining);
-        model.addAttribute("user",user);
-        model.addAttribute("points", points);
-        model.addAttribute("topSevenComment", commentService.getTop7Comments(topComment));
-        model.addAttribute("ongoingChallenges", ongoingChallenges);
-        model.addAttribute("successfulChallenges", successfulChallenges);
-        model.addAttribute("failedChallenges", failedChallenges);
-        model.addAttribute("challengeCount", challengeCount);
-        return "user/userProfile_form" ;
     }
 }
  
