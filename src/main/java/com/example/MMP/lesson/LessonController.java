@@ -36,9 +36,6 @@ public class LessonController {
         LocalDateTime startDateTime = LocalDateTime.of(lessonForm.getLessonDate(), lessonForm.getStartTime());
         LocalDateTime endDateTime = LocalDateTime.of(lessonForm.getLessonDate(), lessonForm.getEndTime());
 
-        System.out.println("Start DateTime: " + startDateTime);
-        System.out.println("End DateTime: " + endDateTime);
-
         if(bindingResult.hasErrors()){
             return "lesson/lesson_create";
         }
