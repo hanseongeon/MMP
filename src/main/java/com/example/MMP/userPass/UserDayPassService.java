@@ -19,8 +19,12 @@ public class UserDayPassService {
         userDayPass.setPassTitle(title);
         userDayPass.setPassPrice(price);
         userDayPass.setPassStart(LocalDate.now());
+<<<<<<< HEAD
         LocalDate finish = LocalDate.now().plusDays(passDays);
         userDayPass.setPassFinish(finish);
+=======
+        userDayPass.setPassFinish(userDayPass.getPassStart().plusDays(passDays));
+>>>>>>> cfdb9f1da87c3a6cba30786e05527f7b5c89d709
         userDayPass.setSiteUser(siteUser);
         return userDayPassRepository.save(userDayPass);
     }

@@ -63,6 +63,7 @@
                         cardTitle.innerText = data.passName; // 받아온 데이터 사용
 
 
+
                         const cardCount = document.createElement('p');
                         cardCount.innerText = `횟수 : ${data.passCount}`; // 받아온 데이터 사용
 
@@ -72,8 +73,10 @@
                         const cardFinish = document.createElement('p');
                         cardFinish.innerText = `이용종료일 : ${data.passFinish}`; // 받아온 데이터 사용
 
+
                         const cardActions = document.createElement('div');
                         cardActions.className = 'card-actions justify-end';
+
 
 
                         cardBody.appendChild(cardTitle);
@@ -106,6 +109,7 @@
                 const cardTitle = document.createElement('h2');
                 cardTitle.className = 'card-title';
                 cardTitle.innerText = data.passName; // 받아온 데이터 사용
+
 
                 const cardStart = document.createElement('p');
                 cardStart.innerText = `이용시작일 : ${data.passStart}`; // 받아온 데이터 사용
