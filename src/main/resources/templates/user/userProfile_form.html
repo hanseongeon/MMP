@@ -141,9 +141,9 @@
                     </li>
                     <div class="border-l border-gray-300 h-6"></div> <!-- Vertical line -->
                     <li class="flex border-y py-2">
-                        <span class="font-bold w-auto text-black inline-block">Points : </span>
+                        <span class="font-bold w-auto text-black inline-block">challenges : </span>
                         <span class="text-gray-700" sec:authorize="isAuthenticated()"
-                              th:text="${#authentication.principal.username}"></span>
+                              th:text="${challengeCount}"></span>
                     </li>
                 </div>
                 <form id="image_form" th:action="@{|/user/imageform|}" method="post" enctype="multipart/form-data">
@@ -213,8 +213,43 @@
 
         <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 h-[450px]">
             <div class="w-full flex flex-col 2xl:w-1/3">
-                <div class="flex-1 bg-white rounded-lg shadow-xl p-8"></div>
+                <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
+                    <h4 class="text-xl text-gray-900 font-bold">내가 참여한 챌린지 목록</h4>
+                    <div class="relative px-4">
+                        <br>
+                        <h1 class="text-black font-bold inline bg-yellow-300 px-2">진행 중인 챌린지</h1>
+                        <br>
+                        <div class="relative px-4" style="max-height: 100px; overflow-y: auto;">
+                            <div th:each="challenge : ${ongoingChallenges}"
+                                 class="flex items-center w-full my-6 -ml-1.5">
+                                <div class="w-11/12">
+                                    <a th:href="@{|/challenge/detail/${challenge.id}|}"
+                                       class="text-sm text-black font-bold hover:underline"
+                                       th:text="${challenge.name}"></a>
+                                    <p class="text-sm text-gray-700" th:text="${challenge.description}"></p>
+                                    <p class="text-xs text-gray-500"
+                                       th:text="${#temporals.format(challenge.openDate, 'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(challenge.closeDate, 'yyyy-MM-dd HH:mm')}"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <h1 class="text-black font-bold inline bg-yellow-300 px-2">성공한 챌린지</h1>
+                        <div class="relative px-4" style="max-height: 600px; overflow: auto;">
+                            <div class="flex space-x-4">
+                                <div th:each="challenge : ${successfulChallenges}" class="flex-shrink-0 my-6 -ml-1.5">
+                                    <a th:href="@{|/challenge/detail/${challenge.id}|}" class="relative block w-24 h-24">
+                                          <span class="absolute inset-0 flex flex-col items-center justify-center border-4 border-red-500 text-red-500 rounded-full" style="box-shadow: 1px 1px 0 #000, -1px -1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000;">
+                                                    <span id="challengeNameSpan-${challenge.id}" th:data-name="${challenge.name}" class="text-sm font-bold text-center challenge-name-span" style="font-weight: 900; text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000;"></span>
+                                         </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+
             <div class="flex flex-col w-full 2xl:w-2/3">
                 <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
                     <h4 class="text-xl text-gray-900 font-bold">Save log</h4>
@@ -264,6 +299,30 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // 성공한 챌린지 이름을 잘라서 표시하는 함수 호출
+            splitChallengeNames();
+        });
+
+        function splitChallengeNames() {
+            const challengeNameSpans = document.querySelectorAll('.challenge-name-span');
+            challengeNameSpans.forEach(span => {
+                const challengeName = span.dataset.name;
+                const lines = splitText(challengeName, 6);
+                span.innerHTML = lines.join('<br>');
+            });
+        }
+
+        function splitText(text, chunkSize) {
+            const chunks = [];
+            for (let i = 0; i < text.length; i += chunkSize) {
+                chunks.push(text.substring(i, i + chunkSize));
+            }
+            return chunks;
+        }
+    </script>
 
     <script>
         const profile_img = document.getElementById('profile_img');
