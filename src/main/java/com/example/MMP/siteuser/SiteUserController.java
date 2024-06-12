@@ -4,6 +4,9 @@ package com.example.MMP.siteuser;
 //import com.example.MMP.mail.MailService;
 import com.example.MMP.Comment.Comment;
 import com.example.MMP.Comment.CommentService;
+import com.example.MMP.challenge.challenge.Challenge;
+import com.example.MMP.challenge.challenge.ChallengeService;
+import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.daypass.DayPass;
 import com.example.MMP.daypass.DayPassService;
 import com.example.MMP.homeTraining.HomeTraining;
@@ -44,9 +47,9 @@ public class SiteUserController {
     private final MailService mailService;
     private final WodService wodService;
     private final HomeTrainingService homeTrainingService;
-    private final UserPtPassService userPtPassService;
-    private final UserDayPassService userDayPassService;
     private final CommentService commentService;
+    private final ChallengeService challengeService;
+
     @GetMapping("/resetPassword")
     public String resetPasswordForm(Model model) {
         model.addAttribute("passwordResetRequestDto", new PasswordResetRequestDto());
@@ -165,26 +168,40 @@ public class SiteUserController {
     @GetMapping("/profile")
     public String getUserProfile(Model model, Principal principal) {
 
-        SiteUser user = this.siteUserService.getUser(principal.getName());
-        List<Wod> wodList = wodService.findByUserWod(user);
-        List<HomeTraining> saveTraining = homeTrainingService.getSaveTraining(user);
-        int points = user.getPoint().getPoints(); // 포인트 가져오기
+        try {
+            SiteUser user = this.siteUserService.getUser (principal.getName ());
+            List<Wod> wodList = wodService.findByUserWod (user);
+            List<HomeTraining> saveTraining = homeTrainingService.getSaveTraining (user);
+            int points = user.getPoint ().getPoints ();
 
-        List<Comment> commentList;
-        List<Comment> topComment = new ArrayList<>();
-        for (Wod wod : wodList){
-            commentList = commentService.getCommentsByWodOrderByCreateDateDesc(wod);
-            for (Comment comment : commentList){
-                topComment.add(comment);
+            List<Comment> commentList;
+            List<Comment> topComment = new ArrayList<> ();
+            for (Wod wod : wodList) {
+                commentList = commentService.getCommentsByWodOrderByCreateDateDesc (wod);
+                topComment.addAll (commentList);
             }
-        }
 
-        model.addAttribute("wodList",wodList);
-        model.addAttribute("saveTraining",saveTraining);
-        model.addAttribute("user",user);
-        model.addAttribute("points", points); // 모델에 포인트 추가
-        model.addAttribute("topSevenComment", commentService.getTop7Comments(topComment));
-        return "user/userProfile_form" ;
+            Map<String, List<Challenge>> challengesByStatus = challengeService.getChallengesByStatus (user.getId ());
+            List<Challenge> ongoingChallenges = challengesByStatus.get ("ongoing");
+            List<Challenge> successfulChallenges = challengesByStatus.get ("successful");
+            List<Challenge> failedChallenges = challengesByStatus.get ("failed");
+            int challengeCount = ongoingChallenges.size () + successfulChallenges.size () + failedChallenges.size ();
+
+            model.addAttribute ("wodList", wodList);
+            model.addAttribute ("saveTraining", saveTraining);
+            model.addAttribute ("user", user);
+            model.addAttribute ("points", points);
+            model.addAttribute ("topSevenComment", commentService.getTop7Comments (topComment));
+            model.addAttribute ("ongoingChallenges", ongoingChallenges);
+            model.addAttribute ("successfulChallenges", successfulChallenges);
+            model.addAttribute ("failedChallenges", failedChallenges);
+            model.addAttribute ("challengeCount", challengeCount);
+
+            return "user/userProfile_form";
+        } catch (Exception e) {
+            model.addAttribute ("errorMessage", "프로필 정보를 불러오는 중 오류가 발생했습니다.");
+            return "error";
+        }
     }
 }
  
