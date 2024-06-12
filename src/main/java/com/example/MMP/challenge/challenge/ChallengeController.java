@@ -117,16 +117,6 @@ public class ChallengeController {
             return "redirect:/user/login";
         }
 
-<<<<<<< HEAD
-        challengeService.participateInChallenge(challengeId, principal);
-
-        // 참여 후 달성률 업데이트
-        SiteUser siteUser = siteUserRepository.findByUserId(principal.getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        ChallengeUser challengeUser = challengeUserRepository.findByChallengeAndSiteUser(challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("챌린지를 찾을 수 없습니다.")), siteUser).orElseThrow(() -> new RuntimeException("챌린지 유저를 찾을 수 없습니다."));
-        challengeService.updateAchievementRate(challengeUser.getId());
-
-
-=======
         Optional<Challenge> challengeOptional = challengeRepository.findById(challengeId);
         if (challengeOptional.isPresent()) {
             Challenge challenge = challengeOptional.get();
@@ -136,7 +126,6 @@ public class ChallengeController {
                 challengeService.participateInChallenge(challengeId, principal);
             }
         }
->>>>>>> 27f5bed0dd3a5d1574401a900eb14864e4c40e11
         return "redirect:/challenge/challenges";
     }
 
