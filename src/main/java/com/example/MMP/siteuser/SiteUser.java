@@ -4,6 +4,7 @@ import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.point.Point;
+import com.example.MMP.transPass.TransPass;
 import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserPtPass;
 import com.example.MMP.wod.Wod;
@@ -44,9 +45,11 @@ public class SiteUser {
     private String userRole;
 
     @OneToMany(mappedBy = "siteUser",cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     List<UserPtPass> userPtPassList = new ArrayList<>();
 
     @OneToMany(mappedBy = "siteUser",cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     List<UserDayPass> userDayPassList = new ArrayList<>();
 
     @OneToMany(mappedBy = "siteUser")
@@ -54,6 +57,7 @@ public class SiteUser {
     private List<Attendance> attendanceList = new ArrayList<>();
 
     @OneToMany
+    @JsonManagedReference
     private List<Challenge> challenges = new ArrayList<> ();
 
     @ManyToMany
@@ -62,12 +66,18 @@ public class SiteUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "training_id")
     )
+    @JsonManagedReference
     private List<HomeTraining> saveTraining = new ArrayList<>();
 
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Wod> wodList;
 
 
     @OneToOne(mappedBy = "siteUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @JsonManagedReference
     private Point point;
+
+    @ManyToMany
+    List<TransPass> transPassList = new ArrayList<>();
 }
