@@ -69,6 +69,12 @@ public class SiteUserController {
         return "user/adminSignup";
     }
 
+    @GetMapping("/commandcenter")
+    public String commandcenter() {
+
+        return "/commandcenter";
+    }
+
     @PostMapping("/adminSignup")
     public String AdminSignup(@Valid AdminDto adminDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
