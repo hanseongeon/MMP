@@ -26,11 +26,15 @@ public class QAttendance extends EntityPathBase<Attendance> {
 
     public final DatePath<java.time.LocalDate> date = createDate("date", java.time.LocalDate.class);
 
+    public final DateTimePath<java.time.LocalDateTime> endTime = createDateTime("endTime", java.time.LocalDateTime.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final BooleanPath present = createBoolean("present");
 
     public final com.example.MMP.siteuser.QSiteUser siteUser;
+
+    public final DateTimePath<java.time.LocalDateTime> startTime = createDateTime("startTime", java.time.LocalDateTime.class);
 
     public QAttendance(String variable) {
         this(Attendance.class, forVariable(variable), INITS);
