@@ -6,11 +6,15 @@ import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -45,5 +49,30 @@ public class LessonController {
 
         return "redirect:/schedule";
     }
+
+//    @PostMapping("/{lessonId}/attend")
+//    public ResponseEntity<String> attendLesson(@PathVariable Long lessonId, Authentication authentication) {
+//        // Lesson ID를 이용해 해당 Lesson 객체를 가져옴
+//        Lesson lesson = lessonService.getLessonById(lessonId);
+//
+//        if (lesson == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lesson not found");
+//        }
+//
+//        // 현재 인증된 사용자 정보 가져오기 (Principal 정보)
+//        String username = authentication.getName();
+//        SiteUser currentUser = siteUserService.findByUserId(username);
+//
+//        if (currentUser == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+//        }
+//
+//        // Lesson에 현재 사용자를 추가
+//        lesson.addAttendee(currentUser);
+//        lessonService.saveLesson(lesson); // 변경 사항 저장
+//
+//        // 변경된 Lesson 정보를 클라이언트에 반환
+//        return ResponseEntity.ok("Successfully attended lesson");
+//    }
 
 }

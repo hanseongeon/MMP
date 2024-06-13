@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
+
 <head>
     <!-- Import map 설정 -->
     <script type='importmap'>
@@ -26,41 +27,7 @@
     <div id='calendar' class="mt-5 h-[500px] w-[550px] overflow-y-auto"></div>
     <div class="flex flex-col justify-center w-[80%] p-2">
         <div class="divider"></div>
-        <div class="flex justify-center items-center h-[50px] bg-base-100">
-            <a href="#" class="recommend w-[10%] h-[100%] btn btn-sm btn-outline-secondary" onclick="toggleIcon(event)">
-                <!-- <i class="fa-regular fa-heart" id="heartIcon"></i> -->
-                <span id="likeCountSpan">헬스트레이너 이름</span>
-            </a>
-            <div class="h-full bg-white rounded-lg border border-gray-300 w-[80%] flex text-black justify-center font-bold items-center">
-                <div>
-                    필라테스
-                </div>
-                <div>
-                    start : 
-                </div>
-                <div>
-                    end :
-                </div>
-            </div>
-            <div class="h-full bg-white text-black rounded-lg border border-gray-300 w-[10%]">
-                <div class="btn w-full h-full">6/6
-                </div>
-            </div>
-        </div>
-        <!-- <div class="grid h-20 card bg-base-300 rounded-box place-items-center text-black flex">
-            <div>
-                <span>헬스트레이너 이름</span>
-            </div>
-            <div>
-                <span>필라테스</span>
-                <span>start time : end time : </span>
-            </div>
-            <div>
-                <input type="button" class="btn" value="버튼">
-            </div>
-        </div> -->
-        <div id="lessonListContainer">
-        </div>
+        <div id="lessonListContainer"></div>
     </div>
     <script type='module'>
         import { Calendar } from '@fullcalendar/core';
@@ -143,15 +110,79 @@
                             const lessonListContainer = document.getElementById('lessonListContainer');
                             lessonListContainer.innerHTML = ''; // 기존 내용 초기화
 
+                            // lessonList 반복 처리
                             lessonList.forEach(function (lesson) {
                                 // 각 lesson에 대한 요소 생성
                                 const lessonDiv = document.createElement('div');
-                                const lessonNameParagraph = document.createElement('p');
-                                lessonNameParagraph.textContent = lesson.lessonName; // lessonName 출력
+                                lessonDiv.classList.add('flex', 'justify-center', 'items-center', 'h-[50px]', 'bg-base-100', 'mb-4', 'rounded-lg');
 
-                                lessonDiv.appendChild(lessonNameParagraph); // p 요소를 div에 추가
+                                // 트레이너 이름
+                                const trainerDiv = document.createElement('div');
+                                trainerDiv.classList.add('h-full', 'bg-white', 'text-black', 'rounded-lg', 'border', 'border-gray-300', 'w-[10%]', 'flex', 'justify-center', 'items-center', 'font-bold');
+                                const trainerName = document.createElement('div');
+                                trainerName.textContent = `${lesson.trainer.name}`;
+                                trainerDiv.appendChild(trainerName);
 
-                                lessonListContainer.appendChild(lessonDiv); // lessonDiv를 lessonListContainer에 추가
+                                lessonDiv.appendChild(trainerDiv);
+
+                                // 레슨 정보 표시 부분
+                                const lessonInfoDiv = document.createElement('div');
+                                lessonInfoDiv.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[80%]', 'flex', 'text-black', 'justify-center', 'font-bold', 'items-center', 'mx-2');
+
+                                const lessonNameDiv = document.createElement('div');
+                                lessonNameDiv.textContent = lesson.lessonName;
+                                lessonInfoDiv.appendChild(lessonNameDiv);
+
+                                const startTimeDiv = document.createElement('div');
+                                startTimeDiv.textContent = `start : ${lesson.startTime}`;
+                                lessonInfoDiv.appendChild(startTimeDiv);
+
+                                const endTimeDiv = document.createElement('div');
+                                endTimeDiv.textContent = `end : ${lesson.endTime}`;
+                                lessonInfoDiv.appendChild(endTimeDiv);
+
+                                lessonDiv.appendChild(lessonInfoDiv);
+
+                                // 인원 정보 표시 부분
+                                const attendanceDiv = document.createElement('div');
+                                attendanceDiv.classList.add('h-full', 'bg-white', 'text-black', 'rounded-lg', 'border', 'border-gray-300', 'w-[10%]', 'flex', 'justify-center', 'items-center');
+                                const attendanceButton = document.createElement('button');
+                                attendanceButton.classList.add('btn', 'w-full', 'h-full');
+                                attendanceButton.textContent = `${lesson.attendanceList.length}/${lesson.headCount}`;
+
+                                // 버튼 클릭 시 동작
+                                attendanceButton.addEventListener('click', function () {
+                                    const xhr = new XMLHttpRequest();
+                                    xhr.open("POST", `/lesson/${lesson.id}/attend`, true);
+                                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+                                    // // CSRF 토큰 추가 (필요 시)
+                                    // const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+                                    
+
+                                    // CSRF 토큰 설정
+                                    const csrfTokenElement = document.getElementById('csrfToken');
+                                    const csrfToken = csrfTokenElement ? csrfTokenElement.value : '';
+                                    const csrfHeader = 'X-CSRF-TOKEN'; // Spring Security의 기본 CSRF 헤더 이름
+                                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+
+                                    xhr.onload = function () {
+                                        if (xhr.status >= 200 && xhr.status < 300) {
+                                            const responseData = JSON.parse(xhr.responseText);
+                                            console.log('Response from server:', responseData);
+                                            // 여기서 attendanceList의 사이즈를 체크하고 동작을 수행할 수 있음
+                                        } else {
+                                            console.error('Failed to attend lesson:', xhr.statusText);
+                                        }
+                                    };
+
+                                    xhr.send();
+                                });
+
+                                attendanceDiv.appendChild(attendanceButton);
+                                lessonDiv.appendChild(attendanceDiv);
+
+                                lessonListContainer.appendChild(lessonDiv);
                             });
                         } else {
                             console.error('Invalid response format: lessons not found');
@@ -168,7 +199,7 @@
             xhr.onerror = function () {
                 console.error('Network error occurred.');
             };
-            
+
             // 요청 보내기
             const requestData = JSON.stringify({ date: date });
             xhr.send(requestData);

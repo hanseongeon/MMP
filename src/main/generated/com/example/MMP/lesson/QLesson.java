@@ -22,6 +22,8 @@ public class QLesson extends EntityPathBase<Lesson> {
 
     public static final QLesson lesson = new QLesson("lesson");
 
+    public final ListPath<com.example.MMP.siteuser.SiteUser, com.example.MMP.siteuser.QSiteUser> attendanceList = this.<com.example.MMP.siteuser.SiteUser, com.example.MMP.siteuser.QSiteUser>createList("attendanceList", com.example.MMP.siteuser.SiteUser.class, com.example.MMP.siteuser.QSiteUser.class, PathInits.DIRECT2);
+
     public final TimePath<java.time.LocalTime> endTime = createTime("endTime", java.time.LocalTime.class);
 
     public final NumberPath<Integer> headCount = createNumber("headCount", Integer.class);

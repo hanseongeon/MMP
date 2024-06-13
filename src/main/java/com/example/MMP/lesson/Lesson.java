@@ -38,10 +38,6 @@ public class Lesson {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime endTime;
 
-//    private LocalDateTime startDateTime;
-//
-//    private LocalDateTime endDateTime;
-
-//    @ManyToMany
-//    private List<SiteUser> participants;
+    @ManyToMany(mappedBy = "lessonsAttending")
+    private List<SiteUser> attendanceList;
 }

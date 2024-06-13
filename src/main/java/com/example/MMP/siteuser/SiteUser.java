@@ -72,6 +72,7 @@ public class SiteUser {
 
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
     @JsonManagedReference
+    @JsonIgnore
     private List<Wod> wodList;
 
 
@@ -87,4 +88,13 @@ public class SiteUser {
     @OneToMany(mappedBy = "trainer")
     @JsonBackReference
     private List<Lesson> lessonList;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_lesson",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "lesson_id")
+    )
+    @JsonIgnore
+    private List<Lesson> lessonsAttending;
 }
