@@ -68,8 +68,19 @@ public class AttendanceService {
         return true;
     }
 
+    public LocalDateTime getStartTime(Long userId){
+        return attendanceRepository.findStartTimeByUserId (userId);
+    }
+    public LocalDateTime getEndTime(Long userId){
+        return attendanceRepository.findEndTimeByUserId (userId);
+    }
+
     public List<Attendance> getUserAttendance(Long siteUserId) {
         return attendanceRepository.findBySiteUserId (siteUserId);
+    }
+
+    public Long countDistinctAttendanceDates(Long userId) {
+        return attendanceRepository.countDistinctBySiteUserId(userId);
     }
 
     public double calculateAttendanceRate(Long siteUserId, LocalDate startDate, LocalDate endDate) {
@@ -79,30 +90,46 @@ public class AttendanceService {
     }
 
     public String handleEntry(String userId, String action) {
-        Optional<SiteUser> _siteUser = siteUserRepository.findByUserId (userId);
-        SiteUser siteUser = new SiteUser ();
-        if (_siteUser.isEmpty ()) {
-            siteUser = _siteUser.get ();
+        Optional<SiteUser> _siteUser = siteUserRepository.findByUserId(userId);
+        if (_siteUser.isEmpty()) {
+            return "User not found";
         }
+        SiteUser siteUser = _siteUser.get();
 
-        if ("enter".equals (action)) {
-            Attendance attendance = new Attendance ();
-            attendance.setSiteUser (siteUser);
-            attendance.setPresent (true);
-            attendance.setStartTime (LocalDateTime.now ());
-            attendanceRepository.save (attendance);
-            return "Entry recorded successfully";
-        } else if ("exit".equals (action)) {
-            Attendance attendance = attendanceRepository.findBySiteUserAndPresent (siteUser, true);
-            if (attendance == null) {
-                return "User not currently present";
+        if ("enter".equals(action)) {
+            Attendance attendance = new Attendance();
+            attendance.setSiteUser(siteUser);
+            attendance.setPresent(true);
+            attendance.setStartTime(LocalDateTime.now());
+            attendance.setDate(LocalDate.now());
+            attendanceRepository.save(attendance);
+            return "입장 완료 되었습니다.";
+        } else if ("exit".equals(action)) {
+            Optional<Attendance> optionalAttendance = attendanceRepository.findFirstBySiteUserAndPresent(siteUser, true);
+            if (optionalAttendance.isEmpty()) {
+                return "현재 입장 중이 아닙니다.";
+            } else {
+                Attendance attendance = optionalAttendance.get();
+                attendance.setPresent(false);
+                attendance.setEndTime(LocalDateTime.now());
+                attendanceRepository.save(attendance);
+                return "퇴실이 완료 되었습니다.";
             }
-            attendance.setPresent (false);
-            attendance.setEndTime (LocalDateTime.now ());
-            attendanceRepository.save (attendance);
-            return "Exit recorded successfully";
         } else {
-            return "Invalid action";
+            return "잘못된 동작입니다.";
         }
+    }
+    public boolean isUserPresent(Long siteUserId) {
+        Optional<Attendance> optionalAttendance = attendanceRepository.findFirstBySiteUserAndPresent(siteUserRepository.findById(siteUserId).orElse(null), true);
+        return optionalAttendance.isPresent();
+    }
+
+    public long calculateTotalExerciseTime(Long userId) {
+        List<Attendance> attendanceList = attendanceRepository.findBySiteUserId(userId);
+
+        return attendanceList.stream()
+                .filter(attendance -> attendance.getStartTime() != null && attendance.getEndTime() != null)
+                .mapToLong(attendance -> ChronoUnit.MINUTES.between(attendance.getStartTime(), attendance.getEndTime()))
+                .sum();
     }
 }

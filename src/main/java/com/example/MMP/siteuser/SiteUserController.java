@@ -2,41 +2,29 @@ package com.example.MMP.siteuser;
 
 
 //import com.example.MMP.mail.MailService;
+
 import com.example.MMP.Comment.Comment;
 import com.example.MMP.Comment.CommentService;
 import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.challenge.challenge.ChallengeService;
-import com.example.MMP.challenge.challengeUser.ChallengeUser;
-import com.example.MMP.daypass.DayPass;
-import com.example.MMP.daypass.DayPassService;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.homeTraining.HomeTrainingService;
 import com.example.MMP.mail.MailService;
-import com.example.MMP.ptpass.PtPass;
-import com.example.MMP.ptpass.PtPassService;
 import com.example.MMP.security.UserDetail;
 import com.example.MMP.transPass.TransPass;
 import com.example.MMP.transPass.TransPassService;
-import com.example.MMP.userPass.UserDayPass;
-import com.example.MMP.userPass.UserDayPassService;
-import com.example.MMP.userPass.UserPtPass;
-import com.example.MMP.userPass.UserPtPassService;
 import com.example.MMP.wod.Wod;
 import com.example.MMP.wod.WodService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.*;
@@ -81,6 +69,12 @@ public class SiteUserController {
         return "user/adminSignup";
     }
 
+    @GetMapping("/commandcenter")
+    public String commandcenter() {
+
+        return "/commandcenter";
+    }
+
     @PostMapping("/adminSignup")
     public String AdminSignup(@Valid AdminDto adminDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -117,8 +111,8 @@ public class SiteUserController {
         }
         try {
             SiteUser siteUser = siteUserService.userSignup(userDto.getName(), userDto.getNumber(), userDto.getGender(), userDto.getBirthDate(), userDto.getEmail(), userDto.getUserRole());
-            if(siteUser.getUserRole().equals("user"))
-                mailService.mailSend(siteUser.getEmail()," [MMP] 회원가입을 환영합니다!","MMP의 회원이 되어주셔서 감사합니다!! 아이디는 전화번호, 비밀번호는 생년월일입니다..! 당신의 건강한 득근을 기원합니다 :)");
+            if (siteUser.getUserRole().equals("user"))
+                mailService.mailSend(siteUser.getEmail(), " [MMP] 회원가입을 환영합니다!", "MMP의 회원이 되어주셔서 감사합니다!! 아이디는 전화번호, 비밀번호는 생년월일입니다..! 당신의 건강한 득근을 기원합니다 :)");
         } catch (DataIntegrityViolationException e) {
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
             return "user/userSignup";
@@ -170,57 +164,72 @@ public class SiteUserController {
     }
 
     @GetMapping("/profile")
-    public String getUserProfile(Model model, Principal principal, @RequestParam(value = "passFilter",defaultValue = "pt") String passFilter) {
+    public String getUserProfile(Model model, Principal principal, @RequestParam(value = "passFilter", defaultValue = "send") String passFilter) {
 
         try {
-            SiteUser user = this.siteUserService.getUser (principal.getName ());
-            List<Wod> wodList = wodService.findByUserWod (user);
-            List<HomeTraining> saveTraining = homeTrainingService.getSaveTraining (user);
-            int points = user.getPoint ().getPoints ();
+            SiteUser user = this.siteUserService.getUser(principal.getName());
+            List<Wod> wodList = wodService.findByUserWod(user);
+            List<HomeTraining> saveTraining = homeTrainingService.getSaveTraining(user);
+            int points = user.getPoint().getPoints();
 
             List<Comment> commentList;
-            List<Comment> topComment = new ArrayList<> ();
+            List<Comment> topComment = new ArrayList<>();
             for (Wod wod : wodList) {
-                commentList = commentService.getCommentsByWodOrderByCreateDateDesc (wod);
-                topComment.addAll (commentList);
+                commentList = commentService.getCommentsByWodOrderByCreateDateDesc(wod);
+                topComment.addAll(commentList);
             }
 
-            Map<String, List<Challenge>> challengesByStatus = challengeService.getChallengesByStatus (user.getId ());
-            List<Challenge> ongoingChallenges = challengesByStatus.get ("ongoing");
-            List<Challenge> successfulChallenges = challengesByStatus.get ("successful");
-            List<Challenge> failedChallenges = challengesByStatus.get ("failed");
-            int challengeCount = ongoingChallenges.size () + successfulChallenges.size () + failedChallenges.size ();
+            Map<String, List<Challenge>> challengesByStatus = challengeService.getChallengesByStatus(user.getId());
+            List<Challenge> ongoingChallenges = challengesByStatus.get("ongoing");
+            List<Challenge> successfulChallenges = challengesByStatus.get("successful");
+            List<Challenge> failedChallenges = challengesByStatus.get("failed");
+            int challengeCount = ongoingChallenges.size() + successfulChallenges.size() + failedChallenges.size();
 
-            if(passFilter.equals("pt")) {
+            if (passFilter.equals("send")) {
                 List<TransPass> MySendPass = transPassService.MySendPass(user);
-                if(MySendPass == null){
-                    model.addAttribute("MySendPass",null);
+                if (MySendPass.isEmpty()) {
+                    model.addAttribute("MySendPass", null);
                 }
-                model.addAttribute("MySendPass",MySendPass);
-            }else{
+                model.addAttribute("MySendPass", MySendPass);
+            } else if (passFilter.equals("accept")) {
                 List<TransPass> MyAcceptPass = transPassService.MyAcceptPass(user);
-                if(MyAcceptPass == null){
-                    model.addAttribute("MyAcceptPass",null);
+                if (MyAcceptPass.isEmpty()) {
+                    model.addAttribute("MyAcceptPass", null);
                 }
-                model.addAttribute("MyAcceptPass",MyAcceptPass);
+                model.addAttribute("MyAcceptPass", MyAcceptPass);
+            }else if(passFilter.equals("stand")){
+                List<TransPass> MyStandPass = transPassService.MyStandPass(user);
+                if(MyStandPass.isEmpty()){
+                    model.addAttribute("MyStandPass",null);
+                }
+                model.addAttribute("MyStandPass",MyStandPass);
             }
 
 
-            model.addAttribute ("wodList", wodList);
-            model.addAttribute ("saveTraining", saveTraining);
-            model.addAttribute ("user", user);
-            model.addAttribute ("points", points);
-            model.addAttribute ("topSevenComment", commentService.getTop7Comments (topComment));
-            model.addAttribute ("ongoingChallenges", ongoingChallenges);
-            model.addAttribute ("successfulChallenges", successfulChallenges);
-            model.addAttribute ("failedChallenges", failedChallenges);
-            model.addAttribute ("challengeCount", challengeCount);
+            model.addAttribute("wodList", wodList);
+            model.addAttribute("saveTraining", saveTraining);
+            model.addAttribute("user", user);
+            model.addAttribute("points", points);
+            model.addAttribute("topSevenComment", commentService.getTop7Comments(topComment));
+            model.addAttribute("ongoingChallenges", ongoingChallenges);
+            model.addAttribute("successfulChallenges", successfulChallenges);
+            model.addAttribute("failedChallenges", failedChallenges);
+            model.addAttribute("challengeCount", challengeCount);
 
             return "user/userProfile_form";
         } catch (Exception e) {
-            model.addAttribute ("errorMessage", "프로필 정보를 불러오는 중 오류가 발생했습니다.");
+            model.addAttribute("errorMessage", "프로필 정보를 불러오는 중 오류가 발생했습니다.");
             return "error";
         }
+    }
+
+    @GetMapping("/user/{loginId}")
+    public ResponseEntity<Optional<SiteUser>> getUser(@PathVariable String userId) {
+        Optional<SiteUser> siteUser = siteUserRepository.findByUserId(userId);
+        if (siteUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(siteUser);
     }
 }
  
