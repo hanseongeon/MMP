@@ -264,7 +264,7 @@
                         <button class="scroll-button2 " id="ptScrollRightButton2">&#8250;</button>
                         <div class="flex w-full card-container2 border-gray-300">
                             <!-- ptPassList 요소들 -->
-                            <div class="htCard card bg-base-100 shadow-2xl m-4 block h-[300px] w-[300px]"
+                            <div class="htCard card w-96 bg-base-100 shadow-xl m-4 block h-[300px] w-[300px]"
                                  th:each="homeTraining:${saveTraining}">
                                 <div th:replace="homeTraining/htCard :: htCard(${homeTraining})"></div>
                             </div>

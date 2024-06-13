@@ -13,17 +13,29 @@
     </script>
 
     <!-- FullCalendar CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.14/main.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.14/main.min.css" rel="stylesheet">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.14/main.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.14/main.min.css" rel="stylesheet"> -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.14/core/main.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.14/daygrid/main.min.css" rel="stylesheet">
 </head>
 <div layout:fragment="content" class="w-full my-3 flex justify-center items-center flex-col">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
         <a class="btn btn-error text-white justify-start" th:href="@{/lesson/create}">추가</a>
     </div>
     <!-- FullCalendar 캘린더를 표시할 div 요소 -->
-    <div id='calendar' class="mt-5 h-[500px] w-[550px]"></div>
+    <div id='calendar' class="mt-5 h-[500px] w-[550px] overflow-y-auto"></div>
+    <div class="flex flex-col justify-center w-[80%] p-2">
+        <div class="divider"></div>
+        <div class="grid h-20 card bg-base-300 rounded-box place-items-center text-black" id="lessonListContainer">
+            <!-- <div th:each="lesson : ${lessonList}"> -->
 
-
+            <!-- </div> -->
+            <!-- 여기에 lesson 객체의 데이터를 표시할 HTML 코드를 작성합니다 -->
+            <!-- <p th:text="${lesson.lessonName}"></p> -->
+            <!-- 예시로 lessonName 속성을 출력하는 경우 -->
+        </div>
+    </div>
     <script type='module'>
         import { Calendar } from '@fullcalendar/core';
         import dayGridPlugin from '@fullcalendar/daygrid';
@@ -45,6 +57,7 @@
                     info.el.addEventListener('click', function () {
                         // 클릭한 날짜 요소 가져오기
                         const clickedDateElement = info.el;
+                        const clickedDate = calendarInstance.getDate(); // 클릭한 셀의 날짜 가져오기
 
                         // 이전에 선택된 날짜의 배경색 초기화
                         if (selectedDateElement) {
@@ -56,6 +69,10 @@
 
                         // 선택한 날짜를 변수에 저장
                         selectedDateElement = clickedDateElement;
+
+                        // data-date 속성 값 가져오기
+                        const dataDate = clickedDateElement.getAttribute('data-date');
+                        sendDateToServer(dataDate);
                     });
                 }
             });
@@ -64,9 +81,83 @@
             calendarInstance.render();
         }
 
+        // 선택한 날짜 데이터를 서버로 전송하는 함수
+        function sendDateToServer(date) {
+            // CSRF 토큰 요소를 가져옵니다
+            const csrfTokenInput = document.querySelector('input[name="_csrf"]');
+            const csrfParameterName = csrfTokenInput.getAttribute('name');
+
+            // CSRF 토큰의 값
+            const csrfToken = csrfTokenInput.value;
+
+            // AJAX 요청 설정
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/lessonCalendar/selected-date", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+            // CSRF 토큰 추가
+            xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+
+            // 요청 완료 후 처리
+            xhr.onload = function () {
+                let lessonList = [];
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    // 성공적으로 요청이 처리됨
+                    console.log('Date successfully sent to server.');
+                    try {
+                        // 서버에서 받은 JSON 데이터 처리
+                        const responseData = JSON.parse(xhr.responseText);
+                        console.log('Response from server:', responseData);
+
+                        // responseData에 lessons라는 키가 있는 경우에만 lessonList에 할당
+                        if (responseData.hasOwnProperty('lessons')) {
+                            lessonList = responseData.lessons;
+
+                            // lessonListContainer 초기화
+                            const lessonListContainer = document.getElementById('lessonListContainer');
+                            lessonListContainer.innerHTML = ''; // 기존 내용 초기화
+
+                            lessonList.forEach(function (lesson) {
+                                console.log(lesson.value); // 각 lesson 객체를 콘솔에 출력하여 내용 확인
+
+                                // 각 lesson에 대한 요소 생성
+                                const lessonDiv = document.createElement('div');
+                                const lessonNameParagraph = document.createElement('p');
+                                lessonNameParagraph.textContent = lesson.id; // lessonName 출력
+
+                                lessonDiv.appendChild(lessonNameParagraph); // p 요소를 div에 추가
+
+                                lessonListContainer.appendChild(lessonDiv); // lessonDiv를 lessonListContainer에 추가
+                            });
+                        } else {
+                            console.error('Invalid response format: lessons not found');
+                        }
+                    } catch (error) {
+                        console.error('Error parsing JSON:', error);
+                    }
+                } else {
+                    // 요청이 실패한 경우
+                    console.error('Failed to send date to server.');
+                }
+            };
+            // 네트워크 오류 처리
+            xhr.onerror = function () {
+                console.error('Network error occurred.');
+            };
+            
+            // 요청 보내기
+            const requestData = JSON.stringify({ date: date });
+            xhr.send(requestData);
+        }
+
         // DOMContentLoaded 이벤트가 발생하면 initializeCalendar 함수를 호출
         document.addEventListener('DOMContentLoaded', function () {
             initializeCalendar();
+
+            // CSRF 토큰 설정
+            const csrfTokenElement = document.getElementById('csrfToken');
+            const csrfToken = csrfTokenElement ? csrfTokenElement.value : '';
+            const csrfHeader = 'X-CSRF-TOKEN'; // Spring Security의 기본 CSRF 헤더 이름
         });
     </script>
 
