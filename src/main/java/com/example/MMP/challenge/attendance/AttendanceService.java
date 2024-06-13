@@ -80,7 +80,7 @@ public class AttendanceService {
     public String handleEntry(String userId, String action) {
         Optional<SiteUser> _siteUser = siteUserRepository.findByUserId(userId);
         SiteUser siteUser = new SiteUser();
-        if (_siteUser.isEmpty()) {
+        if (!_siteUser.isEmpty()) {
             siteUser = _siteUser.get();
         }
 
@@ -88,16 +88,16 @@ public class AttendanceService {
             Attendance attendance = new Attendance();
             attendance.setSiteUser(siteUser);
             attendance.setPresent(true);
-            attendance.setStartDate(LocalDateTime.now());
+            attendance.setStartTime(LocalDateTime.now());
             attendanceRepository.save(attendance);
             return "Entry recorded successfully";
         } else if ("exit".equals(action)) {
-            Attendance attendance = attendanceRepository.findByUserAndPresent(siteUser, true);
+            Attendance attendance = attendanceRepository.findBySiteUserAndPresent(siteUser, true);
             if (attendance == null) {
                 return "User not currently present";
             }
             attendance.setPresent(false);
-            attendance.setEndDate(LocalDateTime.now());
+            attendance.setEndTime(LocalDateTime.now());
             attendanceRepository.save(attendance);
             return "Exit recorded successfully";
         } else {
