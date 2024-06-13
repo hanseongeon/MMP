@@ -10,6 +10,7 @@ import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserPtPass;
 import com.example.MMP.wod.Wod;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -76,6 +77,7 @@ public class SiteUser {
 
     @OneToOne(mappedBy = "siteUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     @JsonManagedReference
+    @JsonIgnore
     private Point point;
 
     @ManyToMany
