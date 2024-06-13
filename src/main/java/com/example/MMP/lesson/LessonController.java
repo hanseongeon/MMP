@@ -33,15 +33,15 @@ public class LessonController {
 
     @PostMapping("/create")
     private String create(@Valid LessonForm lessonForm, BindingResult bindingResult, Principal principal){
-        LocalDateTime startDateTime = LocalDateTime.of(lessonForm.getLessonDate(), lessonForm.getStartTime());
-        LocalDateTime endDateTime = LocalDateTime.of(lessonForm.getLessonDate(), lessonForm.getEndTime());
+//        LocalDateTime startDateTime = LocalDateTime.of(lessonForm.getLessonDate(), lessonForm.getStartTime());
+//        LocalDateTime endDateTime = LocalDateTime.of(lessonForm.getLessonDate(), lessonForm.getEndTime());
 
         if(bindingResult.hasErrors()){
             return "lesson/lesson_create";
         }
         SiteUser trainer = siteUserService.getUser(principal.getName());
 
-        lessonService.create(lessonForm.getLessonName(), lessonForm.getHeadCount(), startDateTime, endDateTime, trainer);
+        lessonService.create(lessonForm.getLessonName(), lessonForm.getHeadCount(), lessonForm.getLessonDate(), lessonForm.getStartTime(), lessonForm.getEndTime(), trainer);
 
         return "redirect:/schedule";
     }

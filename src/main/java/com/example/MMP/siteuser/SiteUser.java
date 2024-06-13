@@ -3,11 +3,13 @@ package com.example.MMP.siteuser;
 import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.homeTraining.HomeTraining;
+import com.example.MMP.lesson.Lesson;
 import com.example.MMP.point.Point;
 import com.example.MMP.transPass.TransPass;
 import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserPtPass;
 import com.example.MMP.wod.Wod;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -79,5 +81,10 @@ public class SiteUser {
     private Point point;
 
     @ManyToMany
+    @JsonManagedReference
     List<TransPass> transPassList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "trainer")
+    @JsonBackReference
+    private List<Lesson> lessonList;
 }
