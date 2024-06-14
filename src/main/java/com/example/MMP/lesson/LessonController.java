@@ -49,7 +49,6 @@ public class LessonController {
 
         return "redirect:/schedule";
     }
-
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable("id") Long id, Model model, Principal principal){
         Lesson lesson = lessonService.getLesson(id);
@@ -108,5 +107,4 @@ public class LessonController {
         lessonService.update(lesson, lessonForm.getLessonName(), lessonForm.getHeadCount(), lessonForm.getLessonDate(), lessonForm.getStartTime(), lessonForm.getEndTime());
         return "redirect:/lesson/detail/" + id;
     }
-
 }

@@ -130,7 +130,7 @@
                                 attendanceDiv.classList.add('h-full', 'bg-white', 'text-black', 'rounded-lg', 'border', 'border-gray-300', 'w-[10%]', 'flex', 'justify-center', 'items-center');
                                 const attendanceButton = document.createElement('button');
                                 attendanceButton.classList.add('btn', 'w-full', 'h-full');
-                                attendanceButton.textContent = `예약 상세보기`;
+                                attendanceButton.textContent = `${lesson.attendanceList.length}/${lesson.headCount}`;
 
                                 // 현재 로그인된 사용자가 attendanceList에 있는지 확인
                                 const isAttending = lesson.attendanceList.some(attendee => attendee.userId == currentUser);
