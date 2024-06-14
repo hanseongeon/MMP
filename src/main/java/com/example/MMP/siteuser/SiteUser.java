@@ -5,6 +5,7 @@ import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.lesson.Lesson;
 import com.example.MMP.point.Point;
+import com.example.MMP.ptGroup.PtGroup;
 import com.example.MMP.transPass.TransPass;
 import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserPtPass;
@@ -45,23 +46,29 @@ public class SiteUser {
 
     private String userRole;
 
-    @OneToMany(mappedBy = "siteUser",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "siteUser", cascade = CascadeType.REMOVE)
     @JsonManagedReference
-    List<UserPtPass> userPtPassList = new ArrayList<>();
+    private List<UserPtPass> userPtPassList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "siteUser",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "siteUser", cascade = CascadeType.REMOVE)
     @JsonManagedReference
-    List<UserDayPass> userDayPassList = new ArrayList<>();
+    private List<UserDayPass> userDayPassList = new ArrayList<>();
 
     @OneToMany(mappedBy = "siteUser")
     @JsonManagedReference
     private List<Attendance> attendanceList = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Challenge> challenges = new ArrayList<> ();
+    @JsonIgnore
+    private List<Wod> wodList;
 
-    @ManyToMany
+    @OneToOne(mappedBy = "siteUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @JsonManagedReference
+    @JsonIgnore
+    private Point point;
+
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "site_user_save_training",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -70,31 +77,23 @@ public class SiteUser {
     @JsonManagedReference
     private List<HomeTraining> saveTraining = new ArrayList<>();
 
-    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    @JsonIgnore
-    private List<Wod> wodList;
-
-
-    @OneToOne(mappedBy = "siteUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-    @JsonManagedReference
-    @JsonIgnore
-    private Point point;
-
-    @ManyToMany
-    @JsonManagedReference
-    List<TransPass> transPassList = new ArrayList<>();
-
     @OneToMany(mappedBy = "trainer")
     @JsonBackReference
     private List<Lesson> lessonList;
 
     @ManyToMany
-    @JoinTable(
-            name = "user_lesson",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "lesson_id")
-    )
-    @JsonIgnore
+    @JsonBackReference
     private List<Lesson> lessonsAttending;
+
+
+    @ManyToOne
+    private PtGroup ptGroupUser;
+
+    @OneToOne
+    private PtGroup ptGroupTrainer;
+
+    @ManyToMany
+    @JsonManagedReference
+    private List<TransPass> transPassList = new ArrayList<>();
+
 }
