@@ -3,6 +3,7 @@ package com.example.MMP.homeTraining;
 import com.example.MMP.homeTraining.category.Category;
 import com.example.MMP.siteuser.SiteUser;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 public class HomeTraining {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,11 +32,11 @@ public class HomeTraining {
 
     private LocalDateTime createDate;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "saveTraining")
+    @JsonManagedReference
     private List<SiteUser> saver;
 
     @ManyToOne
     @JsonBackReference
     private Category category;
-
 }
