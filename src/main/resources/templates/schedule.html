@@ -111,7 +111,7 @@
                                 lessonDiv.appendChild(trainerDiv);
 
                                 const lessonInfoDiv = document.createElement('div');
-                                lessonInfoDiv.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[80%]', 'flex', 'text-black', 'justify-center', 'font-bold', 'items-center', 'mx-2');
+                                lessonInfoDiv.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[75%]', 'flex', 'text-black', 'justify-center', 'font-bold', 'items-center', 'mx-2');
                                 const lessonNameDiv = document.createElement('div');
                                 lessonNameDiv.textContent = lesson.lessonName;
                                 lessonInfoDiv.appendChild(lessonNameDiv);
@@ -127,7 +127,7 @@
                                 lessonDiv.appendChild(lessonInfoDiv);
 
                                 const attendanceDiv = document.createElement('div');
-                                attendanceDiv.classList.add('h-full', 'bg-white', 'text-black', 'rounded-lg', 'border', 'border-gray-300', 'w-[10%]', 'flex', 'justify-center', 'items-center');
+                                attendanceDiv.classList.add('h-full', 'bg-white', 'text-black', 'rounded-lg', 'border', 'border-gray-300', 'w-[15%]', 'flex', 'justify-center', 'items-center');
                                 const attendanceButton = document.createElement('button');
                                 attendanceButton.classList.add('btn', 'w-full', 'h-full');
                                 attendanceButton.textContent = `${lesson.attendanceList.length}/${lesson.headCount}`;
@@ -136,10 +136,10 @@
                                 const isAttending = lesson.attendanceList.some(attendee => attendee.userId == currentUser);
                                 if (isAttending) {
                                     attendanceButton.classList.add('bg-green-500', 'text-white');
-                                    attendanceButton.innerHTML = `예약완료 <br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                                    attendanceButton.innerHTML = `예약완료<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
                                 } else {
                                     attendanceButton.classList.add('bg-red-500', 'text-white');
-                                    attendanceButton.innerHTML = `예약하기 <br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                                    attendanceButton.innerHTML = `예약하기<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
                                 }
 
                                 attendanceButton.addEventListener('click', function () {
