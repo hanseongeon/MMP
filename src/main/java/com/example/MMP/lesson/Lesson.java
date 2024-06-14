@@ -38,6 +38,6 @@ public class Lesson {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime endTime;
 
-    @ManyToMany(mappedBy = "lessonsAttending")
+    @ManyToMany(mappedBy = "lessonsAttending", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<SiteUser> attendanceList;
 }
