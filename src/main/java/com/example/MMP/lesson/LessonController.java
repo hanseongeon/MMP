@@ -4,12 +4,15 @@ import com.example.MMP.homeTraining.HomeTrainingForm;
 import com.example.MMP.homeTraining.category.Category;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
+import jakarta.persistence.EntityManager;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,7 +31,6 @@ import java.util.List;
 public class LessonController {
     private final LessonService lessonService;
     private final SiteUserService siteUserService;
-
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     private String create(LessonForm lessonForm){
@@ -37,8 +39,6 @@ public class LessonController {
 
     @PostMapping("/create")
     private String create(@Valid LessonForm lessonForm, BindingResult bindingResult, Principal principal){
-//        LocalDateTime startDateTime = LocalDateTime.of(lessonForm.getLessonDate(), lessonForm.getStartTime());
-//        LocalDateTime endDateTime = LocalDateTime.of(lessonForm.getLessonDate(), lessonForm.getEndTime());
 
         if(bindingResult.hasErrors()){
             return "lesson/lesson_create";
@@ -49,30 +49,62 @@ public class LessonController {
 
         return "redirect:/schedule";
     }
+    @GetMapping("/detail/{id}")
+    public String detail(@PathVariable("id") Long id, Model model, Principal principal){
+        Lesson lesson = lessonService.getLesson(id);
+        String currentUsername = principal.getName();
 
-//    @PostMapping("/{lessonId}/attend")
-//    public ResponseEntity<String> attendLesson(@PathVariable Long lessonId, Authentication authentication) {
-//        // Lesson ID를 이용해 해당 Lesson 객체를 가져옴
-//        Lesson lesson = lessonService.getLessonById(lessonId);
-//
-//        if (lesson == null) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lesson not found");
-//        }
-//
-//        // 현재 인증된 사용자 정보 가져오기 (Principal 정보)
-//        String username = authentication.getName();
-//        SiteUser currentUser = siteUserService.findByUserId(username);
-//
-//        if (currentUser == null) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
-//        }
-//
-//        // Lesson에 현재 사용자를 추가
-//        lesson.addAttendee(currentUser);
-//        lessonService.saveLesson(lesson); // 변경 사항 저장
-//
-//        // 변경된 Lesson 정보를 클라이언트에 반환
-//        return ResponseEntity.ok("Successfully attended lesson");
-//    }
+        boolean isUserAttending = lesson.getAttendanceList().stream()
+                .anyMatch(attendant -> attendant.getUserId().equals(currentUsername));
 
+        model.addAttribute("lesson", lesson);
+        model.addAttribute("isUserAttending", isUserAttending);
+        return "lesson/lesson_detail";
+    }
+
+    @GetMapping("/reservation/{id}")
+    public String reservation(@PathVariable("id") Long id, Principal principal){
+        Lesson lesson = lessonService.getLesson(id);
+        SiteUser siteUser = siteUserService.getUser(principal.getName());
+
+        lessonService.reservation(lesson, siteUser);
+        return "redirect:/lesson/detail/" + id;
+    }
+
+    @GetMapping("/cancel/{id}")
+    public String cancel(@PathVariable("id") Long id, Principal principal){
+        Lesson lesson = lessonService.getLesson(id);
+        SiteUser siteUser = siteUserService.getUser(principal.getName());
+
+        lessonService.cancel(lesson, siteUser);
+        return "redirect:/lesson/detail/" + id;
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id){
+        Lesson lesson = lessonService.getLesson(id);
+        lessonService.delete(lesson);
+        return "redirect:/schedule";
+    }
+
+    @GetMapping("/update/{id}")
+    public String update(@PathVariable("id") Long id, LessonForm lessonForm){
+        Lesson lesson = lessonService.getLesson(id);
+        lessonForm.setLessonName(lesson.getLessonName());
+        lessonForm.setHeadCount(String.valueOf(lesson.getHeadCount()));
+        lessonForm.setLessonDate(lesson.getLessonDate());
+        lessonForm.setStartTime(lesson.getStartTime());
+        lessonForm.setEndTime(lesson.getEndTime());
+        return "lesson/lesson_create";
+    }
+
+    @PostMapping("/update/{id}")
+    public String update(@PathVariable("id") Long id, @Valid LessonForm lessonForm, BindingResult bindingResult){
+        Lesson lesson = lessonService.getLesson(id);
+        if(bindingResult.hasErrors()){
+            return "lesson/lesson_create";
+        }
+        lessonService.update(lesson, lessonForm.getLessonName(), lessonForm.getHeadCount(), lessonForm.getLessonDate(), lessonForm.getStartTime(), lessonForm.getEndTime());
+        return "redirect:/lesson/detail/" + id;
+    }
 }
