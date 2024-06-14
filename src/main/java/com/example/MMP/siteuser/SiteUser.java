@@ -73,7 +73,7 @@ public class SiteUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "training_id")
     )
-    @JsonManagedReference
+    @JsonBackReference
     private List<HomeTraining> saveTraining = new ArrayList<>();
 
     @OneToMany(mappedBy = "trainer")
@@ -81,6 +81,11 @@ public class SiteUser {
     private List<Lesson> lessonList;
 
     @ManyToMany
+    @JoinTable(
+            name = "user_lesson",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "lesson_id")
+    )
     @JsonBackReference
     private List<Lesson> lessonsAttending;
 
