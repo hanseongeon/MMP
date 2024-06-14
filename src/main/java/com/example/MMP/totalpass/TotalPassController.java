@@ -13,7 +13,9 @@ import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserDayPassService;
 import com.example.MMP.userPass.UserPtPass;
 import com.example.MMP.userPass.UserPtPassService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -115,6 +117,32 @@ public class TotalPassController {
             transPassService.delete(transPass);
             return "redirect:/user/profile";
         }
+    }
+
+    @GetMapping("/admin/stand")
+    public String adminStand (Model model,@RequestParam(value = "page", defaultValue = "0") int page,@RequestParam(value = "sort",defaultValue = "pt")String sort){
+        if(sort.equals("pt")) {
+            Page<TransPass> paging = transPassService.AllPtStandPass(page);
+            model.addAttribute("paging", paging);
+            return "pass/standpass";
+        }else{
+            Page<TransPass> paging = transPassService.AllDayStandPass(page);
+            model.addAttribute("paging",paging);
+            return "pass/standpass";
+        }
+    }
+
+    @GetMapping("/admin/agree/{id}")
+    public String adminAgree(@PathVariable("id")Long id){
+        TransPass transPass = transPassService.findById(id);
+        if(transPass.getUserPtPass() != null) {
+            transPass.getUserPtPass().setSiteUser(transPass.getAcceptUser());
+            userPtPassService.save(transPass.getUserPtPass());
+            return "pass/standpass";
+        }else{
+
+        }
+
     }
 
 }
