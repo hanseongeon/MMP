@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.rmi.StubNotFoundException;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -138,11 +139,23 @@ public class TotalPassController {
         if(transPass.getUserPtPass() != null) {
             transPass.getUserPtPass().setSiteUser(transPass.getAcceptUser());
             userPtPassService.save(transPass.getUserPtPass());
-            return "pass/standpass";
+            transPassService.delete(transPass);
+            return "redirect:/totalPass/admin/stand";
         }else{
-
+            transPass.getUserDayPass().setSiteUser(transPass.getAcceptUser());
+            userDayPassService.save(transPass.getUserDayPass());
+            transPassService.delete(transPass);
+            return "redirect:/totalPass/admin/stand";
         }
 
+    }
+
+    @GetMapping("/admin/reject/{id}")
+    public String adminReject(@PathVariable("id")Long id){
+        TransPass transPass = transPassService.findById(id);
+        transPassService.delete(transPass);
+
+        return "redirect:/totalPass/admin/stand";
     }
 
 }
