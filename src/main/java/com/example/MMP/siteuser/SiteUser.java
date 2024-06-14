@@ -5,6 +5,7 @@ import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.lesson.Lesson;
 import com.example.MMP.point.Point;
+import com.example.MMP.ptGroup.PtGroup;
 import com.example.MMP.transPass.TransPass;
 import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserPtPass;
@@ -97,4 +98,10 @@ public class SiteUser {
     )
     @JsonIgnore
     private List<Lesson> lessonsAttending;
+
+    @ManyToOne
+    private PtGroup ptGroupUser;
+
+    @OneToOne
+    private PtGroup ptGroupTrainer;
 }

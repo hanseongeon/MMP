@@ -46,6 +46,10 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final com.example.MMP.point.QPoint point;
 
+    public final com.example.MMP.ptGroup.QPtGroup ptGroupTrainer;
+
+    public final com.example.MMP.ptGroup.QPtGroup ptGroupUser;
+
     public final ListPath<com.example.MMP.homeTraining.HomeTraining, com.example.MMP.homeTraining.QHomeTraining> saveTraining = this.<com.example.MMP.homeTraining.HomeTraining, com.example.MMP.homeTraining.QHomeTraining>createList("saveTraining", com.example.MMP.homeTraining.HomeTraining.class, com.example.MMP.homeTraining.QHomeTraining.class, PathInits.DIRECT2);
 
     public final ListPath<com.example.MMP.transPass.TransPass, com.example.MMP.transPass.QTransPass> transPassList = this.<com.example.MMP.transPass.TransPass, com.example.MMP.transPass.QTransPass>createList("transPassList", com.example.MMP.transPass.TransPass.class, com.example.MMP.transPass.QTransPass.class, PathInits.DIRECT2);
@@ -79,6 +83,8 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
     public QSiteUser(Class<? extends SiteUser> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.point = inits.isInitialized("point") ? new com.example.MMP.point.QPoint(forProperty("point"), inits.get("point")) : null;
+        this.ptGroupTrainer = inits.isInitialized("ptGroupTrainer") ? new com.example.MMP.ptGroup.QPtGroup(forProperty("ptGroupTrainer"), inits.get("ptGroupTrainer")) : null;
+        this.ptGroupUser = inits.isInitialized("ptGroupUser") ? new com.example.MMP.ptGroup.QPtGroup(forProperty("ptGroupUser"), inits.get("ptGroupUser")) : null;
     }
 
 }
