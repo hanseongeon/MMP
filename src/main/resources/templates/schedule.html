@@ -92,6 +92,7 @@
                 if (xhr.status >= 200 && xhr.status < 300) {
                     try {
                         const responseData = JSON.parse(xhr.responseText);
+                        console.log(responseData);
                         if (responseData.hasOwnProperty('lessons')) {
                             lessonList = responseData.lessons;
                             const lessonListContainer = document.getElementById('lessonListContainer');
@@ -129,12 +130,10 @@
                                 attendanceDiv.classList.add('h-full', 'bg-white', 'text-black', 'rounded-lg', 'border', 'border-gray-300', 'w-[10%]', 'flex', 'justify-center', 'items-center');
                                 const attendanceButton = document.createElement('button');
                                 attendanceButton.classList.add('btn', 'w-full', 'h-full');
-                                attendanceButton.textContent = `${lesson.attendanceList.length}/${lesson.headCount}`;
+                                attendanceButton.textContent = `예약 상세보기`;
 
                                 // 현재 로그인된 사용자가 attendanceList에 있는지 확인
                                 const isAttending = lesson.attendanceList.some(attendee => attendee.userId == currentUser);
-                                console.log(lesson.attendanceList);
-
                                 if (isAttending) {
                                     attendanceButton.classList.add('bg-green-500', 'text-white');
                                     attendanceButton.innerHTML = `예약완료 <br> ${lesson.attendanceList.length}/${lesson.headCount}`;

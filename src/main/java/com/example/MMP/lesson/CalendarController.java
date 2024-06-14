@@ -31,16 +31,16 @@ public class CalendarController {
         // JSON 형식으로 반환할 Map 생성
         Map<String, Object> response = new HashMap<>();
         response.put("lessons", lessonList); // lessons라는 키에 lessonList를 할당
-//
-//        // JSON 응답을 출력
-//        try {
-//            ObjectMapper mapper = new ObjectMapper();
-//            mapper.registerModule(new JavaTimeModule());
-//            String jsonResponse = mapper.writeValueAsString(response);
-//            System.out.println("JSON Response: " + jsonResponse);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+
+        // JSON 응답을 출력
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            String jsonResponse = mapper.writeValueAsString(response);
+            System.out.println("JSON Response: " + jsonResponse);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return response;
     }
