@@ -1,0 +1,152 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="w-full my-3 flex justify-center text-black">
+    <div class="h-screen flex items-center justify-center bg-black">
+        <div class="w-[300px] max-w-md p-8 bg-white rounded-lg shadow-lg">
+            <div class="text-black">
+                <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
+                    <a href="javascript:void(0);" th:data-uri="@{|/lesson/delete/${lesson.id}|}"
+                        class="delete btn btn-error btn-xs my-2" th:text="삭제"></a>
+                    <a th:if="${#authentication.principal.username == lesson.trainer.userId}"
+                        th:href="@{|/lesson/update/${lesson.id}|}" class="btn btn-primary btn-xs my-2">수정</a>
+                </div>
+            </div>
+            <!-- 레슨명 -->
+            <div class="mb-3 w-full">
+                <label class="block text-gray-700">레슨명</label>
+                <p class="w-full max-w-xl text-black font-bold" th:text="${lesson.lessonName}"></p>
+            </div>
+
+            <!-- 트레이너 -->
+            <div class="mb-3 w-full">
+                <label class="block text-gray-700">강사</label>
+                <p class="w-full max-w-xl text-black font-bold" th:text="${lesson.trainer.name}">
+                </p>
+            </div>
+
+            <!-- 참여인원 -->
+            <div class="mb-3 w-full">
+                <label class="block text-gray-700">참여 인원</label>
+                <p class="w-full max-w-xl text-black font-bold" th:text="${lesson.headCount} + 명">
+                </p>
+            </div>
+
+            <!-- 레슨 날짜 -->
+            <div class="mb-3 w-full">
+                <label class="block text-gray-700">레슨 날짜</label>
+                <p class="w-full max-w-xl text-black font-bold" th:text="${lesson.lessonDate}"></p>
+            </div>
+
+            <!-- 레슨 시작 시간 -->
+            <div class="mb-3 w-full">
+                <label class="block text-gray-700">시작 시간</label>
+                <p class="w-full max-w-xl text-black font-bold" th:text="${lesson.startTime}"></p>
+            </div>
+
+            <!-- 레슨 끝 시간 -->
+            <div class="mb-3 w-full">
+                <label class="block text-gray-700">끝 시간</label>
+                <p class="w-full max-w-xl text-black font-bold" th:text="${lesson.endTime}"></p>
+            </div>
+
+            <!-- 예약 버튼 -->
+            <div th:if="${isUserAttending}" class="w-[100px]">
+<<<<<<< HEAD
+                <button class="btn btn-success" onclick="cancelReservation(${lesson.id})">
+                    <span th:text="'예약취소 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></span>
+                </button>
+            </div>
+            <div th:if="${!isUserAttending}" class="w-[100px]">
+                <button class="btn btn-error" onclick="reserveLesson(${lesson.id})">
+                    <span th:text="'예약하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></span>
+                </button>
+=======
+                <a href="javascript:void(0);" th:data-uri="@{|/lesson/cancel/${lesson.id}|}"
+                    class="btn btn-success cancel"
+                    th:text="'예약취소 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></a>
+            </div>
+            <div th:if="${!isUserAttending}" class="w-[100px]">
+                <a href="javascript:void(0);" th:data-uri="@{|/lesson/reservation/${lesson.id}|}"
+                    class="btn btn-error reservation"
+                    th:text="'예약하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></a>
+>>>>>>> 5ec4e4abdb17416a10a3db29272b66fbe7160819
+            </div>
+
+        </div>
+    </div>
+    <script>
+        const delete_elements = document.getElementsByClassName("delete");
+        Array.from(delete_elements).forEach(function (element) {
+            element.addEventListener('click', function () {
+                if (confirm("정말로 삭제하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                };
+            });
+        });
+
+        const reservation_elements = document.getElementsByClassName("reservation");
+        Array.from(reservation_elements).forEach(function (element) {
+            element.addEventListener('click', function () {
+                if (confirm("예약하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                };
+            });
+        });
+
+        const cancel_elements = document.getElementsByClassName("cancel");
+        Array.from(cancel_elements).forEach(function (element) {
+            element.addEventListener('click', function () {
+                if (confirm("예약을 취소하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                };
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        function cancelReservation(lessonId) {
+            const csrfToken = getCsrfToken(); // CSRF 토큰을 가져오는 함수 (이미 구현되어 있다고 가정)
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", `/lesson/cancel-reservation/${lessonId}`, true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    window.location.reload(); // 예약 취소가 성공했을 때 페이지 새로고침 또는 필요한 작업 수행
+                } else {
+                    console.error('Failed to cancel reservation.');
+                }
+            };
+            xhr.onerror = function () {
+                console.error('Network error occurred.');
+            };
+
+            xhr.send();
+        }
+
+        function reserveLesson(lessonId) {
+            const csrfToken = getCsrfToken(); // CSRF 토큰을 가져오는 함수 (이미 구현되어 있다고 가정)
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", `/lesson/reserve/${lessonId}`, true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    window.location.reload(); // 예약하기가 성공했을 때 페이지 새로고침 또는 필요한 작업 수행
+                } else {
+                    console.error('Failed to reserve lesson.');
+                }
+            };
+            xhr.onerror = function () {
+                console.error('Network error occurred.');
+            };
+
+            xhr.send();
+        }
+    </script>
+
+</div>
+
+</html>

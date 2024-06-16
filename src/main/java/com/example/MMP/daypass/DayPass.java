@@ -1,13 +1,8 @@
 package com.example.MMP.daypass;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -15,18 +10,15 @@ import java.time.LocalDateTime;
 public class DayPass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long dayPassId;
+    private Long passId;
 
-    private String dayPassName;
+    @Column(unique = true)
+    private String passName;
 
-    private String dayPassTitle;
+    private String passTitle;
 
-    private LocalDateTime dayPassStart;
+    private int passPrice;
 
-    private LocalDateTime dayPassFinish;
-
-    private int dayPassPrice;
-
-    private int dayPassDays;
+    private int passDays;
 
 }

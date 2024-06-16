@@ -1,13 +1,10 @@
 package com.example.MMP.ptpass;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Getter
@@ -17,16 +14,15 @@ public class PtPass {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long passId;
 
+    @Column(unique = true)
     private String passName;
 
     private String passTitle;
 
     private int passCount;
 
-    private LocalDateTime passStart;
-
-    private LocalDateTime passFinish;
-
     private int passPrice;
+
+    private int passDays;
 
 }

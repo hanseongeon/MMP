@@ -20,9 +20,9 @@ public class QChallenge extends EntityPathBase<Challenge> {
 
     public static final QChallenge challenge = new QChallenge("challenge");
 
-    public final ListPath<com.example.MMP.challenge.challengeActivity.challengeActivity, com.example.MMP.challenge.challengeActivity.QchallengeActivity> challengeActivities = this.<com.example.MMP.challenge.challengeActivity.challengeActivity, com.example.MMP.challenge.challengeActivity.QchallengeActivity>createList("challengeActivities", com.example.MMP.challenge.challengeActivity.challengeActivity.class, com.example.MMP.challenge.challengeActivity.QchallengeActivity.class, PathInits.DIRECT2);
+    public final ListPath<com.example.MMP.challenge.challengeActivity.ChallengeActivity, com.example.MMP.challenge.challengeActivity.QChallengeActivity> challengeActivities = this.<com.example.MMP.challenge.challengeActivity.ChallengeActivity, com.example.MMP.challenge.challengeActivity.QChallengeActivity>createList("challengeActivities", com.example.MMP.challenge.challengeActivity.ChallengeActivity.class, com.example.MMP.challenge.challengeActivity.QChallengeActivity.class, PathInits.DIRECT2);
 
-    public final ListPath<com.example.MMP.challenge.challengeUser.challengeUser, com.example.MMP.challenge.challengeUser.QchallengeUser> challengeUsers = this.<com.example.MMP.challenge.challengeUser.challengeUser, com.example.MMP.challenge.challengeUser.QchallengeUser>createList("challengeUsers", com.example.MMP.challenge.challengeUser.challengeUser.class, com.example.MMP.challenge.challengeUser.QchallengeUser.class, PathInits.DIRECT2);
+    public final ListPath<com.example.MMP.challenge.challengeUser.ChallengeUser, com.example.MMP.challenge.challengeUser.QChallengeUser> challengeUsers = this.<com.example.MMP.challenge.challengeUser.ChallengeUser, com.example.MMP.challenge.challengeUser.QChallengeUser>createList("challengeUsers", com.example.MMP.challenge.challengeUser.ChallengeUser.class, com.example.MMP.challenge.challengeUser.QChallengeUser.class, PathInits.DIRECT2);
 
     public final DateTimePath<java.time.LocalDateTime> closeDate = createDateTime("closeDate", java.time.LocalDateTime.class);
 
@@ -35,6 +35,10 @@ public class QChallenge extends EntityPathBase<Challenge> {
     public final DateTimePath<java.time.LocalDateTime> openDate = createDateTime("openDate", java.time.LocalDateTime.class);
 
     public final NumberPath<Integer> requiredPoint = createNumber("requiredPoint", Integer.class);
+
+    public final NumberPath<Integer> targetExerciseMinutes = createNumber("targetExerciseMinutes", Integer.class);
+
+    public final NumberPath<Double> targetWeightLoss = createNumber("targetWeightLoss", Double.class);
 
     public final StringPath type = createString("type");
 

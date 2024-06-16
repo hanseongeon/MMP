@@ -1,7 +1,7 @@
 package com.example.MMP.challenge.challenge;
 
-import com.example.MMP.challenge.challengeActivity.challengeActivity;
-import com.example.MMP.challenge.challengeUser.challengeUser;
+import com.example.MMP.challenge.challengeActivity.ChallengeActivity;
+import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,11 +30,15 @@ public class Challenge {
 
     private String type;
 
-    @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<challengeActivity> challengeActivities = new ArrayList<> ();
+    // 몸무게 챌린지
+    private Double targetWeightLoss;
+
+    // 운동시간 챌린지
+    private Integer targetExerciseMinutes;
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<challengeUser> challengeUsers = new ArrayList<> ();
+    private List<ChallengeActivity> challengeActivities = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChallengeUser> challengeUsers = new ArrayList<>();
 }

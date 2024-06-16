@@ -1,5 +1,6 @@
 package com.example.MMP.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,12 +14,15 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig{
+
+    private final UserDetailService userDetailService;
         @Bean
         SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http
                     .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                            .requestMatchers("/**").permitAll().anyRequest().authenticated())
+                            .requestMatchers("/user/**").permitAll().anyRequest().authenticated())
                     .formLogin((formLogin) -> formLogin
                             .loginPage("/user/login")
                             .defaultSuccessUrl("/"))
@@ -26,6 +30,11 @@ public class SecurityConfig{
                             .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                             .logoutSuccessUrl("/")
                             .invalidateHttpSession(true))
+                    .rememberMe((rememberMe) -> rememberMe
+                            .key("uniqueAndSecret")
+                            .tokenValiditySeconds(30 * 24 * 60 * 60) // 30 days
+                            .rememberMeParameter("remember-me")
+                            .userDetailsService(userDetailService))
                     .csrf(c -> c.ignoringRequestMatchers(
 
                             new AntPathRequestMatcher("/pt/**"),
@@ -36,7 +45,14 @@ public class SecurityConfig{
                             new AntPathRequestMatcher("/user/**"),
                             new AntPathRequestMatcher("/challenge/**"),
                             new AntPathRequestMatcher("/success"),
-                            new AntPathRequestMatcher("/**")
+                            new AntPathRequestMatcher ("/attendance/**"),
+                            new AntPathRequestMatcher("/checkout"),
+                            new AntPathRequestMatcher("/success"),
+                            new AntPathRequestMatcher("/fail"),
+                            new AntPathRequestMatcher("/confirm"),
+                            new AntPathRequestMatcher ("/weight/**"),
+                            new AntPathRequestMatcher ("/upload_image/**"),
+                            new AntPathRequestMatcher("/ptGroup/**")
                     ))
             ;
 

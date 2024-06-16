@@ -2,6 +2,7 @@ package com.example.MMP.Comment;
 
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.wod.Wod;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,10 +26,12 @@ public class Comment {
     private LocalDateTime modifyDate;
 
     @ManyToOne
+    @JsonBackReference
     private Wod wod;
-//
-//    @ManyToOne
-//    private SiteUser author;
+
+    @ManyToOne
+    @JsonBackReference
+    private SiteUser writer;
 //
 //    @ManyToMany
 //    Set<SiteUser> likeList;
