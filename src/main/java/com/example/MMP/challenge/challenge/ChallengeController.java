@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -80,21 +79,29 @@ public class ChallengeController {
 
     @GetMapping("/list")
     public String list(Model model, Principal principal) {
+        List<Long> participatedChallengeIds = new ArrayList<>();
+        Map<Long, Double> achievementRates = new HashMap<>();
+
+
         if (principal != null) {
             String userId = principal.getName();
             Optional<SiteUser> siteUserOptional = siteUserRepository.findByUserId(userId);
             if (siteUserOptional.isPresent()) {
                 SiteUser siteUser = siteUserOptional.get();
                 List<challengeUser> challengeUsers = challengeUserRepository.findBySiteUser(siteUser);
-                List<Long> participatedChallengeIds = challengeUsers.stream()
+                participatedChallengeIds = challengeUsers.stream()
                         .map(cu -> cu.getChallenge().getId())
                         .collect(Collectors.toList());
-                model.addAttribute("participatedChallengeIds", participatedChallengeIds);
+
+                achievementRates = challengeUsers.stream()
+                        .collect(Collectors.toMap(cu -> cu.getChallenge().getId(), challengeUser::getAchievementRate));
             }
         }
 
         List<Challenge> challenges = challengeRepository.findAll();
         model.addAttribute("challenges", challenges);
+        model.addAttribute("participatedChallengeIds", participatedChallengeIds);
+        model.addAttribute("achievementRates", achievementRates);
         return "/challenge/challengeList";
     }
 

@@ -1,0 +1,40 @@
+upload:
+  directory: C:/Users/admin/Desktop/MMP/MMP/src/main/resources/static/uploads/
+spring:
+  mail:
+    host: smtp.gmail.com
+    username: mmp240601
+    port: '587'
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: 'true'
+          auth: 'true'
+    password: wzrayybyznrywdhw
+  application:
+    name: MMP
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    password: ''
+    username: root
+    url: jdbc:mysql://localhost:3307/mmp?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: 'true'
+        show_sql: 'true'
+server:
+  port: '8088'
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: false
+  freemarker:
+    cache: false
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
