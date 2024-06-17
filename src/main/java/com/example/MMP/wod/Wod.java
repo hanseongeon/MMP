@@ -20,6 +20,8 @@ public class Wod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "writer_id")
     private SiteUser writer;
 
     private String imagePath;

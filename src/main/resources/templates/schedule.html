@@ -136,12 +136,24 @@
 
                                 // 현재 로그인된 사용자가 attendanceList에 있는지 확인
                                 const isAttending = lesson.attendanceList.some(attendee => attendee.userId == currentUser);
+                                const currentUserIndex = lesson.attendanceList.findIndex(attendee => attendee.userId == currentUser);
+                                console.log(currentUserIndex);
                                 if (isAttending) {
-                                    attendanceButton.classList.add('bg-green-500', 'text-white');
-                                    attendanceButton.innerHTML = `예약완료<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                                    if (currentUserIndex + 1 <= lesson.headCount) {
+                                        attendanceButton.classList.add('bg-green-500', 'text-white');
+                                        attendanceButton.innerHTML = `예약완료<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                                    } else {
+                                        attendanceButton.classList.add('bg-red-500', 'text-white');
+                                        attendanceButton.innerHTML = `대기완료<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                                    }
                                 } else {
-                                    attendanceButton.classList.add('bg-red-500', 'text-white');
-                                    attendanceButton.innerHTML = `예약하기<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                                    if (lesson.attendanceList.length < lesson.headCount) {
+                                        attendanceButton.classList.add('bg-blue-500', 'text-white');
+                                        attendanceButton.innerHTML = `예약하기<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                                    } else {
+                                        attendanceButton.classList.add('bg-red-500', 'text-white');
+                                        attendanceButton.innerHTML = `대기하기<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                                    }
                                 }
 
                                 attendanceButton.addEventListener('click', function () {
@@ -174,24 +186,6 @@
         document.addEventListener('DOMContentLoaded', function () {
             initializeCalendar();
         });
-
-        // attendanceButton.addEventListener('click', function () {
-        //     const xhr = new XMLHttpRequest();
-        //     xhr.open("POST", `/lesson/detail/${lesson.id}`, true);
-        //     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        //     xhr.onload = function () {
-        //         if (xhr.status >= 200 && xhr.status < 300) {
-        //             // 서버 응답에 따른 처리
-        //             window.location.reload(); // 예를 들어, 페이지 새로고침 등의 처리
-        //         } else {
-        //             console.error('Failed to send attendance request.');
-        //         }
-        //     };
-        //     xhr.onerror = function () {
-        //         console.error('Network error occurred.');
-        //     };
-        //     xhr.send();
-        // });
     </script>
 
 </div>
