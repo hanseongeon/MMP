@@ -19,6 +19,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,11 +60,6 @@ public class SiteUser {
     @OneToMany(mappedBy = "siteUser")
     @JsonManagedReference
     private List<Attendance> attendanceList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    @JsonIgnore
-    private List<Wod> wodList;
 
     @OneToOne(mappedBy = "siteUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     @JsonManagedReference
@@ -113,5 +109,7 @@ public class SiteUser {
 
     @OneToMany(mappedBy = "acceptUser")
     private List<Alarm> alarmList = new ArrayList<>();
+
+    private LocalDate createDate;
 
 }
