@@ -22,9 +22,13 @@ public class QChallengeGroup extends EntityPathBase<ChallengeGroup> {
 
     public static final QChallengeGroup challengeGroup = new QChallengeGroup("challengeGroup");
 
+    public final ListPath<com.example.MMP.challenge.attendance.Attendance, com.example.MMP.challenge.attendance.QAttendance> attendances = this.<com.example.MMP.challenge.attendance.Attendance, com.example.MMP.challenge.attendance.QAttendance>createList("attendances", com.example.MMP.challenge.attendance.Attendance.class, com.example.MMP.challenge.attendance.QAttendance.class, PathInits.DIRECT2);
+
     public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
 
     public final StringPath goal = createString("goal");
+
+    public final ListPath<com.example.MMP.challengeGroup.GroupTag.GroupTag, com.example.MMP.challengeGroup.GroupTag.QGroupTag> groupTagList = this.<com.example.MMP.challengeGroup.GroupTag.GroupTag, com.example.MMP.challengeGroup.GroupTag.QGroupTag>createList("groupTagList", com.example.MMP.challengeGroup.GroupTag.GroupTag.class, com.example.MMP.challengeGroup.GroupTag.QGroupTag.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
