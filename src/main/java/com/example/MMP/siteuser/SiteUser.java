@@ -1,7 +1,6 @@
 package com.example.MMP.siteuser;
 
 import com.example.MMP.challenge.attendance.Attendance;
-import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.lesson.Lesson;
@@ -105,4 +104,5 @@ public class SiteUser {
     @ManyToMany(cascade = CascadeType.REMOVE)
     private List<ChatRoom> chatRoomList = new ArrayList<>();
 
+    private String macAddress; // MAC 주소
 }
