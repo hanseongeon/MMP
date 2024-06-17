@@ -50,15 +50,23 @@
 
             <!-- 예약 버튼 -->
             <div th:if="${isUserAttending}" class="w-[100px]">
-                <a href="javascript:void(0);" th:data-uri="@{|/lesson/cancel/${lesson.id}|}"
-                    class="btn btn-success cancel"
-                    th:text="'예약취소 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></a>
+                <a href="javascript:void(0);" th:data-uri="@{|/lesson/cancel/${lesson.id}|}" class="btn cancel"
+                    th:classappend="${#strings.startsWith(#authentication.principal.username, lesson.attendanceList[lesson.headCount].userId) ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}"
+                    th:text="${#strings.startsWith(#authentication.principal.username, lesson.attendanceList[lesson.headCount].userId) ? '대기완료' : '예약완료'} + ' ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></a>
             </div>
             <div th:if="${!isUserAttending}" class="w-[100px]">
-                <a href="javascript:void(0);" th:data-uri="@{|/lesson/reservation/${lesson.id}|}"
-                    class="btn btn-error reservation"
-                    th:text="'예약하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></a>
+                <div th:if="${lesson.attendanceList.size()} > ${lesson.headCount}">
+                    <a href="javascript:void(0);" th:data-uri="@{|/lesson/reservation/${lesson.id}|}"
+                        class="btn bg-blue-500 reservation"
+                        th:text="'예약하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></a>
+                </div>
+                <div th:unless="${lesson.attendanceList.size()} > ${lesson.headCount}">
+                    <a href="javascript:void(0);" th:data-uri="@{|/lesson/reservation/${lesson.id}|}"
+                        class="btn btn-error reservation"
+                        th:text="'대기하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></a>
+                </div>
             </div>
+
         </div>
     </div>
     <script>
@@ -89,6 +97,52 @@
             });
         });
     </script>
+    <script type="text/javascript">
+        function cancelReservation(lessonId) {
+            const csrfToken = getCsrfToken(); // CSRF 토큰을 가져오는 함수 (이미 구현되어 있다고 가정)
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", `/lesson/cancel-reservation/${lessonId}`, true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    window.location.reload(); // 예약 취소가 성공했을 때 페이지 새로고침 또는 필요한 작업 수행
+                } else {
+                    console.error('Failed to cancel reservation.');
+                }
+            };
+            xhr.onerror = function () {
+                console.error('Network error occurred.');
+            };
+
+            xhr.send();
+        }
+
+        function reserveLesson(lessonId) {
+            const csrfToken = getCsrfToken(); // CSRF 토큰을 가져오는 함수 (이미 구현되어 있다고 가정)
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", `/lesson/reserve/${lessonId}`, true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    window.location.reload(); // 예약하기가 성공했을 때 페이지 새로고침 또는 필요한 작업 수행
+                } else {
+                    console.error('Failed to reserve lesson.');
+                }
+            };
+            xhr.onerror = function () {
+                console.error('Network error occurred.');
+            };
+
+            xhr.send();
+        }
+    </script>
+
 </div>
 
 </html>

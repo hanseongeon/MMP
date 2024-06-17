@@ -1,6 +1,7 @@
 package com.example.MMP.ptGroup;
 
 import com.example.MMP.siteuser.SiteUser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,9 +17,11 @@ public class PtGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(mappedBy = "ptGroupTrainer")
+    @JsonIgnore
     private SiteUser trainer;
 
     @OneToMany(mappedBy = "ptGroupUser")
+    @JsonIgnore
     private List<SiteUser> members = new ArrayList<>();
 }
