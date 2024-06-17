@@ -27,7 +27,9 @@
     </div>
     <!-- FullCalendar 캘린더를 표시할 div 요소 -->
     <div id='calendar' class="mt-5 h-[500px] w-[550px] overflow-y-auto"></div>
+    <!-- 각 날짜에 해당하는 레슨 리스트 -->
     <div class="flex flex-col justify-center w-[80%] p-2">
+        <a href="#" class="btn w-[15%]">My Schedule</a>
         <div class="divider"></div>
         <div id="lessonListContainer"></div>
     </div>
@@ -101,38 +103,74 @@
                             lessonListContainer.innerHTML = '';
 
                             lessonList.forEach(function (lesson) {
+                                const endTime = new Date(lesson.lessonDate + 'T' + lesson.endTime);
+                                const currentTime = new Date(); // 현재 시간을 가져옵니다.
+
                                 const lessonDiv = document.createElement('div');
-                                lessonDiv.classList.add('flex', 'justify-center', 'items-center', 'h-[50px]', 'bg-base-100', 'mb-4', 'rounded-lg');
+                                lessonDiv.classList.add('flex', 'justify-center', 'items-center', 'h-[65px]', 'bg-base-100', 'mb-4', 'rounded-lg');
 
                                 const trainerDiv = document.createElement('div');
                                 trainerDiv.classList.add('h-full', 'bg-white', 'text-black', 'rounded-lg', 'border', 'border-gray-300', 'w-[10%]', 'flex', 'justify-center', 'items-center', 'font-bold');
                                 const trainerName = document.createElement('div');
                                 trainerName.textContent = `${lesson.trainer.name}`;
                                 trainerDiv.appendChild(trainerName);
-
                                 lessonDiv.appendChild(trainerDiv);
 
                                 const lessonInfoDiv = document.createElement('div');
-                                lessonInfoDiv.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[75%]', 'flex', 'text-black', 'justify-center', 'font-bold', 'items-center', 'mx-2');
+                                lessonInfoDiv.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[80%]', 'flex', 'text-black', 'font-bold', 'items-center', 'mx-2');
+
+                                // Lesson 이름
+                                const lessonNameDivWrapper = document.createElement('div');
+                                lessonNameDivWrapper.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[80%]', 'flex', 'text-black', 'font-bold','justify-center', 'items-center', 'mx-2');
+
                                 const lessonNameDiv = document.createElement('div');
                                 lessonNameDiv.textContent = lesson.lessonName;
-                                lessonInfoDiv.appendChild(lessonNameDiv);
+                                lessonNameDivWrapper.appendChild(lessonNameDiv);
 
+                                lessonInfoDiv.appendChild(lessonNameDivWrapper);
+
+                                // 날짜, 시작 시간, 종료 시간을 묶을 div
+                                const lessonTimeDivWrapper = document.createElement('div');
+                                lessonTimeDivWrapper.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[20%]', 'text-black', 'font-bold', 'mx-2');
+
+                                // Lesson 날짜
+                                const lessonDateDiv = document.createElement('div');
+                                lessonDateDiv.textContent = `date: ${lesson.lessonDate}`;
+                                lessonDateDiv.classList.add('text-sm');
+                                lessonTimeDivWrapper.appendChild(lessonDateDiv);
+
+
+                                // 시작 시간
                                 const startTimeDiv = document.createElement('div');
-                                startTimeDiv.textContent = `start : ${lesson.startTime}`;
-                                lessonInfoDiv.appendChild(startTimeDiv);
+                                startTimeDiv.textContent = `start: ${lesson.startTime}`;
+                                startTimeDiv.classList.add('text-sm'); // 작은 텍스트로 표시
+                                lessonTimeDivWrapper.appendChild(startTimeDiv);
 
+                                // 종료 시간
                                 const endTimeDiv = document.createElement('div');
-                                endTimeDiv.textContent = `end : ${lesson.endTime}`;
-                                lessonInfoDiv.appendChild(endTimeDiv);
+                                endTimeDiv.textContent = `end: ${lesson.endTime}`;
+                                endTimeDiv.classList.add('text-sm'); // 작은 텍스트로 표시
+                                lessonTimeDivWrapper.appendChild(endTimeDiv);
+
+                                lessonInfoDiv.appendChild(lessonTimeDivWrapper);
 
                                 lessonDiv.appendChild(lessonInfoDiv);
 
                                 const attendanceDiv = document.createElement('div');
-                                attendanceDiv.classList.add('h-full', 'bg-white', 'text-black', 'rounded-lg', 'border', 'border-gray-300', 'w-[15%]', 'flex', 'justify-center', 'items-center');
+                                attendanceDiv.classList.add('h-full', 'bg-white', 'text-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[10%]', 'flex', 'justify-center', 'items-center');
                                 const attendanceButton = document.createElement('button');
                                 attendanceButton.classList.add('btn', 'w-full', 'h-full');
                                 attendanceButton.textContent = `${lesson.attendanceList.length}/${lesson.headCount}`;
+
+                                // 종료 시간이 지났으면 버튼을 비활성화합니다.
+                                if (endTime < currentTime) {
+                                    attendanceButton.setAttribute('disabled', 'disabled');
+                                }
+
+                                // 이벤트 핸들러 등록
+                                attendanceButton.addEventListener('click', function () {
+                                    window.location.href = `/lesson/detail/${lesson.id}`;
+                                });
 
                                 // 현재 로그인된 사용자가 attendanceList에 있는지 확인
                                 const isAttending = lesson.attendanceList.some(attendee => attendee.userId == currentUser);
@@ -143,7 +181,7 @@
                                         attendanceButton.classList.add('bg-green-500', 'text-white');
                                         attendanceButton.innerHTML = `예약완료<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
                                     } else {
-                                        attendanceButton.classList.add('bg-red-500', 'text-white');
+                                        attendanceButton.classList.add('bg-gray-500', 'text-white');
                                         attendanceButton.innerHTML = `대기완료<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
                                     }
                                 } else {
