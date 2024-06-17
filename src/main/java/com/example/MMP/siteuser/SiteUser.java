@@ -1,5 +1,6 @@
 package com.example.MMP.siteuser;
 
+import com.example.MMP.alarm.Alarm;
 import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.homeTraining.HomeTraining;
@@ -96,10 +97,18 @@ public class SiteUser {
     @JsonManagedReference
     private List<TransPass> transPassList = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.REMOVE)
+    @ManyToMany
+    @JoinTable(
+            name = "user_chat_room",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "chat_room_id")
+    )
     private List<ChatRoom> chatRoomList = new ArrayList<>();
 
     private String macAddress; // MAC 주소
+
+    @OneToMany(mappedBy = "acceptUser")
+    private List<Alarm> alarmList = new ArrayList<>();
 
     private LocalDate createDate;
 }
