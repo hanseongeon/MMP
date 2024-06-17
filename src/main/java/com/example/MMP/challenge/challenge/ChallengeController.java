@@ -1,5 +1,6 @@
 package com.example.MMP.challenge.challenge;
 
+
 import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.challenge.challengeUser.ChallengeUserRepository;
 import com.example.MMP.siteuser.SiteUser;
@@ -90,29 +91,12 @@ public class ChallengeController {
         List<ChallengeUser> challengeUsers = new ArrayList<>();
         Map<Long, Double> challengeAchievementRates = new HashMap<> ();
 
-<<<<<<< HEAD
-    @GetMapping("/list")
-    public String list(Model model, Principal principal) {
-        List<Long> participatedChallengeIds = new ArrayList<>();
-        Map<Long, Double> achievementRates = new HashMap<>();
-
-
-=======
->>>>>>> 716c9c951e8d9a3533dcde8cc175a0ce7d0d969b
         if (principal != null) {
             String userId = principal.getName();
             Optional<SiteUser> siteUserOptional = siteUserRepository.findByUserId(userId);
             if (siteUserOptional.isPresent()) {
                 SiteUser siteUser = siteUserOptional.get();
-<<<<<<< HEAD
-                List<challengeUser> challengeUsers = challengeUserRepository.findBySiteUser(siteUser);
-                participatedChallengeIds = challengeUsers.stream()
-                        .map(cu -> cu.getChallenge().getId())
-                        .collect(Collectors.toList());
 
-                achievementRates = challengeUsers.stream()
-                        .collect(Collectors.toMap(cu -> cu.getChallenge().getId(), challengeUser::getAchievementRate));
-=======
                 challengeUsers = challengeUserRepository.findBySiteUser(siteUser);
                 participatedChallengeIds = challengeUsers.stream()
                         .map(cu -> cu.getChallenge().getId())
@@ -120,22 +104,17 @@ public class ChallengeController {
                 for (ChallengeUser challengeUser : challengeUsers) {
                     challengeAchievementRates.put(challengeUser.getChallenge().getId(), challengeUser.getAchievementRate());
                 }
->>>>>>> 716c9c951e8d9a3533dcde8cc175a0ce7d0d969b
             }
         }
 
         List<Challenge> challenges = challengeRepository.findAll();
         model.addAttribute("challenges", challenges);
         model.addAttribute("participatedChallengeIds", participatedChallengeIds);
-<<<<<<< HEAD
-        model.addAttribute("achievementRates", achievementRates);
-=======
         model.addAttribute("challengeUsers", challengeUsers);
         model.addAttribute("challengeAchievementRates", challengeAchievementRates);
 
         // 현재 날짜를 모델에 추가
         model.addAttribute("currentDate", LocalDate.now());
->>>>>>> 716c9c951e8d9a3533dcde8cc175a0ce7d0d969b
         return "/challenge/challengeList";
     }
 
@@ -197,6 +176,25 @@ public class ChallengeController {
         }
 
         challengeService.updateWeight(challengeId, principal, weight);
+        return "redirect:/challenge/challenges";
+    }
+
+
+    // 운동 시간 입력 폼 반환
+    @GetMapping("/enterExerciseTime")
+    public String enterExerciseTimeForm(@RequestParam("challengeId") Long challengeId, Model model) {
+        model.addAttribute("challengeId", challengeId);
+        return "challenge/enterExerciseTime";
+    }
+
+    // 운동 시간 입력 처리
+    @PostMapping("/enterExerciseTime")
+    public String enterExerciseTime(@RequestParam("challengeId") Long challengeId, @RequestParam("exerciseTime") int exerciseTime, Principal principal) {
+        if (principal == null) {
+            return "redirect:/user/login";
+        }
+
+        challengeService.participateInChallengeWithExerciseTime(challengeId, principal, exerciseTime);
         return "redirect:/challenge/challenges";
     }
 

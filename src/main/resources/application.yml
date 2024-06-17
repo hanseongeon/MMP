@@ -18,7 +18,7 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
     password: ''
     username: root
-    url: jdbc:mysql://localhost:3307/mmp?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/mmp?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
   jpa:
     hibernate:
       ddl-auto: update
