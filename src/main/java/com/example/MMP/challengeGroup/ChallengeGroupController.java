@@ -27,14 +27,14 @@ public class ChallengeGroupController {
 
     @GetMapping("/edit/{groupId}")
     public String editGroup(@PathVariable Long groupId, Model model, Principal principal) {
-        Optional<ChallengeGroup> groupOpt = groupRepository.findById(groupId);
-        if (groupOpt.isPresent()) {
-            ChallengeGroup group = groupOpt.get();
-            String username = principal.getName();
-            if (!groupService.isLeader(groupId, username)) {
+        Optional<ChallengeGroup> groupOpt = groupRepository.findById (groupId);
+        if (groupOpt.isPresent ()) {
+            ChallengeGroup group = groupOpt.get ();
+            String username = principal.getName ();
+            if (!groupService.isLeader (groupId, username)) {
                 return "error/403"; // 권한이 부족함을 알리는 적절한 뷰
             }
-            model.addAttribute("group", group);
+            model.addAttribute ("group", group);
             return "/challenge/groupEdit";
         } else {
             return "error/404";
@@ -77,7 +77,9 @@ public class ChallengeGroupController {
 
         // 로그인된 사용자 정보 추가
         String username = principal.getName ();
+
         SiteUser user = userService.getUserByUserNumber (username);
+
         model.addAttribute ("user", user);
 
         return "/challenge/groupList_form";
@@ -95,6 +97,7 @@ public class ChallengeGroupController {
             return "error/404"; // 잘못된 ID 처리
         }
 
+
         Optional<ChallengeGroup> groupOpt = groupRepository.findById(groupId);
         if (groupOpt.isPresent()) {
             ChallengeGroup group = groupOpt.get();
@@ -102,12 +105,13 @@ public class ChallengeGroupController {
             boolean isLeader = groupService.isLeader(groupId, username);
 
             // 멤버들을 가입 날짜와 이름으로 정렬 (null 값을 처리)
-            List<SiteUser> sortedMembers = group.getMembers().stream()
-                    .sorted(Comparator.comparing(SiteUser::getCreateDate, Comparator.nullsLast(Comparator.naturalOrder()))
-                            .thenComparing(SiteUser::getUserId, Comparator.nullsLast(Comparator.naturalOrder())))
-                    .collect(Collectors.toList());
+            List<SiteUser> sortedMembers = group.getMembers ().stream ()
+                    .sorted (Comparator.comparing (SiteUser::getCreateDate, Comparator.nullsLast (Comparator.naturalOrder ()))
+                            .thenComparing (SiteUser::getUserId, Comparator.nullsLast (Comparator.naturalOrder ())))
+                    .collect (Collectors.toList ());
 
             // 해당 그룹의 출석 기록 조회
+
             List<Attendance> attendances = attendanceRepository.findByChallengeGroupId(groupId);
 
             // 각 멤버별 총 출석 시간 계산 및 포맷팅
@@ -133,6 +137,7 @@ public class ChallengeGroupController {
             model.addAttribute("sortedMembers", sortedMembers); // 정렬된 멤버 리스트 추가
             model.addAttribute("memberAttendanceFormattedMap", memberAttendanceFormattedMap); // 멤버별 포맷된 출석 시간 추가
             model.addAttribute("groupRank", groupRank); // 그룹 순위 추가
+
             return "challenge/groupDetail";
         } else {
             return "error/404"; // 그룹을 찾지 못한 경우
