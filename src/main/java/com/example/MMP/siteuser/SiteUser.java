@@ -2,6 +2,7 @@ package com.example.MMP.siteuser;
 
 import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.challenge.Challenge;
+import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.lesson.Lesson;
 import com.example.MMP.point.Point;
@@ -17,6 +18,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +76,7 @@ public class SiteUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "training_id")
     )
-    @JsonManagedReference
+    @JsonBackReference
     private List<HomeTraining> saveTraining = new ArrayList<>();
 
     @OneToMany(mappedBy = "trainer")
@@ -82,6 +84,11 @@ public class SiteUser {
     private List<Lesson> lessonList;
 
     @ManyToMany
+    @JoinTable(
+            name = "user_lesson",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "lesson_id")
+    )
     @JsonBackReference
     private List<Lesson> lessonsAttending;
 
@@ -96,4 +103,8 @@ public class SiteUser {
     @JsonManagedReference
     private List<TransPass> transPassList = new ArrayList<>();
 
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    private List<ChatRoom> chatRoomList = new ArrayList<>();
+
+    private LocalDate createDate;
 }

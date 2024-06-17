@@ -9,6 +9,8 @@ import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.challenge.challengeUser.ChallengeUserRepository;
 import com.example.MMP.challenge.challengeUser.ChallengeUserService;
 import com.example.MMP.challenge.userWeight.UserWeightService;
+import com.example.MMP.chat.ChatRoom;
+import com.example.MMP.chat.ChatRoomRepository;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
 import lombok.RequiredArgsConstructor;
