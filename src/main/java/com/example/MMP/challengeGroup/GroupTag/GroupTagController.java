@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/group/{groupId}/tags")
+@RequestMapping("/groupChallenge/{groupId}/tags")
 public class GroupTagController {
     private final GroupTagService groupTagService;
 
@@ -17,7 +17,7 @@ public class GroupTagController {
     public String create(@PathVariable("groupId") Long groupId, String name) {
         GroupTag groupTag = groupTagService.create(groupId, name);
 
-        return "redirect:/group/detail/" + groupId;
+        return "redirect:/groupChallenge/detail/" + groupId;
     }
 
     @PostMapping("{groupTagId}/delete")
@@ -25,6 +25,6 @@ public class GroupTagController {
         GroupTag groupTag = groupTagService.getGroupTag(groupTagId);
         groupTagService.delete(groupTagId);
 
-        return "redirect:/group/detail/" + groupId;
+        return "redirect:/groupChallenge/detail/" + groupId;
     }
 }
