@@ -22,6 +22,8 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public static final QSiteUser siteUser = new QSiteUser("siteUser");
 
+    public final ListPath<com.example.MMP.alarm.Alarm, com.example.MMP.alarm.QAlarm> alarmList = this.<com.example.MMP.alarm.Alarm, com.example.MMP.alarm.QAlarm>createList("alarmList", com.example.MMP.alarm.Alarm.class, com.example.MMP.alarm.QAlarm.class, PathInits.DIRECT2);
+
     public final ListPath<com.example.MMP.challenge.attendance.Attendance, com.example.MMP.challenge.attendance.QAttendance> attendanceList = this.<com.example.MMP.challenge.attendance.Attendance, com.example.MMP.challenge.attendance.QAttendance>createList("attendanceList", com.example.MMP.challenge.attendance.Attendance.class, com.example.MMP.challenge.attendance.QAttendance.class, PathInits.DIRECT2);
 
     public final StringPath birthDate = createString("birthDate");
@@ -39,6 +41,8 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
     public final ListPath<com.example.MMP.lesson.Lesson, com.example.MMP.lesson.QLesson> lessonList = this.<com.example.MMP.lesson.Lesson, com.example.MMP.lesson.QLesson>createList("lessonList", com.example.MMP.lesson.Lesson.class, com.example.MMP.lesson.QLesson.class, PathInits.DIRECT2);
 
     public final ListPath<com.example.MMP.lesson.Lesson, com.example.MMP.lesson.QLesson> lessonsAttending = this.<com.example.MMP.lesson.Lesson, com.example.MMP.lesson.QLesson>createList("lessonsAttending", com.example.MMP.lesson.Lesson.class, com.example.MMP.lesson.QLesson.class, PathInits.DIRECT2);
+
+    public final StringPath macAddress = createString("macAddress");
 
     public final StringPath name = createString("name");
 
@@ -63,8 +67,6 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
     public final ListPath<com.example.MMP.userPass.UserPtPass, com.example.MMP.userPass.QUserPtPass> userPtPassList = this.<com.example.MMP.userPass.UserPtPass, com.example.MMP.userPass.QUserPtPass>createList("userPtPassList", com.example.MMP.userPass.UserPtPass.class, com.example.MMP.userPass.QUserPtPass.class, PathInits.DIRECT2);
 
     public final StringPath userRole = createString("userRole");
-
-    public final ListPath<com.example.MMP.wod.Wod, com.example.MMP.wod.QWod> wodList = this.<com.example.MMP.wod.Wod, com.example.MMP.wod.QWod>createList("wodList", com.example.MMP.wod.Wod.class, com.example.MMP.wod.QWod.class, PathInits.DIRECT2);
 
     public QSiteUser(String variable) {
         this(SiteUser.class, forVariable(variable), INITS);

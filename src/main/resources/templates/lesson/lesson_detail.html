@@ -50,26 +50,42 @@
 
             <!-- 예약 버튼 -->
             <div th:if="${isUserAttending}" class="w-[100px]">
+                <a href="javascript:void(0);" th:data-uri="@{|/lesson/cancel/${lesson.id}|}" class="btn cancel"
 <<<<<<< HEAD
-                <button class="btn btn-success" onclick="cancelReservation(${lesson.id})">
-                    <span th:text="'예약취소 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></span>
-                </button>
-            </div>
-            <div th:if="${!isUserAttending}" class="w-[100px]">
-                <button class="btn btn-error" onclick="reserveLesson(${lesson.id})">
-                    <span th:text="'예약하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></span>
-                </button>
+                   th:classappend="${lesson.attendanceList.size() > 0 && lesson.headCount < lesson.attendanceList.size() && #authentication.principal.username == lesson.attendanceList[lesson.headCount].userId ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}"
+                   th:text="${lesson.attendanceList.size() > 0 && lesson.headCount < lesson.attendanceList.size() && #authentication.principal.username == lesson.attendanceList[lesson.headCount].userId ? '대기완료' : '예약완료'} + ' ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}">
 =======
-                <a href="javascript:void(0);" th:data-uri="@{|/lesson/cancel/${lesson.id}|}"
-                    class="btn btn-success cancel"
-                    th:text="'예약취소 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></a>
+                    th:classappend="${lesson.attendanceList.size() > 0 && lesson.headCount < lesson.attendanceList.size() && #authentication.principal.username == lesson.attendanceList[lesson.headCount].userId ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}"
+                    th:text="${lesson.attendanceList.size() > 0 && lesson.headCount < lesson.attendanceList.size() && #authentication.principal.username == lesson.attendanceList[lesson.headCount].userId ? '대기완료' : '예약완료'} + ' ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}">
+>>>>>>> 41d0ae93811e519eae8be0fbb6f85a6e85a0c24c
+                </a>
             </div>
             <div th:if="${!isUserAttending}" class="w-[100px]">
-                <a href="javascript:void(0);" th:data-uri="@{|/lesson/reservation/${lesson.id}|}"
-                    class="btn btn-error reservation"
-                    th:text="'예약하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></a>
->>>>>>> 5ec4e4abdb17416a10a3db29272b66fbe7160819
+                <div th:if="${lesson.attendanceList.size() > lesson.headCount}">
+                    <a href="javascript:void(0);" th:data-uri="@{|/lesson/reservation/${lesson.id}|}"
+<<<<<<< HEAD
+                       class="btn bg-blue-500 reservation"
+                       th:text="'예약하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}">
+=======
+                        class="btn bg-blue-500 reservation text-white"
+                        th:text="'예약하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}">
+>>>>>>> 41d0ae93811e519eae8be0fbb6f85a6e85a0c24c
+                    </a>
+                </div>
+                <div th:if="${lesson.attendanceList.size() <= lesson.headCount}">
+                    <a href="javascript:void(0);" th:data-uri="@{|/lesson/reservation/${lesson.id}|}"
+<<<<<<< HEAD
+                       class="btn btn-error reservation"
+                       th:text="'대기하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}">
+=======
+                        class="btn btn-error reservation text-white"
+                        th:text="'대기하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}">
+>>>>>>> 41d0ae93811e519eae8be0fbb6f85a6e85a0c24c
+                    </a>
+                </div>
             </div>
+
+
 
         </div>
     </div>
@@ -87,6 +103,15 @@
         Array.from(reservation_elements).forEach(function (element) {
             element.addEventListener('click', function () {
                 if (confirm("예약하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                };
+            });
+        });
+
+        const wait_elements = document.getElementsByClassName("wait");
+        Array.from(wait_elements).forEach(function (element) {
+            element.addEventListener('click', function () {
+                if (confirm("대기하시겠습니까?")) {
                     location.href = this.dataset.uri;
                 };
             });
