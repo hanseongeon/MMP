@@ -179,9 +179,10 @@
 
                 // 현재 로그인된 사용자가 attendanceList에 있는지 확인
                 const isAttending = lesson.attendanceList.some(attendee => attendee.userId == currentUser);
-                const currentUserIndex = lesson.attendanceList.findIndex(attendee => attendee.userId == currentUser);
-                console.log(currentUserIndex);
+                console.log(lesson.headCount);
                 if (isAttending) {
+                    const currentUserIndex = lesson.attendanceList.findIndex(attendee => attendee.userId == currentUser);
+                    console.log(currentUserIndex);
                     if (currentUserIndex + 1 <= lesson.headCount) {
                         attendanceButton.classList.add('bg-green-500', 'text-white');
                         attendanceButton.innerHTML = `예약완료<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
