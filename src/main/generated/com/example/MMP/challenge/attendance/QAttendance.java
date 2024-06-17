@@ -24,6 +24,8 @@ public class QAttendance extends EntityPathBase<Attendance> {
 
     public final com.example.MMP.challenge.challengeActivity.QChallengeActivity challengeActivity;
 
+    public final com.example.MMP.challengeGroup.QChallengeGroup challengeGroup;
+
     public final DatePath<java.time.LocalDate> date = createDate("date", java.time.LocalDate.class);
 
     public final DateTimePath<java.time.LocalDateTime> endTime = createDateTime("endTime", java.time.LocalDateTime.class);
@@ -35,6 +37,8 @@ public class QAttendance extends EntityPathBase<Attendance> {
     public final com.example.MMP.siteuser.QSiteUser siteUser;
 
     public final DateTimePath<java.time.LocalDateTime> startTime = createDateTime("startTime", java.time.LocalDateTime.class);
+
+    public final NumberPath<Long> totalTime = createNumber("totalTime", Long.class);
 
     public QAttendance(String variable) {
         this(Attendance.class, forVariable(variable), INITS);
@@ -55,6 +59,7 @@ public class QAttendance extends EntityPathBase<Attendance> {
     public QAttendance(Class<? extends Attendance> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.challengeActivity = inits.isInitialized("challengeActivity") ? new com.example.MMP.challenge.challengeActivity.QChallengeActivity(forProperty("challengeActivity"), inits.get("challengeActivity")) : null;
+        this.challengeGroup = inits.isInitialized("challengeGroup") ? new com.example.MMP.challengeGroup.QChallengeGroup(forProperty("challengeGroup"), inits.get("challengeGroup")) : null;
         this.siteUser = inits.isInitialized("siteUser") ? new com.example.MMP.siteuser.QSiteUser(forProperty("siteUser"), inits.get("siteUser")) : null;
     }
 

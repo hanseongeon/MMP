@@ -7,6 +7,8 @@ import com.example.MMP.Comment.Comment;
 import com.example.MMP.Comment.CommentService;
 import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.challenge.challenge.ChallengeService;
+import com.example.MMP.chat.ChatRoom;
+import com.example.MMP.chat.ChatRoomService;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.homeTraining.HomeTrainingService;
 import com.example.MMP.mail.MailService;
@@ -19,10 +21,12 @@ import com.example.MMP.wod.Wod;
 import com.example.MMP.wod.WodService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +34,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller
@@ -45,6 +50,8 @@ public class SiteUserController {
     private final ChallengeService challengeService;
     private final TransPassService transPassService;
     private final PtGroupRepository ptGroupRepository;
+    private final ChatRoomService chatRoomService;
+
 
     @GetMapping("/resetPassword")
     public String resetPasswordForm(Model model) {
@@ -216,7 +223,9 @@ public class SiteUserController {
                 model.addAttribute("MyStandPass",MyStandPass);
             }
 
+            LocalDateTime nowTime = LocalDateTime.now();
 
+            model.addAttribute("nowTime",nowTime);
             model.addAttribute("wodList", wodList);
             model.addAttribute("saveTraining", saveTraining);
             model.addAttribute("user", user);
@@ -241,6 +250,18 @@ public class SiteUserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         return ResponseEntity.ok(siteUser);
+    }
+
+    @GetMapping("/chat/{id}")
+    public String chat(@PathVariable("id")Long id, @AuthenticationPrincipal UserDetail userDetail,Model model){
+        SiteUser siteUser = siteUserService.getUser(userDetail.getUsername());
+        SiteUser siteUser1 = siteUserService.findById(id);
+        ChatRoom chatRoom = chatRoomService.findChatroom(siteUser,siteUser1);
+        model.addAttribute("chatRoom",chatRoom);
+        model.addAttribute("me",siteUser);
+        model.addAttribute("you",siteUser1);
+
+        return "chat/chatroom";
     }
 }
  

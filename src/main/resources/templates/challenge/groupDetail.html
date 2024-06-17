@@ -1,0 +1,142 @@
+
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="w-full text-white">
+    <title th:text="${group.name} + ' 그룹'">그룹 디테일</title>
+    <main class="container mx-auto p-4 text-white">
+    <div class="mt-10 mb-4">
+        <a href="/groupChallenge/list">< 그룹 리스트로 돌아가기</a></div>
+    <div class="flex items-center mt-10 mb-4">
+        <h1 class="flex justify-center text-3xl font-bold mr-2" th:text="${group.name} + ' 그룹'"></h1>
+        <a th:if="${isLeader}" th:href="@{/group/edit/{groupId}(groupId=${group.id})}"
+           style="padding: 0; margin: 0;">
+            <img src="https://i.imgur.com/coalo37.png" style="width: 30px; height: 30px; display: block;"/>
+        </a>
+    </div>
+
+    <div class="flex w-full">
+        <div class="flex flex-col w-full">
+            <h2 class="text-2xl font-semibold mb-2">그룹 소개</h2>
+            <p class="mb-4" th:text="${group.goal}">그룹 소개 내용</p>
+
+            <!--  박스  -->
+
+            <div class="stats shadow flex justify-center">
+                <div class="stat flex flex-col items-center text-center">
+                    <div class="stat-title font-semibold mb-2">멤버수</div>
+                    <div class="stat-value" th:text="${group.members.size()}">멤버수</div>
+                    <div class="stat-desc" th:text="${group.leader.name}"></div>
+                </div>
+
+                <div class="stat border-r border-gray-300 flex flex-col items-center text-center">
+                    <div class="stat-figure text-secondary">
+                    </div>
+                    <div class="stat-title font-semibold mb-2">그룹 시작일</div>
+                    <div class="stat-value" id="dDay"></div>
+                    <div class="stat-desc" th:text="${group.createDate}">↗︎ 400 (22%)</div>
+                </div>
+
+                <div class="stat border-r border-gray-300 flex flex-col items-center text-center">
+                    <div class="stat-figure text-secondary">
+                    </div>
+                    <div class="stat-title font-semibold mb-2">오늘의 그룹순위</div>
+                    <div class="stat-value">1,200</div>
+                    <div class="stat-desc">↘︎ 90 (14%)</div>
+                </div>
+            </div>
+            <p>*오늘의 그룹순위는 그룹 회원들의 운동 평균 시간으로 따집니다</p>
+            </br>
+            </br>
+            <h2 class="text-2xl font-semibold mb-2">태그 목록</h2>
+            <ul class="list-none pl-5 flex flex-row flex-wrap">
+                <li th:each="groupTag : ${group.groupTagList}" class="mr-4 mb-2">
+                    <span class="badge badge-ghost badge-lm">#<span th:text="${groupTag.tag.name}"></span></span>
+                    <form th:action="@{/groupChallenge/{groupId}/tags/{groupTagId}/delete(groupId=${group.id}, groupTagId=${groupTag.id})}"
+                          method="post" class="inline">
+                        <button type="submit" class="btn btn-error btn-xs">삭제</button>
+                    </form>
+                </li>
+            </ul>
+            <a href="#my_modal_8" class="btn">태그추가</a>
+
+            <!-- Put this part before </body> tag -->
+            <div class="modal" role="dialog" id="my_modal_8">
+                <div class="modal-box">
+                    <h3 class="font-bold text-lg">태그 추가</h3>
+                    <form th:action="@{/groupChallenge/{groupId}/tags/create(groupId=${group.id})}" method="post">
+                        <input type="text" id="tagInput" name="name" class="input text-black input-bordered w-full mb-2"
+                               placeholder="태그 이름">
+                        <button type="submit" class="btn btn-primary w-full text-black">태그 추가</button>
+                    </form>
+                    <h3 class="font-bold text-lg mt-4">태그 목록</h3>
+                    <ul class="list-disc pl-5 mt-10">
+                        <li th:each="tag : ${tags}">
+                            <span th:text="${tag.name}" th:attr="data-tag-name=${tag.name}"></span>
+                        </li>
+                    </ul>
+                    <div class="modal-action">
+                        <a href="#" class="btn">닫기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider divider-horizontal"></div>
+
+        <div class="flex flex-col w-full">
+            <h2 class="text-2xl font-semibold mb-2">멤버 구성</h2>
+            <table class="table w-full">
+                <thead>
+                <tr>
+                    <th class="text-white">멤버 이름</th>
+                    <th class="text-white">멤버 가입일</th>
+                    <th class="text-white">오늘의 운동 시간</th>
+                    <th class="text-white">채팅하기</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="member : ${sortedMembers}">
+                    <td th:text="${member.name}"></td>
+                    <td th:text="${member.createDate}"></td>
+                    <td th:text="${memberAttendanceFormattedMap[member.id]}"></td>
+                    <td>
+                        <a class="btn btn-info btn-xs" th:href="@{/user/profile/{name}(name=${member.name})}">Details</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+</br>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+         function calculateDday(createDate) {
+             const currentDate = new Date();
+             const groupCreateDate = new Date(createDate);
+             const timeDiff = groupCreateDate - currentDate;
+             const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+             return dayDiff > 0 ? `D-${dayDiff}` : `D+${Math.abs(dayDiff)+1}`;
+         }
+
+         const groupCreateDate = /*[[${group.createDate}]]*/ '[[${group.createDate}]]'; // Thymeleaf 문법으로 서버 데이터를 삽입합니다.
+         document.getElementById('dDay').innerText = calculateDday(groupCreateDate);
+     });
+</script>
+
+<script th:inline="javascript">
+    function setTagName(tagName) {
+        document.getElementById('tagInput').value = tagName;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.badge[data-tag-name]').forEach(function(element) {
+            element.addEventListener('click', function() {
+                setTagName(this.getAttribute('data-tag-name'));
+            });
+        });
+    });
+</script>
+</body>
+</div>
+</html>
