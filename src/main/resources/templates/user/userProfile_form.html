@@ -113,6 +113,12 @@
         .card-actions {
             z-index: 1;
         }
+
+        .gotalk:hover {
+            background-color: #D8D8D8;
+            cursor: pointer;
+
+        }
     </style>
 </head>
 
@@ -155,8 +161,7 @@
                         <input type="submit" value="이미지 저장">
                     </form>
                 </div>
-
-                <div class="flex-1 flex flex-row items-center lg:items-end justify-start px-8 mt-2">
+                <div class="flex-1 flex flex-row items-center lg:items-end justify-start px-8 mt-2 text-black">
                     <div class="flex items-center space-x-4 mt-2">
                         <details class="dropdown">
                             <summary class="m-1 btn">
@@ -168,15 +173,41 @@
                                 </svg>
                                 <span>Message</span>
                             </summary>
-                            <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-                                <div th:if="${#authorization.expression('hasRole(''TRAINER'')')}">
-                                    <div th:each="group : ${user.ptGroupTrainer.members}" class="flex flex-row">
-                                        <a href="#" th:text="${group.name}"></a>
+                            <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52 text-black">
+                                <div th:if="${#authorization.expression('hasRole(''TRAINER'')')}" class="eertert">
+                                    <div th:if="${!#lists.isEmpty(user.chatRoomList)}"
+                                        th:each="chatroom : ${user.chatRoomList}" class="gotalk">
+                                        <div th:each="talkuser : ${chatroom.userList}">
+                                            <div class="flex gap-10">
+                                                <a th:if="${talkuser.name != user.name}"
+                                                    th:href="@{|/user/chat/${talkuser.id}|}" th:text="${talkuser.name}"
+                                                    class="talk-url font-bold justify-start"></a>
+                                                <p th:if="${!#lists.isEmpty(chatroom.chatMessageList) && talkuser.name != user.name}"
+                                                    th:with="formattedDate=${#temporals.format(chatroom.chatMessageList[chatroom.chatMessageList.size() - 1].sendTime, 'a HH:mm')}"
+                                                    th:text="${formattedDate}" class="font-bold justify-end"></p>
+                                            </div>
+                                            <p th:if="${!#lists.isEmpty(chatroom.chatMessageList) && talkuser.name != user.name}"
+                                                th:text="${chatroom.chatMessageList[chatroom.chatMessageList.size() - 1].message}"
+                                                class="text-gray-500"></p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div th:if="${#authorization.expression('hasRole(''USER'')')}">
-                                    <div class="flex flex-row">
-                                        <a href="#" th:text="${user.ptGroupUser.trainer.name}"></a>
+                                    <div th:if="${!#lists.isEmpty(user.chatRoomList)}"
+                                        th:each="chatroom : ${user.chatRoomList}" class="gotalk">
+                                        <div th:each="talkuser : ${chatroom.userList}">
+                                            <div class="flex gap-10">
+                                                <a th:if="${talkuser.name != user.name}"
+                                                    th:href="@{|/user/chat/${talkuser.id}|}" th:text="${talkuser.name}"
+                                                    class="talk-url font-bold justify-start"></a>
+                                                <p th:if="${!#lists.isEmpty(chatroom.chatMessageList) && talkuser.name != user.name}"
+                                                    th:with="formattedDate=${#temporals.format(chatroom.chatMessageList[chatroom.chatMessageList.size() - 1].sendTime, 'a HH:mm')}"
+                                                    th:text="${formattedDate}" class="font-bold justify-end"></p>
+                                            </div>
+                                            <p th:if="${!#lists.isEmpty(chatroom.chatMessageList) && talkuser.name != user.name}"
+                                                th:text="${chatroom.chatMessageList[chatroom.chatMessageList.size() - 1].message}"
+                                                class="text-gray-500"></p>
+                                        </div>
                                     </div>
                                 </div>
                             </ul>
@@ -212,7 +243,7 @@
                                 <!-- ptPassList 요소들 -->
                                 <div class="wodCard card w-60 h-60 bg-base-100 shadow-2xl m-4 block h-[300px] w-[250px]"
                                     th:each="wod:${wodList}">
-                                    <div th:replace="wod/wodCard :: wodCard(${wod})"></div>
+                                    <div th:replace="~{wod/wodCard :: wodCard(${wod})}"></div>
                                 </div>
                             </div>
                         </div>
@@ -267,7 +298,6 @@
                     </div>
                 </div>
 
-
                 <div class="flex flex-col w-full 2xl:w-2/3">
                     <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
                         <h4 class="text-xl text-gray-900 font-bold">Save log</h4>
@@ -279,7 +309,7 @@
                                 <!-- ptPassList 요소들 -->
                                 <div class="htCard card w-96 bg-base-100 shadow-xl m-4 block h-[300px] w-[300px]"
                                     th:each="homeTraining:${saveTraining}">
-                                    <div th:replace="homeTraining/htCard :: htCard(${homeTraining})"></div>
+                                    <div th:replace="~{homeTraining/htCard :: htCard(${homeTraining})}"></div>
                                 </div>
                             </div>
                         </div>
@@ -349,7 +379,7 @@
                             <button class="scroll-button3 " id="ptScrollRightButton3">&#8250;</button>
                             <div class="flex w-full card-container3 border-gray-300">
                                 <!-- ptPassList 요소들 -->
-                                <div th:replace="pass/passDto :: passDto(${user})"
+                                <div th:replace="~{pass/passDto :: passDto(${user})}"
                                     class="card w-60 h-60 bg-base-100 shadow-2xl m-4 block h-[300px] w-[300px]"></div>
                             </div>
                         </div>
@@ -561,85 +591,25 @@
                             icon.classList.add('fa-solid', 'fa-bookmark');
                         }
                     }
-<<<<<<< HEAD
                 }).catch(error => {
                     console.error('Error:', error);
                 });
             }
         </script>
+        <script>
+            const gotalkList = document.querySelectorAll('.gotalk');
+            console.log(gotalkList);
+            gotalkList.forEach((gotalk) => {
+                gotalk.addEventListener('click', () => {
+                    console.log(gotalk);
+                    const talkUrl = gotalk.querySelector('.talk-url');
+                    console.log(talkUrl);
+                    window.location.href = talkUrl;
+                });
+            })
+
+        </script>
     </div>
-=======
-                })
-                .catch(error => console.error('Error:', error));
-        }
-
-        function updateInitialIconState() {
-            const bookmarks = document.querySelectorAll('.recommend');
-            bookmarks.forEach(bookmark => {
-                const icon = bookmark.querySelector('i');
-                const hiddenDiv = bookmark.querySelector('.hidden');
-                const htId = hiddenDiv.getAttribute('data-ht-id');
-
-                fetch(`/homeTraining/bookmark/${htId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.bookmarked) {
-                            icon.classList.remove('fa-regular');
-                            icon.classList.add('fa-solid');
-                        } else {
-                            icon.classList.remove('fa-solid');
-                            icon.classList.add('fa-regular');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-            });
-        }
-
-        function toggleBookmark(event) {
-            event.preventDefault(); // 링크의 기본 동작을 방지
-            const icon = event.currentTarget.querySelector('i');
-            const isBookmarked = icon.classList.contains('fa-solid');
-            const hiddenDiv = event.currentTarget.querySelector('.hidden');
-            const htId = hiddenDiv.getAttribute('data-ht-id');
-
-            fetch('/homeTraining/bookmark', {
-                method: isBookmarked ? 'DELETE' : 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
-                },
-                body: JSON.stringify({ htId: htId }) // `htId`를 JSON으로 전달
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            }).then(data => {
-                if (data.success) {
-                    if (isBookmarked) {
-                        icon.classList.remove('fa-solid', 'fa-bookmark');
-                        icon.classList.add('fa-regular', 'fa-bookmark');
-                    } else {
-                        icon.classList.remove('fa-regular', 'fa-bookmark');
-                        icon.classList.add('fa-solid', 'fa-bookmark');
-                    }
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-            });
-        }
-
-        const delete_elements = document.getElementsByClassName("delete");
-        Array.from(delete_elements).forEach(function (element) {
-            element.addEventListener('click', function () {
-                if (confirm("정말로 삭제하시겠습니까?")) {
-                    location.href = this.dataset.uri;
-                };
-            });
-        });
-    </script>
-</div>
->>>>>>> c4f0d25db583fc9703d8cab83621c30724063e6d
 </body>
 
 </html>

@@ -1,7 +1,9 @@
 package com.example.MMP.challengeGroup;
 
+import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challengeGroup.GroupTag.GroupTag;
 import com.example.MMP.siteuser.SiteUser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +29,7 @@ public class ChallengeGroup {
 
     @ManyToOne
     @JoinColumn(name = "leader_id")
+    @JsonIgnore
     private SiteUser leader;
 
     @ManyToMany
@@ -41,6 +44,11 @@ public class ChallengeGroup {
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GroupTag> groupTagList = new ArrayList<> ();
+
+
+    @OneToMany(mappedBy = "challengeGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Attendance> attendances = new ArrayList<>();
+
 
 }
 

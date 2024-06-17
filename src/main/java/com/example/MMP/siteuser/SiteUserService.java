@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,6 +39,7 @@ public class SiteUserService {
         siteUser.setGender(gender);
         siteUser.setEmail(email);
         siteUser.setUserRole("admin");
+        siteUser.setCreateDate(LocalDate.now());
         // Point 설정
         Point point = new Point ();
         point.setSiteUser(siteUser); // Point와 SiteUser 연결
@@ -58,6 +60,7 @@ public class SiteUserService {
         siteUser.setGender(gender);
         siteUser.setEmail(email);
         siteUser.setUserRole(userRole);
+        siteUser.setCreateDate(LocalDate.now());
 
 
         // Point 설정
@@ -73,12 +76,12 @@ public class SiteUserService {
         return siteUser;
     }
 
-    public SiteUser getUserByUsername(String username) {
-        Optional<SiteUser> siteUser = this.siteUserRepository.findByName (username);
-        if (siteUser.isPresent()) {
-            return siteUser.get();
+    public SiteUser getUserByUserNumber(String username) {
+        SiteUser siteUser = this.siteUserRepository.findByNumber(username);
+        if (siteUser != null) {
+            return siteUser;
         } else {
-            throw new DataNotFoundException ("사용자를 찾을 수 없습니다.");
+            throw new DataNotFoundException("사용자를 찾을 수 없습니다.");
         }
     }
 
@@ -106,6 +109,16 @@ public class SiteUserService {
     public void save(SiteUser member) {
         siteUserRepository.save(member);
     }
+
+    public SiteUser findByNumber(String number){
+        return siteUserRepository.findByNumber(number);
+    }
+
+    public String getNumberByName(String number) {
+        SiteUser siteUser = this.siteUserRepository.findByNumber(number);
+        return siteUser.getName();
+    }
+
 }
 
 
