@@ -20,6 +20,8 @@ public class QChatRoom extends EntityPathBase<ChatRoom> {
 
     public static final QChatRoom chatRoom = new QChatRoom("chatRoom");
 
+    public final ListPath<com.example.MMP.alarm.Alarm, com.example.MMP.alarm.QAlarm> alarmList = this.<com.example.MMP.alarm.Alarm, com.example.MMP.alarm.QAlarm>createList("alarmList", com.example.MMP.alarm.Alarm.class, com.example.MMP.alarm.QAlarm.class, PathInits.DIRECT2);
+
     public final ListPath<ChatMessage, QChatMessage> chatMessageList = this.<ChatMessage, QChatMessage>createList("chatMessageList", ChatMessage.class, QChatMessage.class, PathInits.DIRECT2);
 
     public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);

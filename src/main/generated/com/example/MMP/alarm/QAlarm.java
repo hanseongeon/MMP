@@ -24,9 +24,13 @@ public class QAlarm extends EntityPathBase<Alarm> {
 
     public final com.example.MMP.siteuser.QSiteUser acceptUser;
 
+    public final com.example.MMP.chat.QChatRoom chatRoom;
+
     public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final StringPath message = createString("message");
 
     public final StringPath sender = createString("sender");
 
@@ -51,6 +55,7 @@ public class QAlarm extends EntityPathBase<Alarm> {
     public QAlarm(Class<? extends Alarm> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.acceptUser = inits.isInitialized("acceptUser") ? new com.example.MMP.siteuser.QSiteUser(forProperty("acceptUser"), inits.get("acceptUser")) : null;
+        this.chatRoom = inits.isInitialized("chatRoom") ? new com.example.MMP.chat.QChatRoom(forProperty("chatRoom")) : null;
     }
 
 }
