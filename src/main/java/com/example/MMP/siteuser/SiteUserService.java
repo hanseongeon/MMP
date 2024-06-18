@@ -1,6 +1,7 @@
 package com.example.MMP.siteuser;
 
 import com.example.MMP.DataNotFoundException;
+import com.example.MMP.lesson.Lesson;
 import com.example.MMP.mail.MailService;
 import com.example.MMP.point.Point;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -76,13 +78,12 @@ public class SiteUserService {
         return siteUser;
     }
 
-    public SiteUser getUserByUsername(String username) {
-        String name = getNumberByName(username);
-        Optional<SiteUser> siteUser = this.siteUserRepository.findByName (name);
-        if (siteUser.isPresent()) {
-            return siteUser.get();
+    public SiteUser getUserByUserNumber(String username) {
+        SiteUser siteUser = this.siteUserRepository.findByNumber(username);
+        if (siteUser != null) {
+            return siteUser;
         } else {
-            throw new DataNotFoundException ("사용자를 찾을 수 없습니다.");
+            throw new DataNotFoundException("사용자를 찾을 수 없습니다.");
         }
     }
 
@@ -118,6 +119,11 @@ public class SiteUserService {
     public String getNumberByName(String number) {
         SiteUser siteUser = this.siteUserRepository.findByNumber(number);
         return siteUser.getName();
+    }
+
+    public List<Lesson> getLessonList(SiteUser siteUser) {
+        List<Lesson> lessonList = siteUser.getLessonList();
+        return lessonList;
     }
 }
 
