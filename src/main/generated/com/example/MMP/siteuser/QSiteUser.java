@@ -28,6 +28,8 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final StringPath birthDate = createString("birthDate");
 
+    public final SetPath<com.example.MMP.challengeGroup.ChallengeGroup, com.example.MMP.challengeGroup.QChallengeGroup> challengeGroups = this.<com.example.MMP.challengeGroup.ChallengeGroup, com.example.MMP.challengeGroup.QChallengeGroup>createSet("challengeGroups", com.example.MMP.challengeGroup.ChallengeGroup.class, com.example.MMP.challengeGroup.QChallengeGroup.class, PathInits.DIRECT2);
+
     public final ListPath<com.example.MMP.chat.ChatRoom, com.example.MMP.chat.QChatRoom> chatRoomList = this.<com.example.MMP.chat.ChatRoom, com.example.MMP.chat.QChatRoom>createList("chatRoomList", com.example.MMP.chat.ChatRoom.class, com.example.MMP.chat.QChatRoom.class, PathInits.DIRECT2);
 
     public final DatePath<java.time.LocalDate> createDate = createDate("createDate", java.time.LocalDate.class);
