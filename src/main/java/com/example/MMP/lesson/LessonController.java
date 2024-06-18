@@ -58,23 +58,35 @@ public class LessonController {
                 .anyMatch(attendant -> attendant.getUserId().equals(currentUsername));
 
         boolean isLessonAttended;
-        if(isUserAttending){
-            if (lesson.getAttendanceList().size() <= lesson.getHeadCount()){//예약신청이 된 상태, 예약리스트길이가 인원수와 같거나 작을 때. --> 예약 완료
+
+        if(isUserAttending){//예약신청이 된 상태,
+            if (lesson.getAttendanceList().size() <= lesson.getHeadCount()){ //예약리스트길이가 인원수와 같거나 작을 때. --> 예약 완료
                 isLessonAttended = true;
-            }else {//예약신청이 된 상태, 예약리스트길이가 인원수보다 클 때. --> 대기 완료
+            }else { //예약리스트길이가 인원수보다 클 때. --> 대기 완료
                 isLessonAttended = false;
             }
-        }else {
-            if (lesson.getAttendanceList().size() < lesson.getHeadCount()){//예약신청이 안된 상태, 예약리스트길이가 인원수와 같거나 클 때. --> 대기 하기
+        }else {//예약신청이 안된 상태,
+            if (!(lesson.getAttendanceList().size() < lesson.getHeadCount())){//예약리스트길이가 인원수와 같거나 클 때. --> 대기 하기
                 isLessonAttended = false;
-            }else {//예약신청이 안된 상태, 예약리스트길이가 인원수보다 작을 때 --> 예약 하기
+            }else { //예약리스트길이가 인원수보다 작을 때 --> 예약 하기
                 isLessonAttended = true;
+            }
+        }
+        List<SiteUser> reservationList = new ArrayList<>();
+        List<SiteUser> waitingList = new ArrayList<>();
+        for(int i = 0; i < lesson.getAttendanceList().size(); i++){
+            if (i < lesson.getHeadCount()){
+                reservationList.add(lesson.getAttendanceList().get(i));
+            }else {
+                waitingList.add(lesson.getAttendanceList().get(i));
             }
         }
 
         model.addAttribute("lesson", lesson);
         model.addAttribute("isUserAttending", isUserAttending);
         model.addAttribute("isLessonAttended", isLessonAttended);
+        model.addAttribute("reservationList", reservationList);
+        model.addAttribute("waitingList", waitingList);
         return "lesson/lesson_detail";
     }
 

@@ -75,6 +75,20 @@
                     </a>
                 </div>
             </div>
+            <div th:if="${#authentication.principal.username == lesson.trainer.userId}">
+                <div class="mb-3 w-full">
+                    <label class="block text-gray-700">예약자</label>
+                    <div th:each="reservation : ${reservationList}">
+                        <p class="w-full max-w-xl text-black font-bold" th:text="${reservation.name}"></p>
+                    </div>
+                </div>
+                <div class="mb-3 w-full">
+                    <label class="block text-gray-700">대기자</label>
+                    <div th:each="wait : ${waitingList}">
+                        <p class="w-full max-w-xl text-black font-bold" th:text="${wait.name}"></p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script>
