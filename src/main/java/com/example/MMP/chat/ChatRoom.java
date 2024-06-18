@@ -1,6 +1,8 @@
 package com.example.MMP.chat;
 
+import com.example.MMP.alarm.Alarm;
 import com.example.MMP.siteuser.SiteUser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +24,7 @@ public class ChatRoom {
     private Long id;
 
     @ManyToMany(mappedBy = "chatRoomList", cascade = CascadeType.REMOVE)
+    @JsonIgnore
     List<SiteUser> userList = new ArrayList<>();
 
     @OneToMany(mappedBy = "chatRoom")
@@ -29,6 +32,11 @@ public class ChatRoom {
 
     @CreatedDate
     private LocalDateTime createDate;
+
+    @OneToMany(mappedBy = "chatRoom")
+    List<Alarm> alarmList = new ArrayList<>();
+
+
 
 
 }

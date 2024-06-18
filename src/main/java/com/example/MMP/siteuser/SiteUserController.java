@@ -8,6 +8,7 @@ import com.example.MMP.Comment.CommentService;
 import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.challenge.challenge.ChallengeService;
 import com.example.MMP.chat.ChatRoom;
+import com.example.MMP.chat.ChatRoomDto;
 import com.example.MMP.chat.ChatRoomService;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.homeTraining.HomeTrainingService;
@@ -83,7 +84,7 @@ public class SiteUserController {
     @GetMapping("/commandcenter")
     public String commandcenter() {
 
-        return "/commandcenter";
+        return "commandcenter";
     }
 
     @PostMapping("/adminSignup")
@@ -138,9 +139,7 @@ public class SiteUserController {
             bindingResult.reject("signupFailed", e.getMessage());
             return "user/userSignup";
         }
-
         return "redirect:/";
-
     }
 
     @GetMapping("/getUserID")
@@ -223,9 +222,7 @@ public class SiteUserController {
                 model.addAttribute("MyStandPass",MyStandPass);
             }
 
-            LocalDateTime nowTime = LocalDateTime.now();
 
-            model.addAttribute("nowTime",nowTime);
             model.addAttribute("wodList", wodList);
             model.addAttribute("saveTraining", saveTraining);
             model.addAttribute("user", user);
@@ -234,6 +231,7 @@ public class SiteUserController {
             model.addAttribute("ongoingChallenges", ongoingChallenges);
             model.addAttribute("successfulChallenges", successfulChallenges);
             model.addAttribute("failedChallenges", failedChallenges);
+            model.addAttribute("chatRoomDtoList",chatRoomService.findChat(user));
             model.addAttribute("challengeCount", challengeCount);
 
             return "user/userProfile_form";
@@ -257,6 +255,7 @@ public class SiteUserController {
         SiteUser siteUser = siteUserService.getUser(userDetail.getUsername());
         SiteUser siteUser1 = siteUserService.findById(id);
         ChatRoom chatRoom = chatRoomService.findChatroom(siteUser,siteUser1);
+        chatRoomService.deleteAlarm(siteUser,chatRoom);
         model.addAttribute("chatRoom",chatRoom);
         model.addAttribute("me",siteUser);
         model.addAttribute("you",siteUser1);
