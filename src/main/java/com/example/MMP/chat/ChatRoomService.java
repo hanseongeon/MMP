@@ -31,6 +31,7 @@ public class ChatRoomService {
         chatRoom.getUserList().add(siteUser);
         chatRoom.getUserList().add(siteUser1);
         chatRoomRepository.save(chatRoom);
+
         return chatRoom;
     }
 
