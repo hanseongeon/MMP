@@ -41,4 +41,6 @@ public class Challenge {
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChallengeUser> challengeUsers = new ArrayList<>();
+
+    private boolean expiration;
 }

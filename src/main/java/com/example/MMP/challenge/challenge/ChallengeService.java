@@ -44,6 +44,7 @@ public class ChallengeService {
         challenge.setCloseDate(endDate);
         challenge.setRequiredPoint(requiredPoint);
         challenge.setType(type);
+        challenge.setExpiration (false);
 
         if ("weight".equals(type) && targetWeightLoss != null) {
             challenge.setTargetWeightLoss(targetWeightLoss);
@@ -54,6 +55,13 @@ public class ChallengeService {
         }
 
         return challengeRepository.save(challenge);
+    }
+
+    public Challenge expiration(Long challengeId){
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new RuntimeException("챌린지를 찾을 수 없습니다."));
+        challenge.setExpiration (true);
+        return challengeRepository.save (challenge);
     }
 
     public void participateInChallenge(Long challengeId, Principal principal) {
@@ -226,6 +234,7 @@ public class ChallengeService {
             challengeUser.setEndDate(challenge.getCloseDate());
             challengeUser.setAchievementRate(0);
             challengeUser.setSuccess(false);
+            challengeUser.setInitialExerciseTime(0);
             challengeUserRepository.save(challengeUser);
             System.out.println("참여 성공: " + challengeUser.getId());
         } else {
@@ -233,15 +242,6 @@ public class ChallengeService {
             challengeUser = optionalChallengeUser.get();
             System.out.println("이미 참여 중: " + challengeUser.getId());
         }
-
-        // 초기 또는 최신 운동 시간 기록
-        Attendance attendance = new Attendance();
-        attendance.setSiteUser(siteUser);
-        attendance.setDate(LocalDate.now());
-        attendance.setPresent(true);
-        attendance.setStartTime(LocalDateTime.now());
-        attendance.setEndTime(LocalDateTime.now().plusMinutes(exerciseTime)); // 입력받은 운동 시간을 종료 시간으로 설정
-        attendanceRepository.save(attendance);
 
         // ChallengeActivity 생성
         ChallengeActivity challengeActivity = new ChallengeActivity();
@@ -251,6 +251,32 @@ public class ChallengeService {
 
         // 운동 시간에 따른 달성률 업데이트
         updateAchievementRate(challengeUser.getId());
+    }
+
+    @Transactional
+    public void updateExerciseTime(Long challengeId, Principal principal ) {
+        String userId = principal.getName();
+        SiteUser siteUser = siteUserRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("챌린지를 찾을 수 없습니다."));
+        Long user = siteUser.getId ();
+
+        Integer exerciseTime =  attendanceService.getTotalTime (user);
+
+        challengeUserRepository.findByChallengeAndSiteUser(challenge, siteUser).ifPresent(challengeUser -> {
+            Integer initialExerciseTime = challengeUser.getInitialExerciseTime ();
+            Integer targetExerciseTime = challenge.getTargetExerciseMinutes ();
+            Integer currentExerciseTime = initialExerciseTime + exerciseTime;
+
+
+            Integer achievementRate = (currentExerciseTime / targetExerciseTime) * 100;
+            challengeUser.setAchievementRate(achievementRate);
+            challengeUserRepository.save(challengeUser);
+
+            // 달성률이 100% 이상인 경우 챌린지 성공 처리
+            if (achievementRate >= 100) {
+                challengeUserService.markChallengeAsSuccessful(challengeUser.getId());
+            }
+        });
     }
 
 }

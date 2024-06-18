@@ -25,6 +25,9 @@ public interface AttendanceRepository extends JpaRepository<Attendance,Long> {
     @Query("SELECT a.endTime FROM Attendance a WHERE a.siteUser.id = :userId ORDER BY a.endTime DESC LIMIT 1")
     LocalDateTime findEndTimeByUserId(@Param("userId") Long userId);
 
+    @Query("SELECT a.totalTime FROM Attendance a WHERE a.siteUser.id = :userId ORDER BY a.endTime DESC LIMIT 1")
+    Integer findTotalTimeByUserId(@Param("userId") Long userId);
+
     @Query("SELECT COUNT(DISTINCT a.date) FROM Attendance a WHERE a.siteUser.id = :userId")
     Long countDistinctBySiteUserId(@Param("userId") Long userId);
 
