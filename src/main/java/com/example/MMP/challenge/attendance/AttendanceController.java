@@ -2,17 +2,18 @@ package com.example.MMP.challenge.attendance;
 
 import com.example.MMP.security.UserDetail;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Controller
@@ -62,7 +63,6 @@ public class AttendanceController {
         return "/challenge/attendanceCalendar";
     }
 
-
     // 사용자의 출석 기록을 반환
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Attendance>> getUserAttendance(@PathVariable Long userId) {
@@ -92,28 +92,5 @@ public class AttendanceController {
         String userId = principal.getName();
         String result = attendanceService.handleEntry(userId, "exit");
         return ResponseEntity.ok(result);
-    }
-
-    @PostMapping("/bluetooth-entry")
-    public ResponseEntity<String> bluetoothEntry(@RequestBody Map<String, String> payload) {
-        String userId = payload.get("userId");
-        String action = payload.get("action");
-
-        if (userId == null || action == null) {
-            return ResponseEntity.badRequest().body("Invalid request data");
-        }
-
-        String result = attendanceService.handleEntry(userId, action);
-        return ResponseEntity.ok(result);
-    }
-
-    @PostMapping("/check")
-    public ResponseEntity<String> checkAttendance(@RequestParam String macAddress) {
-        try {
-            attendanceService.markAttendance(macAddress);
-            return ResponseEntity.ok("Attendance checked successfully.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to check attendance.");
-        }
     }
 }
