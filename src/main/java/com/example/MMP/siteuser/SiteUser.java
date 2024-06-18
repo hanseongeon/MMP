@@ -87,8 +87,10 @@ public class SiteUser {
     private List<Lesson> lessonsAttending;
 
 
-    @ManyToOne
-    private PtGroup ptGroupUser;
+
+    @ManyToMany(mappedBy = "members")
+    @JsonIgnore
+    private List<PtGroup> ptGroupUser = new ArrayList<>();
 
     @OneToOne
     private PtGroup ptGroupTrainer;
