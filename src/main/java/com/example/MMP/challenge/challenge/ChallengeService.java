@@ -51,7 +51,7 @@ public class ChallengeService {
         }
 
         if ("exerciseTime".equals(type) && targetExerciseMinutes != null) {
-            challenge.setTargetExerciseMinutes(targetExerciseMinutes);
+            challenge.setTargetExerciseSeconds (targetExerciseMinutes);
         }
 
         return challengeRepository.save(challenge);
@@ -205,7 +205,7 @@ public class ChallengeService {
                     challenge.getOpenDate().toLocalDate(),
                     challenge.getCloseDate().toLocalDate()
             );
-            int targetExerciseMinutes = challenge.getTargetExerciseMinutes();
+            int targetExerciseMinutes = challenge.getTargetExerciseSeconds ();
             achievementRate = ((double) totalExerciseTime / targetExerciseMinutes) * 100;
         }
 
@@ -254,21 +254,37 @@ public class ChallengeService {
     }
 
     @Transactional
-    public void updateExerciseTime(Long challengeId, Principal principal ) {
+    public void updateExerciseTime(Long challengeId, Principal principal) {
         String userId = principal.getName();
-        SiteUser siteUser = siteUserRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("챌린지를 찾을 수 없습니다."));
-        Long user = siteUser.getId ();
+        SiteUser siteUser = siteUserRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new RuntimeException("챌린지를 찾을 수 없습니다."));
+        Long siteUserId = siteUser.getId();
 
-        Integer exerciseTime =  attendanceService.getTotalTime (user);
+        Long challengeUserId = challengeUserRepository.findByChallengeAndSiteUser(challenge, siteUser)
+                .orElseThrow(() -> new RuntimeException("챌린지 유저를 찾을 수 없습니다.")).getId();
+
+        LocalDateTime challengeStartDate = challengeUserRepository.findById (challengeUserId).get ().getStartDate ();
+
+        // AttendanceService를 사용하여 운동 시간 계산
+        List<Attendance> attendanceList = attendanceRepository.findBySiteUserId (siteUserId);
+
+        long totalExerciseTimeInSeconds = 0L;
+        for (Attendance attendance : attendanceList) {
+            if (attendance.getStartTime ().isAfter(challengeStartDate)) {
+                totalExerciseTimeInSeconds += attendance.getTotalTime();
+            }
+        }
+
+        final long finalTotalExerciseTimeInSeconds = totalExerciseTimeInSeconds;
 
         challengeUserRepository.findByChallengeAndSiteUser(challenge, siteUser).ifPresent(challengeUser -> {
-            Integer initialExerciseTime = challengeUser.getInitialExerciseTime ();
-            Integer targetExerciseTime = challenge.getTargetExerciseMinutes ();
-            Integer currentExerciseTime = initialExerciseTime + exerciseTime;
+            long initialExerciseTime = challengeUser.getInitialExerciseTime(); // 초 단위
+            long targetExerciseTime = challenge.getTargetExerciseSeconds(); // 초 단위
+            long currentExerciseTime = initialExerciseTime + finalTotalExerciseTimeInSeconds;
 
-
-            Integer achievementRate = (currentExerciseTime / targetExerciseTime) * 100;
+            int achievementRate = (int) ((currentExerciseTime * 100) / targetExerciseTime);
             challengeUser.setAchievementRate(achievementRate);
             challengeUserRepository.save(challengeUser);
 

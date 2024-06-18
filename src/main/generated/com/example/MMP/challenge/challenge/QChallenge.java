@@ -38,7 +38,7 @@ public class QChallenge extends EntityPathBase<Challenge> {
 
     public final NumberPath<Integer> requiredPoint = createNumber("requiredPoint", Integer.class);
 
-    public final NumberPath<Integer> targetExerciseMinutes = createNumber("targetExerciseMinutes", Integer.class);
+    public final NumberPath<Integer> targetExerciseSeconds = createNumber("targetExerciseSeconds", Integer.class);
 
     public final NumberPath<Double> targetWeightLoss = createNumber("targetWeightLoss", Double.class);
 

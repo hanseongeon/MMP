@@ -34,7 +34,7 @@ public class Challenge {
     private Double targetWeightLoss;
 
     // 운동시간 챌린지
-    private Integer targetExerciseMinutes;
+    private Integer targetExerciseSeconds;
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChallengeActivity> challengeActivities = new ArrayList<>();

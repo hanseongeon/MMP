@@ -2,6 +2,7 @@ package com.example.MMP.siteuser;
 
 import com.example.MMP.alarm.Alarm;
 import com.example.MMP.challenge.attendance.Attendance;
+import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.challengeGroup.ChallengeGroup;
 import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.homeTraining.HomeTraining;
@@ -119,4 +120,7 @@ public class SiteUser {
     @ManyToMany
     @JsonManagedReference
     private Set<ChallengeGroup> challengeGroups = new HashSet<> ();
+
+    @OneToMany(mappedBy = "siteUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChallengeUser> challengeUsers = new ArrayList<>();
 }

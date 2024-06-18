@@ -33,4 +33,6 @@ public interface AttendanceRepository extends JpaRepository<Attendance,Long> {
 
     List<Attendance> findByChallengeGroupId(Long groupId);
 
+    List<Attendance> findBySiteUserIdAndDateAfter(Long userId, LocalDate startDate);
+
 }

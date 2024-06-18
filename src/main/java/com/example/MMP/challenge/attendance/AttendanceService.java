@@ -176,4 +176,8 @@ public class AttendanceService {
             System.out.println("User not found for MAC address: " + macAddress);
         }
     }
+
+    public List<Attendance> getAttendanceByUserIdAndStartDate(Long userId, LocalDateTime startDate) {
+        return attendanceRepository.findBySiteUserIdAndDateAfter(userId, startDate.toLocalDate());
+    }
 }
