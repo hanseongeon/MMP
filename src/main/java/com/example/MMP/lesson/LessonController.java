@@ -1,36 +1,24 @@
 package com.example.MMP.lesson;
 
-import com.example.MMP.homeTraining.HomeTrainingForm;
-import com.example.MMP.homeTraining.category.Category;
-import com.example.MMP.ptpass.PtPass;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
 import com.example.MMP.userPass.UserPtPass;
 import com.example.MMP.userPass.UserPtPassService;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -195,4 +183,5 @@ public class LessonController {
         }
         return lessonService.sortLessonsByDateDesc(lessonList);
     }
+
 }
