@@ -4,35 +4,71 @@
 <head>
     <!-- Import map 설정 -->
     <script type='importmap'>
-      {
-        "imports": {
-          "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.14",
-          "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.14"
+        {
+          "imports": {
+            "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.14",
+            "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.14"
+          }
         }
-      }
     </script>
 
     <!-- FullCalendar CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.14/core/main.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.14/daygrid/main.min.css" rel="stylesheet">
 </head>
+
 <body>
-<div layout:fragment="content" class="w-full my-3 flex justify-center items-center flex-col">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+<div layout:fragment="content"
+     class="w-full my-3 flex justify-start items-center flex-col overflow-y-auto h-screen">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
         <a class="btn btn-error text-white justify-start" th:href="@{/lesson/create}">추가</a>
+
     </div>
-    <!-- FullCalendar 캘린더를 표시할 div 요소 -->
-    <div id='calendar' class="mt-5 h-[500px] w-[550px] overflow-y-auto"></div>
+    <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
+        <a class="btn btn-error text-white justify-start" href="user/commandcenter">관리자 페이지</a>
+        <a class="btn btn-error text-white justify-start" href="/user/adminSignup">관리자 회원가입</a>
+    </div>
     <!-- 각 날짜에 해당하는 레슨 리스트 -->
-    <div class="flex flex-col justify-center w-[80%] p-2">
-        <a href="#" class="btn w-[15%]" id="myScheduleButton">My Schedule</a>
-        <div class="divider"></div>
-        <div id="lessonListContainer"></div>
+    <div class="w-[80%]">
+        <div style="display: inline-block; vertical-align: top;" class="w-[50%]">
+            <div id='calendar' class="mt-5 h-[700px] w-[700px]"></div>
+        </div>
+        <div style="display: inline-block; vertical-align: top;" class="w-[40%]">
+            <a href="#" class="btn w-[20%]" id="myScheduleButton">My Schedule</a>
+            <div class="divider"></div>
+            <div id="lessonListContainer" class="mt-5 h-[600px] w-[900px]"></div>
+        </div>
+    </div>
+
+    <!-- 이미지 지도를 표시할 div 입니다 -->
+    <div class="flex flex-col items-center justify-center h-screen">
+        <div id="staticMap" style="width:400px;height:350px;"></div>
+        <a href="https://map.kakao.com/?q=%EB%8C%80%EC%A0%84+%EC%BD%94%EB%A6%AC%EC%95%84%EC%95%84%EC%9D%B4%ED%8B%B0"
+           target="_blank" class="mt-4 text-white">업체 위치</a>
     </div>
     <div>
-        <input type="hidden" id="currentUser" th:value="${#authentication.principal.username}" />
+        <input type="hidden" id="currentUser" th:value="${#authentication.principal.username}"/>
     </div>
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e71195e7a1854be49ca6900abef2dd50&libraries=services"></script>
+    <script>
+        // 이미지 지도에 표시할 마커입니다
+        var marker = {
+            position: new kakao.maps.LatLng(33.450701, 126.570667),
+            text: '미라클 빌딩 3층에 위치하고 있습니다! 주차장은 지하 2층까지 사용가능합니다.' // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다
+        };
+
+        var staticMapContainer = document.getElementById('staticMap'), // 이미지 지도를 표시할 div
+            staticMapOption = {
+                center: new kakao.maps.LatLng(33.450701, 126.570667), // 이미지 지도의 중심좌표
+                level: 3, // 이미지 지도의 확대 레벨
+                marker: marker // 이미지 지도에 표시할 마커
+            };
+
+        // 이미지 지도를 생성합니다
+        var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+    </script>
     <script type='module'>
         import { Calendar } from '@fullcalendar/core';
         import dayGridPlugin from '@fullcalendar/daygrid';
@@ -127,7 +163,7 @@
 
                 // Lesson 이름
                 const lessonNameDivWrapper = document.createElement('div');
-                lessonNameDivWrapper.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[70%]', 'flex', 'text-black', 'font-bold','justify-center', 'items-center', 'mx-2');
+                lessonNameDivWrapper.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[80%]', 'flex', 'text-black', 'font-bold', 'justify-center', 'items-center', 'mx-2');
 
                 const lessonNameDiv = document.createElement('div');
                 lessonNameDiv.textContent = lesson.lessonName;
@@ -137,7 +173,7 @@
 
                 // 날짜, 시작 시간, 종료 시간을 묶을 div
                 const lessonTimeDivWrapper = document.createElement('div');
-                lessonTimeDivWrapper.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[30%]', 'text-black', 'font-bold', 'mx-2');
+                lessonTimeDivWrapper.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[20%]', 'text-black', 'font-bold', 'mx-2');
 
                 // Lesson 날짜
                 const lessonDateDiv = document.createElement('div');
@@ -179,24 +215,30 @@
 
                 // 현재 로그인된 사용자가 attendanceList에 있는지 확인
                 const isAttending = lesson.attendanceList.some(attendee => attendee.userId == currentUser);
-                const currentUserIndex = lesson.attendanceList.findIndex(attendee => attendee.userId == currentUser);
-                console.log(currentUserIndex);
-                if (isAttending) {
-                    if (currentUserIndex + 1 <= lesson.headCount) {
-                        attendanceButton.classList.add('bg-green-500', 'text-white');
-                        attendanceButton.innerHTML = `예약완료<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                // console.log(isAttending);
+                if (currentUser != lesson.trainer.userId) {
+                    if (isAttending) {
+                        const currentUserIndex = lesson.attendanceList.findIndex(attendee => attendee.userId == currentUser);
+                        // console.log("index : " + currentUserIndex);
+                        if ((currentUserIndex + 1) <= lesson.headCount) {
+                            attendanceButton.classList.add('bg-green-500', 'text-white', 'text-xs');
+                            attendanceButton.innerHTML = `예약완료<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                        } else {
+                            attendanceButton.classList.add('bg-gray-500', 'text-white', 'text-xs');
+                            attendanceButton.innerHTML = `대기완료<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                        }
                     } else {
-                        attendanceButton.classList.add('bg-gray-500', 'text-white');
-                        attendanceButton.innerHTML = `대기완료<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                        if (lesson.attendanceList.length < lesson.headCount) {
+                            attendanceButton.classList.add('bg-blue-500', 'text-white', 'text-xs');
+                            attendanceButton.innerHTML = `예약하기<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                        } else {
+                            attendanceButton.classList.add('bg-red-500', 'text-white', 'text-xs');
+                            attendanceButton.innerHTML = `대기하기<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                        }
                     }
                 } else {
-                    if (lesson.attendanceList.length < lesson.headCount) {
-                        attendanceButton.classList.add('bg-blue-500', 'text-white');
-                        attendanceButton.innerHTML = `예약하기<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
-                    } else {
-                        attendanceButton.classList.add('bg-red-500', 'text-white');
-                        attendanceButton.innerHTML = `대기하기<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
-                    }
+                    attendanceButton.classList.add('bg-blue-500', 'text-white');
+                    attendanceButton.innerHTML = `상세보기 <br> ${lesson.attendanceList.length}/${lesson.headCount}`;
                 }
 
                 attendanceButton.addEventListener('click', function () {
@@ -219,7 +261,6 @@
             initializeCalendar();
 
             document.getElementById('myScheduleButton').addEventListener('click', function () {
-                console.log("good");
                 const csrfToken = getCsrfToken();
 
                 const xhr = new XMLHttpRequest();
@@ -249,4 +290,5 @@
     </script>
 </div>
 </body>
+
 </html>

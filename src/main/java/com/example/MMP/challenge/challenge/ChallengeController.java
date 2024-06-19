@@ -105,8 +105,14 @@ public class ChallengeController {
                 }
             }
         }
-
         List<Challenge> challenges = challengeRepository.findAll();
+        LocalDateTime now = LocalDateTime.now();
+        for (Challenge challenge : challenges) {
+            if (challenge.getCloseDate().isBefore(now) && !challenge.isExpiration ()) {
+                challengeService.expiration(challenge.getId());
+            }
+        }
+
         model.addAttribute("challenges", challenges);
         model.addAttribute("participatedChallengeIds", participatedChallengeIds);
         model.addAttribute("challengeUsers", challengeUsers);
@@ -132,7 +138,9 @@ public class ChallengeController {
                 case "weight":
                     return "redirect:/challenge/enterWeight?challengeId=" + challengeId;
                 case "exerciseTime":
-                    return "redirect:/challenge/enterExerciseTime?challengeId=" + challengeId;
+                    // 초기 운동 시간을 0으로 설정
+                    challengeService.participateInChallengeWithExerciseTime(challengeId, principal, 0);
+                    break;
                 default:
                     challengeService.participateInChallenge(challengeId, principal);
                     break;
@@ -141,6 +149,12 @@ public class ChallengeController {
         return "redirect:/challenge/challenges";
     }
 
+    @PostMapping("/expiration")
+    private String expiration(@RequestParam("challengeId") Long challengeId){
+        challengeService.expiration (challengeId);
+
+        return "redirect:/challenge/challenges";
+    }
 
 
     @GetMapping("/enterWeight")
@@ -178,6 +192,7 @@ public class ChallengeController {
         return "redirect:/challenge/challenges";
     }
 
+<<<<<<< HEAD
 
     // 운동 시간 입력 폼 반환
     @GetMapping("/enterExerciseTime")
@@ -197,4 +212,6 @@ public class ChallengeController {
         return "redirect:/challenge/challenges";
     }
 
+=======
+>>>>>>> b0b0d1c2eebdfadc4581f1bb45e15124cda405b6
 }

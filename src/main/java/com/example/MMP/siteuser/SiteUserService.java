@@ -1,14 +1,17 @@
 package com.example.MMP.siteuser;
 
 import com.example.MMP.DataNotFoundException;
+
+import com.example.MMP.lesson.Lesson;
+
 import com.example.MMP.mail.MailService;
 import com.example.MMP.point.Point;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,7 +44,7 @@ public class SiteUserService {
         siteUser.setUserRole("admin");
         siteUser.setCreateDate(LocalDate.now());
         // Point 설정
-        Point point = new Point ();
+        Point point = new Point();
         point.setSiteUser(siteUser); // Point와 SiteUser 연결
         siteUser.setPoint(point); // SiteUser에 Point 설정
 
@@ -50,7 +53,7 @@ public class SiteUserService {
         siteUserRepository.save(siteUser);
     }
 
-    public SiteUser userSignup(String name,String number,String gender, String birthDay, String email, String userRole){
+    public SiteUser userSignup(String name, String number, String gender, String birthDay, String email, String userRole) {
         SiteUser siteUser = new SiteUser();
         siteUser.setUserId(number);
         siteUser.setPassword(passwordEncoder.encode(birthDay));
@@ -64,7 +67,7 @@ public class SiteUserService {
 
 
         // Point 설정
-        Point point = new Point ();
+        Point point = new Point();
         point.setSiteUser(siteUser); // Point와 SiteUser 연결
         siteUser.setPoint(point); // SiteUser에 Point 설정
 
@@ -98,11 +101,11 @@ public class SiteUserService {
     }
 
 
-    public SiteUser findByUserName(String username){
+    public SiteUser findByUserName(String username) {
         return siteUserRepository.findByUserId(username).orElseThrow();
     }
 
-    public SiteUser findById(Long id){
+    public SiteUser findById(Long id) {
         return siteUserRepository.findById(id).orElseThrow();
     }
 
@@ -110,7 +113,7 @@ public class SiteUserService {
         siteUserRepository.save(member);
     }
 
-    public SiteUser findByNumber(String number){
+    public SiteUser findByNumber(String number) {
         return siteUserRepository.findByNumber(number);
     }
 
@@ -119,6 +122,10 @@ public class SiteUserService {
         return siteUser.getName();
     }
 
+    public List<Lesson> getLessonList(SiteUser siteUser) {
+        List<Lesson> lessonList = siteUser.getLessonList();
+        return lessonList;
+    }
 }
 
 

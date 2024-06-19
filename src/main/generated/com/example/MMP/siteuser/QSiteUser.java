@@ -28,6 +28,10 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final StringPath birthDate = createString("birthDate");
 
+    public final SetPath<com.example.MMP.challengeGroup.ChallengeGroup, com.example.MMP.challengeGroup.QChallengeGroup> challengeGroups = this.<com.example.MMP.challengeGroup.ChallengeGroup, com.example.MMP.challengeGroup.QChallengeGroup>createSet("challengeGroups", com.example.MMP.challengeGroup.ChallengeGroup.class, com.example.MMP.challengeGroup.QChallengeGroup.class, PathInits.DIRECT2);
+
+    public final ListPath<com.example.MMP.challenge.challengeUser.ChallengeUser, com.example.MMP.challenge.challengeUser.QChallengeUser> challengeUsers = this.<com.example.MMP.challenge.challengeUser.ChallengeUser, com.example.MMP.challenge.challengeUser.QChallengeUser>createList("challengeUsers", com.example.MMP.challenge.challengeUser.ChallengeUser.class, com.example.MMP.challenge.challengeUser.QChallengeUser.class, PathInits.DIRECT2);
+
     public final ListPath<com.example.MMP.chat.ChatRoom, com.example.MMP.chat.QChatRoom> chatRoomList = this.<com.example.MMP.chat.ChatRoom, com.example.MMP.chat.QChatRoom>createList("chatRoomList", com.example.MMP.chat.ChatRoom.class, com.example.MMP.chat.QChatRoom.class, PathInits.DIRECT2);
 
     public final DatePath<java.time.LocalDate> createDate = createDate("createDate", java.time.LocalDate.class);
@@ -54,7 +58,7 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final com.example.MMP.ptGroup.QPtGroup ptGroupTrainer;
 
-    public final com.example.MMP.ptGroup.QPtGroup ptGroupUser;
+    public final ListPath<com.example.MMP.ptGroup.PtGroup, com.example.MMP.ptGroup.QPtGroup> ptGroupUser = this.<com.example.MMP.ptGroup.PtGroup, com.example.MMP.ptGroup.QPtGroup>createList("ptGroupUser", com.example.MMP.ptGroup.PtGroup.class, com.example.MMP.ptGroup.QPtGroup.class, PathInits.DIRECT2);
 
     public final ListPath<com.example.MMP.homeTraining.HomeTraining, com.example.MMP.homeTraining.QHomeTraining> saveTraining = this.<com.example.MMP.homeTraining.HomeTraining, com.example.MMP.homeTraining.QHomeTraining>createList("saveTraining", com.example.MMP.homeTraining.HomeTraining.class, com.example.MMP.homeTraining.QHomeTraining.class, PathInits.DIRECT2);
 
@@ -88,7 +92,6 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
         super(type, metadata, inits);
         this.point = inits.isInitialized("point") ? new com.example.MMP.point.QPoint(forProperty("point"), inits.get("point")) : null;
         this.ptGroupTrainer = inits.isInitialized("ptGroupTrainer") ? new com.example.MMP.ptGroup.QPtGroup(forProperty("ptGroupTrainer"), inits.get("ptGroupTrainer")) : null;
-        this.ptGroupUser = inits.isInitialized("ptGroupUser") ? new com.example.MMP.ptGroup.QPtGroup(forProperty("ptGroupUser"), inits.get("ptGroupUser")) : null;
     }
 
 }
