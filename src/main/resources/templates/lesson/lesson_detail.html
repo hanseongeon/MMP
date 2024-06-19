@@ -47,6 +47,14 @@
                 <label class="block text-gray-700">끝 시간</label>
                 <p class="w-full max-w-xl text-black font-bold" th:text="${lesson.endTime}"></p>
             </div>
+            <!-- 유저 이용권 선택 -->
+            <div class="mb-3 w-full">
+                <label class="block text-gray-700">내 이용권</label>
+                <select id="passSelect" class="select text-black select-error w-full max-w-xs text-black" name="passId">
+                    <option th:each="pt : ${ptPassList}" th:value="${pt.id}"
+                        th:text="${pt.passName} + ' : 잔여 ' + ${pt.passCount} + '개'"></option>
+                </select>
+            </div>
 
             <!-- 예약 버튼 -->
             <div th:if="${#authentication.principal.username != lesson.trainer.userId}" class="w-[100px]">
@@ -75,6 +83,9 @@
                     </a>
                 </div>
             </div>
+
+
+
             <div th:if="${#authentication.principal.username == lesson.trainer.userId}">
                 <div class="mb-3 w-full">
                     <label class="block text-gray-700">예약자</label>
@@ -137,7 +148,7 @@
             });
         });
     </script>
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
         function cancelReservation(lessonId) {
             const csrfToken = getCsrfToken(); // CSRF 토큰을 가져오는 함수 (이미 구현되어 있다고 가정)
 
@@ -181,7 +192,7 @@
 
             xhr.send();
         }
-    </script>
+    </script> -->
 
 </div>
 
