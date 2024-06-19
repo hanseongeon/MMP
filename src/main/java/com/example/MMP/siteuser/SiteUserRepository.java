@@ -13,5 +13,4 @@ public interface SiteUserRepository extends JpaRepository<SiteUser,Long> ,SiteUs
 
     SiteUser findByNumber(String number);
 
-    SiteUser findByMacAddress(String macAddress);
 }
