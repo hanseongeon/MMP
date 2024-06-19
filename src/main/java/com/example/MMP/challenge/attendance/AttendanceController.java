@@ -1,6 +1,12 @@
 package com.example.MMP.challenge.attendance;
 
+import com.example.MMP.challenge.challenge.ChallengeRepository;
+import com.example.MMP.challenge.challenge.ChallengeService;
+import com.example.MMP.challenge.challengeUser.ChallengeUser;
+import com.example.MMP.challenge.challengeUser.ChallengeUserRepository;
 import com.example.MMP.security.UserDetail;
+import com.example.MMP.siteuser.SiteUser;
+import com.example.MMP.siteuser.SiteUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +25,10 @@ import java.util.Map;
 @RequestMapping("/attendance")
 public class AttendanceController {
     private final AttendanceService attendanceService;
+    private final SiteUserService siteUserService;
+    private final ChallengeUserRepository challengeUserRepository;
+    private final ChallengeRepository challengeRepository;
+    private final ChallengeService challengeService;
 
     @GetMapping("/checkin")
     public String checkInPage() {
@@ -62,7 +72,6 @@ public class AttendanceController {
         return "/challenge/attendanceCalendar";
     }
 
-
     // 사용자의 출석 기록을 반환
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Attendance>> getUserAttendance(@PathVariable Long userId) {
@@ -91,29 +100,25 @@ public class AttendanceController {
         UserDetail userDetail = (UserDetail) authentication.getPrincipal();
         String userId = principal.getName();
         String result = attendanceService.handleEntry(userId, "exit");
-        return ResponseEntity.ok(result);
-    }
 
-    @PostMapping("/bluetooth-entry")
-    public ResponseEntity<String> bluetoothEntry(@RequestBody Map<String, String> payload) {
-        String userId = payload.get("userId");
-        String action = payload.get("action");
+        SiteUser siteUser = siteUserService.getUser(userId);
+        List<ChallengeUser> challengeUsers = challengeUserRepository.findBySiteUser(siteUser);
 
-        if (userId == null || action == null) {
-            return ResponseEntity.badRequest().body("Invalid request data");
+        if (challengeUsers.isEmpty()) {
+            return ResponseEntity.ok(result); // 챌린지 유저가 없으면 결과 반환
+        } else {
+            for (ChallengeUser challengeUser : challengeUsers) {
+                if (challengeUser.getInitialExerciseTime() != null) {
+                    Long challengeId = challengeUser.getChallenge().getId();
+                    Boolean expired = challengeRepository.findById(challengeId).get().isExpiration();
+                    if (expired) {
+                        continue;
+                    } else {
+                        challengeService.updateExerciseTime(challengeId, principal);
+                    }
+                }
+            }
         }
-
-        String result = attendanceService.handleEntry(userId, action);
         return ResponseEntity.ok(result);
-    }
-
-    @PostMapping("/check")
-    public ResponseEntity<String> checkAttendance(@RequestParam String macAddress) {
-        try {
-            attendanceService.markAttendance(macAddress);
-            return ResponseEntity.ok("Attendance checked successfully.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to check attendance.");
-        }
     }
 }

@@ -22,7 +22,7 @@ public class WebsocketController {
 
     @MessageMapping("/talk/{id}")
     @SendTo("/sub/talk/{id}")
-    public ChatMessageDto chat(@DestinationVariable("id")Long id,ChatMessageDto chatMessageDto){
+    public ChatMessageDto chat(@DestinationVariable("id") Long id, ChatMessageDto chatMessageDto) {
         SiteUser siteUser = siteUserService.findByNumber(chatMessageDto.getSender());
         ChatRoom chatRoom = chatRoomService.findById(id);
         ChatMessage chatMessage = ChatMessage.builder().message(chatMessageDto.getMessage()).sender(siteUser).sendTime(chatMessageDto.getSendTime()).chatRoom(chatRoom).build();
@@ -33,11 +33,16 @@ public class WebsocketController {
 
     @MessageMapping("/alarm/{number}")
     @SendTo("/sub/alarm/{number}")
-    public AlarmDto alarm(@DestinationVariable("number") String number,AlarmDto alarmDto){
+    public AlarmDto alarm(@DestinationVariable("number") String number, AlarmDto alarmDto) {
         SiteUser siteUser = siteUserService.findByNumber(alarmDto.getAcceptUser());
         ChatRoom chatRoom = chatRoomService.findById(alarmDto.getChatroomId());
         Alarm alarm = Alarm.builder().sender(alarmDto.getSender()).acceptUser(siteUser).message(alarmDto.getMessage()).sendTime(alarmDto.getSendTime()).chatRoom(chatRoom).build();
         alarmService.save(alarm);
+        SiteUser me = siteUserService.findByNumber(alarmDto.getSender());
+        ChatRoomDto chatRoomDto = chatRoomService.findAlarm(siteUser.getId(),me.getId());
+        alarmDto.setSender(me.getName());
+        alarmDto.setAlarmCnt(chatRoomDto.getAlarmCnt() -1 + 1);
+
         return alarmDto;
     }
 }
