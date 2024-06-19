@@ -22,7 +22,7 @@
         <div class="bg-white p-6 rounded-lg shadow-lg w-[800px] h-[800px]">
             <h1 class="text-2xl font-bold mb-4">Chat Room</h1>
             <div id="messages" class="w-[100%] h-[85%] overflow-y-auto mb-4">
-                <div th:each="list :${chatRoom.chatMessageList}">
+                <div th:each="list :${challengeGroup.chatRoom.chatMessageList}">
                     <div th:if="${list.sender != null}">
                         <div th:if="${list.sender.name eq me.name}">
                             <div class="chat chat-end flex flex-col items-end">
@@ -69,15 +69,11 @@
                 stompClient = Stomp.over(socket);
                 stompClient.connect({}, function (frame) {
                     console.log('웹소켓 연결 성공:', frame);
-                    const aa = [[${ chatRoom.id }]];
-                    const number = [[${ you.number }]];
+                    const aa = [[${ challengeGroup.chatRoom.id }]];
 
                     //구독
                     stompClient.subscribe('/sub/talk/' + aa, function (chatMessageDto) {
                         showChat(JSON.parse(chatMessageDto.body));
-                    });
-
-                    stompClient.subscribe('/sub/alarm/' + number, function (alarmDto) {
                     });
                 });
             }
@@ -85,10 +81,9 @@
 
             //html 에서 입력값, roomId 를 받아서 Controller 로 전달
             function sendChat() {
-                const aa = [[${ chatRoom.id }]];
+                const aa = [[${ challengeGroup.chatRoom.id }]];
                 const sender = [[${me.number}]];
                 const name = [[${ me.name }]];
-                const number = [[${ you.number }]];
 
                 var currentDate = new Date();
                 currentDate.setTime(currentDate.getTime() + (9 * 60 * 60 * 1000));
@@ -101,16 +96,6 @@
                             'name': name,
                             'message': $("#message").val(),
                             'sendTime': formattedDate
-                        }));
-
-                    stompClient.send("/pub/alarm/" + number, {},
-                        JSON.stringify({
-                            'sender': sender,
-                            'acceptUser': number,
-                            'message': $("#message").val(),
-                            'sendTime': formattedDate,
-                            'chatroomId' : aa,
-                            'alarmCnt' : '0'
                         }));
                 }
                 $("#message").val('');

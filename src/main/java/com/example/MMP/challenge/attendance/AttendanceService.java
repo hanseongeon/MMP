@@ -1,10 +1,6 @@
 package com.example.MMP.challenge.attendance;
 
-import com.example.MMP.challenge.challenge.ChallengeService;
-<<<<<<< HEAD
-=======
-import com.example.MMP.challenge.challengeActivity.ChallengeActivity;
->>>>>>> b0b0d1c2eebdfadc4581f1bb45e15124cda405b6
+
 import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.challenge.challengeUser.ChallengeUserRepository;
 import com.example.MMP.challenge.challengeUser.ChallengeUserService;

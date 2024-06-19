@@ -1,7 +1,10 @@
 package com.example.MMP.lesson;
 
+import com.example.MMP.chat.ChatRoom;
+import com.example.MMP.chat.ChatRoomService;
 import com.example.MMP.homeTraining.HomeTrainingForm;
 import com.example.MMP.homeTraining.category.Category;
+import com.example.MMP.security.UserDetail;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
 import jakarta.persistence.EntityManager;
@@ -12,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
@@ -46,7 +50,7 @@ public class LessonController {
 
         lessonService.create(lessonForm.getLessonName(), lessonForm.getHeadCount(), lessonForm.getLessonDate(), lessonForm.getStartTime(), lessonForm.getEndTime(), trainer);
 
-        return "redirect:/schedule";
+        return "redirect:/";
     }
 
     @GetMapping("/detail/{id}")
@@ -112,7 +116,7 @@ public class LessonController {
     public String delete(@PathVariable("id") Long id){
         Lesson lesson = lessonService.getLesson(id);
         lessonService.delete(lesson);
-        return "redirect:/schedule";
+        return "redirect:/";
     }
 
     @GetMapping("/update/{id}")
@@ -150,4 +154,5 @@ public class LessonController {
         }
         return lessonService.sortLessonsByDateDesc(lessonList);
     }
+
 }
