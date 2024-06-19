@@ -38,7 +38,7 @@ public class ChallengeGroupController {
                 return "error/403"; // 권한이 부족함을 알리는 적절한 뷰
             }
             model.addAttribute ("group", group);
-            return "/challenge/groupEdit";
+            return "challenge/groupEdit";
         } else {
             return "error/404";
         }
@@ -85,7 +85,7 @@ public class ChallengeGroupController {
 
         model.addAttribute ("user", user);
 
-        return "/challenge/groupList_form";
+        return "challenge/groupList_form";
     }
 
     @GetMapping("/sorted")

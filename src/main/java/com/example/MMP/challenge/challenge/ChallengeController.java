@@ -62,7 +62,7 @@ public class ChallengeController {
     @GetMapping("/create")
     public String challengeCreate(Model model) {
         model.addAttribute("challengeForm", new ChallengeForm());
-        return "/challenge/challengeCreate_form";
+        return "challenge/challengeCreate_form";
     }
 
     @PostMapping("/create")
@@ -120,7 +120,7 @@ public class ChallengeController {
 
         // 현재 날짜를 모델에 추가
         model.addAttribute("currentDate", LocalDate.now());
-        return "/challenge/challengeList";
+        return "challenge/challengeList";
     }
 
 
@@ -178,7 +178,7 @@ public class ChallengeController {
     @GetMapping("/updateWeight")
     public String updateWeightForm(@RequestParam("challengeId") Long challengeId, Model model) {
         model.addAttribute("challengeId", challengeId);
-        return "/challenge/weightForm";
+        return "challenge/weightForm";
     }
 
     // 변경된 몸무게 입력 처리
@@ -192,7 +192,6 @@ public class ChallengeController {
         return "redirect:/challenge/challenges";
     }
 
-<<<<<<< HEAD
 
     // 운동 시간 입력 폼 반환
     @GetMapping("/enterExerciseTime")
@@ -212,6 +211,5 @@ public class ChallengeController {
         return "redirect:/challenge/challenges";
     }
 
-=======
->>>>>>> b0b0d1c2eebdfadc4581f1bb45e15124cda405b6
+
 }
