@@ -50,7 +50,7 @@ public class LessonController {
 
         lessonService.create(lessonForm.getLessonName(), lessonForm.getHeadCount(), lessonForm.getLessonDate(), lessonForm.getStartTime(), lessonForm.getEndTime(), trainer);
 
-        return "redirect:/schedule";
+        return "redirect:/";
     }
 
     @GetMapping("/detail/{id}")
@@ -116,7 +116,7 @@ public class LessonController {
     public String delete(@PathVariable("id") Long id){
         Lesson lesson = lessonService.getLesson(id);
         lessonService.delete(lesson);
-        return "redirect:/schedule";
+        return "redirect:/";
     }
 
     @GetMapping("/update/{id}")
