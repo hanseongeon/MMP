@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -80,6 +81,13 @@ public class ChallengeController {
                 challengeForm.getTargetWeightLoss(),
                 challengeForm.getTargetExerciseMinutes()
         );
+        return "redirect:/challenge/challenges";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String challengeDelete(@PathVariable("id") Long challengeId) {
+        Challenge challenge = challengeService.getChallenge(challengeId);
+        challengeService.delete(challenge);
         return "redirect:/challenge/challenges";
     }
 
