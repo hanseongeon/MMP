@@ -26,8 +26,10 @@
         </div> -->
         <div class="dropdown">
             <button class="dropbtn bg-black text-white text-lg">게시판</button>
-            <div class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 bg-black text-white">
-                <a class="nav-link inline-block py-2 px-4 text-white no-underline border-b border-gray-500" th:href="@{/wod/form}">오운완</a>
+            <div
+                class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 bg-black text-white">
+                <a class="nav-link inline-block py-2 px-4 text-white no-underline border-b border-gray-500"
+                    th:href="@{/wod/form}">오운완</a>
                 <a class="nav-link inline-block py-2 px-4 text-white no-underline" href="/homeTraining/home">홈트레이닝</a>
             </div>
         </div>
@@ -97,11 +99,31 @@
         function showAlarm(alarmDto) {
             const alarmList = document.querySelectorAll(".alarm");
             alarmList.forEach((alarm) => {
-                const alarmMessage = alarm.querySelector(".alarmMessage")
-                alarmMessage.innerText = alarmDto.message;
+                const goTalkList = document.querySelectorAll(".gotalk")
+                goTalkList.forEach((goTalk) => {
+                    const url = goTalk.querySelector(".talk-url").innerText;
+                    const sender = alarmDto.sender;
+                    console.log('url: ' + url);
+                    console.log('urlType : ' + typeof (url));
+                    console.log('sender : ' + sender);
+                    console.log('senderTypeof : ' + typeof (sender));
+                    if (url === sender) {
+                        const alarmMessage = alarm.querySelector(".alarmMessage");
+                        alarmMessage.innerText = alarmDto.message;
+                        let alarmCnt = alarm.querySelector(".alarmCnt");
+                        console.log('alarm : ' + alarmCnt);
+                        console.log('alarm : ' + typeof (alarmCnt));
 
-                const alarmCnt = alarm.querySelector(".alarmCnt")
-                alarmCnt.innerText = alarmDto.alarmCnt;
+                        if (alarmCnt === null) {
+                            alarmCnt = document.createElement('p');
+                            alarmCnt.classList.add('alarmCnt', 'notification-badge');
+                            alarmCnt.innerText = alarmDto.alarmCnt;
+                            alarm.appendChild(alarmCnt);
+                        } else {
+                            alarmCnt.innerText = alarmDto.alarmCnt;
+                        }
+                    }
+                });
             });
 
             $("#toast").append(
