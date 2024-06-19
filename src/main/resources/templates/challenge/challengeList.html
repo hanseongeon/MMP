@@ -122,6 +122,11 @@
 
                     <!-- 만료되지 않은 챌린지 처리 -->
                     <div th:if="${challenge.expiration == false}" class="card-body">
+                        <form th:action="@{/challenge/delete/{id}(id=${challenge.id})}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger mt-4" style="width: 30px; height: 30px; padding: 0; border: none; background: none;">
+                                <img src="https://i.imgur.com/1GlWQQD.png" alt="삭제">
+                            </button>
+                        </form>
                         <h2 class="card-title" style="color: red;" th:text="${challenge.name}">챌린지 이름</h2>
                         <p style="color: black;" th:text="${challenge.description}">챌린지 설명</p>
                         <p style="color: black;"><strong>시작 날짜: </strong><span
@@ -208,10 +213,6 @@
                                   th:if="${challenge.expiration == true}">
                                 <input type="hidden" name="challengeId" th:value="${challenge.id}">
                                 <button type="submit" class="btn btn-warning mt-4" style="color: black;">만료완료</button>
-                            </form>
-                            <form th:action="@{/challenge/delete/{id}(id=${challenge.id})}" method="post"
-                                  style="display:inline;">
-                                <button type="submit" class="btn btn-danger mt-4" style="color: black;">삭제</button>
                             </form>
                         </div>
                     </div>
