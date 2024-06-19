@@ -126,14 +126,11 @@ public class LessonController {
             }
         }
 
-        List<UserPtPass> ptPassList = user.getUserPtPassList();
-
         model.addAttribute("lesson", lesson);
         model.addAttribute("isUserAttending", isUserAttending);
         model.addAttribute("isLessonAttended", isLessonAttended);
         model.addAttribute("reservationList", reservationList);
         model.addAttribute("waitingList", waitingList);
-        model.addAttribute("ptPassList", ptPassList);
         return "lesson/lesson_detail";
     }
 
