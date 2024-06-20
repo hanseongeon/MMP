@@ -2,7 +2,11 @@ package com.example.MMP.challengeGroup;
 
 import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.attendance.AttendanceRepository;
+<<<<<<< HEAD
 import com.example.MMP.chat.ChatMessageService;
+=======
+import com.example.MMP.challenge.challenge.Challenge;
+>>>>>>> 8e30aa885c328710e30d5363cd6ac77e7a5d6605
 import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.chat.ChatRoomService;
 import com.example.MMP.security.UserDetail;
@@ -164,6 +168,7 @@ public class ChallengeGroupController {
             model.addAttribute ("sortedMembers", sortedMembers); // 정렬된 멤버 리스트 추가
             model.addAttribute ("memberAttendanceFormattedMap", memberAttendanceFormattedMap); // 멤버별 포맷된 출석 시간 추가
             model.addAttribute ("groupRank", groupRank); // 그룹 순위 추가
+            model.addAttribute ("groupLeader",group.getLeader ());
 
             return "challenge/groupDetail";
         } else {
@@ -183,6 +188,13 @@ public class ChallengeGroupController {
         model.addAttribute("chatRoom",chatRoom);
         model.addAttribute("memberList",memberList);
         return "chat/groupchat";
+    }
+
+    @PostMapping("/delete/{groupId}")
+    public String challengeGroupDelete(@PathVariable Long groupId) {
+        ChallengeGroup challengeGroup = groupService.getGroup(groupId);
+        groupService.deleteGroup(challengeGroup);
+        return "redirect:/groupChallenge/list";
     }
 }
 

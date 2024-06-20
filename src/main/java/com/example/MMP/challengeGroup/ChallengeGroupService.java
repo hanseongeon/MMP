@@ -82,6 +82,7 @@ public class ChallengeGroupService {
         }
     }
 
+    // 그룹 탈퇴 기능
     public void removeGroup(Long groupId, Long userId) {
         Optional<ChallengeGroup> groupOpt = groupRepository.findById(groupId);
         Optional<SiteUser> userOpt = userRepository.findById(userId);
@@ -121,12 +122,6 @@ public class ChallengeGroupService {
         return groupRepository.findAllOrderByMembersCountDesc();
     }
 
-    public void deleteGroup(Long groupId) {
-        ChallengeGroup group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("그룹을 찾을 수 없습니다."));
-        groupRepository.delete(group);
-    }
-
     // 각 그룹의 총 운동 시간을 계산
     public long calculateGroupTotalAttendanceTime(ChallengeGroup group, Map<Long, Long> memberAttendanceTimeMap) {
         return group.getMembers()
@@ -164,6 +159,10 @@ public class ChallengeGroupService {
         }
 
         return groupRanks;
+    }
+
+    public void deleteGroup(ChallengeGroup challengeGroup) {
+        groupRepository.delete (challengeGroup);
     }
 }
 
