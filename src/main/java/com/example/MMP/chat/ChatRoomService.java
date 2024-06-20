@@ -62,6 +62,7 @@ public class ChatRoomService {
             chatRoomDto.setLastMessage(chatMessage.getMessage());
             chatRoomDto.setSendDate(chatMessage.getSendTime());
 
+
             if (chatMessage.getSort().equals("many")) {
                 List<ChallengeGroup> challengeGroupList = new ArrayList<>(siteUser.getChallengeGroups());
                 chatRoomDto.setYou(challengeGroupList.get(groupCnt).getName());
