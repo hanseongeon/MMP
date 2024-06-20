@@ -159,52 +159,36 @@
 <div layout:fragment="script">
     <script th:inline="javascript">
         function filterItems() {
-            const checkedGenders = getCheckedValues('gender');
-            const checkedClassTypes = getCheckedValues('classType');
-            const checkedSpecializations = getCheckedValues('specialization');
-            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    const checkedGenders = getCheckedValues('gender');
+    const checkedClassTypes = getCheckedValues('classType');
+    const checkedSpecializations = getCheckedValues('specialization');
 
-            fetch('/trainer/filter', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    gender: checkedGenders,
-                    classType: checkedClassTypes,
-                    specialization: checkedSpecializations
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const trainerListContainer = document.getElementById('trainerListContainer');
-                trainerListContainer.innerHTML = ''; // 기존 카드들을 지우고 새로운 카드들을 추가할 준비
-
-                data.forEach(trainer => {
-                    const card = document.createElement('div');
-                    card.classList.add('card', 'w-80', 'bg-base-100', 'shadow-xl', 'm-2', 'pt-2.5', 'text-black');
-                    card.innerHTML = `
-                        <figure><img src="/uploads/${trainer.imagePath}" alt="profile" /></figure>
-                        <div class="card-body">
-                            <p th:text="'트레이너 : ' + ${trainer.trainerName}"></p>
-                    <p th:text="'성별 : ' + ${trainer.gender}"></p>
-                    <p th:text="'레슨 : ' + ${trainer.classType}"></p>
-                    <p th:text="'전문 : ' + ${trainer.specialization}"></p>
-                    <p th:text="'경력 : ' + ${trainer.introduce}"></p>
-                            <div class="card-actions justify-end">
-                                <a href="/totalPass/list" class="btn btn-primary">이용권 보러가기</a>
-                            </div>
-                        </div>
-                    `;
-                    trainerListContainer.appendChild(card);
-                });
-            })
-            .catch(error => console.error('필터링 중 오류 발생:', error));
-        }
-
-        function getCheckedValues(name) {
-            return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(cb => cb.value);
-        }
+    fetch('/trainer/filter', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            gender: checkedGenders,
+            classType: checkedClassTypes,
+            specialization: checkedSpecializations
+        })
+    })
+    .then(response => response.json())
+    .then(filteredTrainers => {
+        const trainerCards = document.querySelectorAll('.card');
+        trainerCards.forEach(card => {
+            const trainerId = card.dataset.trainerId;
+            const matches = filteredTrainers.some(trainer => trainer.id === trainerId);
+            if (matches) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    })
+    .catch(error => console.error('필터링 중 오류 발생:', error));
+}
     </script>
 </div>
 
