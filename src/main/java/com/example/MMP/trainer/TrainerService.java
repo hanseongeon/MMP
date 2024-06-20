@@ -52,12 +52,4 @@ public class TrainerService {
     public List<Trainer> findAll() {
         return this.trainerRepository.findAll();//
     }
-
-    public List<Trainer> filterTrainers(String gender, String classType, String specialization) {
-        if (gender == null && classType == null && specialization == null) {
-            return trainerRepository.findAll();
-        } else {
-            return trainerRepository.findByGenderAndClassTypeAndSpecialization(gender, classType, specialization);
-        }
-    }
 }
