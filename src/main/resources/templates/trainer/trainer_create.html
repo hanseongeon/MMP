@@ -1,17 +1,17 @@
-<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml">
-<div layout:fragment="content" class="w-full my-3">
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="w-full my-3 flex justify-center text-black">
     <div class="h-screen flex items-center justify-center bg-black">
         <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg text-black">
             <form action="/trainer/create" method="post" enctype="multipart/form-data">
                 <div>
                     <label for="trainerName">트레이너 이름:</label>
-                    <input type="text" id="trainerName" name="trainerName" required>
+                    <input type="text" id="trainerName" name="trainerName" class="input" placeholder="이름을 입력하세요." required>
                 </div>
                 <div>
                     <label>성별:</label>
-                    <input type="radio" id="genderMale" name="gender" value="male">
+                    <input type="radio" id="genderMale" name="gendere" value="man">
                     <label for="genderMale">남성</label>
-                    <input type="radio" id="genderFemale" name="gender" value="female">
+                    <input type="radio" id="genderFemale" name="gender" value="woman">
                     <label for="genderFemale">여성</label>
                 </div>
                 <div>
@@ -25,11 +25,11 @@
                 </div>
                 <div>
                     <label>전문화:</label>
-                    <input type="checkbox" id="specialization1to1" name="specialization" value="1:1">
+                    <input type="checkbox" id="specialization1to1" name="specialization" value="1">
                     <label for="specialization1to1">1:1</label>
-                    <input type="checkbox" id="specialization1toN" name="specialization" value="1:n">
+                    <input type="checkbox" id="specialization1toN" name="specialization" value="2">
                     <label for="specialization1toN">1:n</label>
-                    <input type="checkbox" id="specializationNtoN" name="specialization" value="n:n">
+                    <input type="checkbox" id="specializationNtoN" name="specialization" value="3">
                     <label for="specializationNtoN">n:n</label>
                 </div>
                 <div>
