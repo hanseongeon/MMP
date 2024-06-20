@@ -2,6 +2,7 @@ package com.example.MMP.challengeGroup;
 
 import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.attendance.AttendanceRepository;
+import com.example.MMP.chat.ChatMessageService;
 import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.chat.ChatRoomService;
 import com.example.MMP.security.UserDetail;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +37,7 @@ public class ChallengeGroupController {
     private final SiteUserService siteUserService;
     private final ChatRoomService chatRoomService;
     private final SiteUserRepository siteUserRepository;
+    private final ChatMessageService chatMessageService;
 
     @GetMapping("/edit/{groupId}")
     public String editGroup(@PathVariable Long groupId, Model model, Principal principal) {
@@ -72,6 +75,7 @@ public class ChallengeGroupController {
             chatRoom.getUserList().add(siteUser);
             siteUser.getChatRoomList().add(chatRoom);
             ChallengeGroup group = groupService.createGroup (name, principal,chatRoom);
+            chatMessageService.firstGroupChatMessage(siteUser,chatRoom,group.getName());
             return ResponseEntity.ok (group);
         } catch (Exception e) {
             // 예외가 발생하면 로그를 남기고 500 에러를 반환
@@ -171,8 +175,13 @@ public class ChallengeGroupController {
     public String groupTalk(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetail userDetail, Model model){
         SiteUser siteUser = siteUserService.getUser(userDetail.getUsername());
         ChallengeGroup challengeGroup = groupService.getGroup(id);
+        List<SiteUser> memberList = new ArrayList<>(challengeGroup.getMembers());
+        ChatRoom chatRoom = chatRoomService.findById(challengeGroup.getChatRoom().getId());
+
         model.addAttribute("challengeGroup",challengeGroup);
         model.addAttribute("me",siteUser);
+        model.addAttribute("chatRoom",chatRoom);
+        model.addAttribute("memberList",memberList);
         return "chat/groupchat";
     }
 }

@@ -36,6 +36,8 @@ public class QAlarm extends EntityPathBase<Alarm> {
 
     public final DateTimePath<java.time.LocalDateTime> sendTime = createDateTime("sendTime", java.time.LocalDateTime.class);
 
+    public final StringPath sort = createString("sort");
+
     public QAlarm(String variable) {
         this(Alarm.class, forVariable(variable), INITS);
     }

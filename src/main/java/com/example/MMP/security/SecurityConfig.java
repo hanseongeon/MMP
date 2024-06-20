@@ -53,12 +53,12 @@ public class SecurityConfig{
                             new AntPathRequestMatcher ("/weight/**"),
                             new AntPathRequestMatcher ("/upload_image/**"),
                             new AntPathRequestMatcher("/ptGroup/**")
-                    ))
-                    .sessionManagement(sessionManagement -> sessionManagement
-                            .maximumSessions(1) // 동시 세션 수를 1로 제한
-                            .maxSessionsPreventsLogin(true) // 새로운 로그인 시도를 막음
-                            .sessionRegistry(sessionRegistry())
-                    );
+                    ));
+//                    .sessionManagement(sessionManagement -> sessionManagement
+//                            .maximumSessions(1) // 동시 세션 수를 1로 제한
+//                            .maxSessionsPreventsLogin(true) // 새로운 로그인 시도를 막음
+//                            .sessionRegistry(sessionRegistry())
+//                    );
             return http.build();
         }
 
