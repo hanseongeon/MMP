@@ -11,20 +11,18 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QUserPtPass is a Querydsl query type for UserPtPass
+ * QUserDayPass is a Querydsl query type for UserDayPass
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QUserPtPass extends EntityPathBase<UserPtPass> {
+public class QUserDayPass extends EntityPathBase<UserDayPass> {
 
-    private static final long serialVersionUID = 485758339L;
+    private static final long serialVersionUID = -393116097L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QUserPtPass userPtPass = new QUserPtPass("userPtPass");
+    public static final QUserDayPass userDayPass = new QUserDayPass("userDayPass");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
-
-    public final NumberPath<Integer> passCount = createNumber("passCount", Integer.class);
 
     public final DatePath<java.time.LocalDate> passFinish = createDate("passFinish", java.time.LocalDate.class);
 
@@ -38,23 +36,23 @@ public class QUserPtPass extends EntityPathBase<UserPtPass> {
 
     public final com.example.MMP.siteuser.QSiteUser siteUser;
 
-    public QUserPtPass(String variable) {
-        this(UserPtPass.class, forVariable(variable), INITS);
+    public QUserDayPass(String variable) {
+        this(UserDayPass.class, forVariable(variable), INITS);
     }
 
-    public QUserPtPass(Path<? extends UserPtPass> path) {
+    public QUserDayPass(Path<? extends UserDayPass> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QUserPtPass(PathMetadata metadata) {
+    public QUserDayPass(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QUserPtPass(PathMetadata metadata, PathInits inits) {
-        this(UserPtPass.class, metadata, inits);
+    public QUserDayPass(PathMetadata metadata, PathInits inits) {
+        this(UserDayPass.class, metadata, inits);
     }
 
-    public QUserPtPass(Class<? extends UserPtPass> type, PathMetadata metadata, PathInits inits) {
+    public QUserDayPass(Class<? extends UserDayPass> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.siteUser = inits.isInitialized("siteUser") ? new com.example.MMP.siteuser.QSiteUser(forProperty("siteUser"), inits.get("siteUser")) : null;
     }
