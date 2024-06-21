@@ -67,13 +67,14 @@ public class ChallengeGroupController {
     @PostMapping("/create")
     public ResponseEntity<ChallengeGroup> createGroup(@RequestParam String name, Principal principal) {
         try {
-            SiteUser siteUser = siteUserService.getUser (principal.getName ());
-            ChatRoom chatRoom = new ChatRoom ();
-            chatRoomService.save (chatRoom);
-            chatRoom.getUserList ().add (siteUser);
-            siteUser.getChatRoomList ().add (chatRoom);
-            ChallengeGroup group = groupService.createGroup (name, principal, chatRoom);
-            chatMessageService.firstGroupChatMessage (siteUser, chatRoom, group.getName ());
+            SiteUser siteUser = siteUserService.getUser(principal.getName());
+            ChatRoom chatRoom = new ChatRoom();
+            chatRoom.setSort("many");
+            chatRoomService.save(chatRoom);
+            chatRoom.getUserList().add(siteUser);
+            siteUser.getChatRoomList().add(chatRoom);
+            ChallengeGroup group = groupService.createGroup (name, principal,chatRoom);
+            chatMessageService.firstGroupChatMessage(siteUser,chatRoom,group.getName());
             return ResponseEntity.ok (group);
         } catch (Exception e) {
             // 예외가 발생하면 로그를 남기고 500 에러를 반환
@@ -171,19 +172,26 @@ public class ChallengeGroupController {
         }
     }
 
-
     @GetMapping("/groupTalk/{id}")
-    public String groupTalk(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetail userDetail, Model
-            model) {
-        SiteUser siteUser = siteUserService.getUser (userDetail.getUsername ());
-        ChallengeGroup challengeGroup = groupService.getGroup (id);
-        List<SiteUser> memberList = new ArrayList<> (challengeGroup.getMembers ());
-        ChatRoom chatRoom = chatRoomService.findById (challengeGroup.getChatRoom ().getId ());
+    public String groupTalk(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetail userDetail, Model model){
+        SiteUser siteUser = siteUserService.getUser(userDetail.getUsername());
+        ChallengeGroup challengeGroup = groupService.getGroup(id);
+        List<SiteUser> memberList = new ArrayList<>(challengeGroup.getMembers());
+        List<String> memberNumber = new ArrayList<>();
+        for(SiteUser siteUser1 : memberList){
+            memberNumber.add(siteUser1.getNumber());
+        }
+        ChatRoom chatRoom = chatRoomService.findById(challengeGroup.getChatRoom().getId());
 
-        model.addAttribute ("challengeGroup", challengeGroup);
-        model.addAttribute ("me", siteUser);
-        model.addAttribute ("chatRoom", chatRoom);
-        model.addAttribute ("memberList", memberList);
+        chatRoomService.deleteGroupAlarm(challengeGroup,siteUser);
+        model.addAttribute("challengeGroup",challengeGroup);
+        model.addAttribute("me",siteUser);
+        model.addAttribute("chatRoom",chatRoom);
+        model.addAttribute("memberNumber",memberNumber);
+
+
+
+
         return "chat/groupchat";
     }
 

@@ -68,11 +68,11 @@ public class ChallengeGroupService {
             SiteUser user = userOpt.get ();
             group.getMembers ().add (user);
 
-            ChatRoom chatRoom = group.getChatRoom ();
-            chatRoom.getUserList ().add (user);
-            chatRoomService.save (chatRoom);
-
-            user.getChallengeGroups ().add (group);
+            ChatRoom chatRoom = group.getChatRoom();
+            chatRoom.getUserList().add(user);
+            chatRoomService.save(chatRoom);
+            user.getChallengeGroups().add(group);
+            user.getChatRoomList().add(chatRoom);
 
             userService.save (user);
             groupRepository.save (group);
@@ -92,9 +92,14 @@ public class ChallengeGroupService {
             group.getMembers ().remove (user);
             groupRepository.save (group);
 
-            ChatRoom chatRoom = chatRoomService.findById (group.getChatRoom ().getId ());
-            chatRoom.getUserList ().remove (user);
-            chatRoomService.save (chatRoom);
+
+            ChatRoom chatRoom = chatRoomService.findById(group.getChatRoom().getId());
+            chatRoom.getUserList().remove(user);
+            chatRoomService.save(chatRoom);
+
+            user.getChatRoomList().remove(chatRoom);
+            userService.save(user);
+
         } else {
             throw new IllegalArgumentException ("그룹이나 유저를 찾을 수 없습니다.");
         }
