@@ -2,6 +2,7 @@ package com.example.MMP.challengeGroup;
 
 import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.attendance.AttendanceRepository;
+import com.example.MMP.chat.ChatMessageService;
 import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.chat.ChatRoomService;
 import com.example.MMP.security.UserDetail;
@@ -17,9 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,6 +33,7 @@ public class ChallengeGroupController {
     private final SiteUserService siteUserService;
     private final ChatRoomService chatRoomService;
     private final SiteUserRepository siteUserRepository;
+    private final ChatMessageService chatMessageService;
 
     @GetMapping("/edit/{groupId}")
     public String editGroup(@PathVariable Long groupId, Model model, Principal principal) {
@@ -72,6 +71,7 @@ public class ChallengeGroupController {
             chatRoom.getUserList().add(siteUser);
             siteUser.getChatRoomList().add(chatRoom);
             ChallengeGroup group = groupService.createGroup (name, principal,chatRoom);
+            chatMessageService.firstGroupChatMessage(siteUser,chatRoom,group.getName());
             return ResponseEntity.ok (group);
         } catch (Exception e) {
             // 예외가 발생하면 로그를 남기고 500 에러를 반환
@@ -160,6 +160,7 @@ public class ChallengeGroupController {
             model.addAttribute ("sortedMembers", sortedMembers); // 정렬된 멤버 리스트 추가
             model.addAttribute ("memberAttendanceFormattedMap", memberAttendanceFormattedMap); // 멤버별 포맷된 출석 시간 추가
             model.addAttribute ("groupRank", groupRank); // 그룹 순위 추가
+            model.addAttribute ("groupLeader",group.getLeader ());
 
             return "challenge/groupDetail";
         } else {
@@ -171,9 +172,21 @@ public class ChallengeGroupController {
     public String groupTalk(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetail userDetail, Model model){
         SiteUser siteUser = siteUserService.getUser(userDetail.getUsername());
         ChallengeGroup challengeGroup = groupService.getGroup(id);
+        List<SiteUser> memberList = new ArrayList<>(challengeGroup.getMembers());
+        ChatRoom chatRoom = chatRoomService.findById(challengeGroup.getChatRoom().getId());
+
         model.addAttribute("challengeGroup",challengeGroup);
         model.addAttribute("me",siteUser);
+        model.addAttribute("chatRoom",chatRoom);
+        model.addAttribute("memberList",memberList);
         return "chat/groupchat";
+    }
+
+    @PostMapping("/delete/{groupId}")
+    public String challengeGroupDelete(@PathVariable Long groupId) {
+        ChallengeGroup challengeGroup = groupService.getGroup(groupId);
+        groupService.deleteGroup(challengeGroup);
+        return "redirect:/groupChallenge/list";
     }
 }
 
