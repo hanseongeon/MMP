@@ -13,6 +13,7 @@ import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.chat.ChatRoomRepository;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,10 +53,19 @@ public class ChallengeService {
         }
 
         if ("exerciseTime".equals(type) && targetExerciseMinutes != null) {
-            challenge.setTargetExerciseSeconds (targetExerciseMinutes);
+            Integer targetExerciseChangeMinutes = targetExerciseMinutes*60;
+            challenge.setTargetExerciseSeconds (targetExerciseChangeMinutes);
         }
 
         return challengeRepository.save(challenge);
+    }
+    public Challenge getChallenge(Long id) {
+        Optional<Challenge> challengeOptional = challengeRepository.findById(id);
+        return challengeOptional.orElseThrow(() -> new EntityNotFoundException ("Challenge not found with id: " + id));
+    }
+
+    public void delete(Challenge challenge){
+       challengeRepository.delete (challenge);
     }
 
     public Challenge expiration(Long challengeId){
@@ -65,7 +76,7 @@ public class ChallengeService {
     }
 
     public void participateInChallenge(Long challengeId, Principal principal) {
-        String userId = principal.getName();
+        String userId = principal.getName ();
         SiteUser siteUser = siteUserRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         Challenge challenge = challengeRepository.findById(challengeId)
@@ -81,6 +92,7 @@ public class ChallengeService {
             challengeUser.setStartDate(LocalDateTime.now());
             challengeUser.setEndDate(challenge.getCloseDate());
             challengeUser.setSuccess(false);
+            challengeUser.setInitialDuration (0);
             challengeUserRepository.save(challengeUser);
             System.out.println("참여 성공: " + challengeUser.getId());
 
@@ -285,6 +297,48 @@ public class ChallengeService {
             long currentExerciseTime = initialExerciseTime + finalTotalExerciseTimeInSeconds;
 
             int achievementRate = (int) ((currentExerciseTime * 100) / targetExerciseTime);
+            challengeUser.setAchievementRate(achievementRate);
+            challengeUserRepository.save(challengeUser);
+
+            // 달성률이 100% 이상인 경우 챌린지 성공 처리
+            if (achievementRate >= 100) {
+                challengeUserService.markChallengeAsSuccessful(challengeUser.getId());
+            }
+        });
+    }
+
+    @Transactional
+    public void updateExerciseAttendance(Long challengeId, Long challengeUserId, Principal principal) {
+        Optional<ChallengeUser> challengeUsers = challengeUserRepository.findById (challengeId);
+        Long userId = challengeUserRepository.findById (challengeUserId).get ().getSiteUser ().getId ();
+        SiteUser siteUser = siteUserRepository.findById (userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new RuntimeException("챌린지를 찾을 수 없습니다."));
+
+
+        LocalDate challengeStartDate = challengeUserRepository.findById (challengeUserId).get ().getStartDate ().toLocalDate ();
+
+        List<Attendance> attendanceList = attendanceRepository.findBySiteUserId (userId);
+
+        long uniqueAttendanceDays = attendanceList.stream()
+                .map(Attendance::getDate)
+                .filter(attendanceDate -> !attendanceDate.isBefore(challengeStartDate))  // startDate 이전 날짜는 제외
+                .collect(Collectors.toSet())
+                .size();
+
+        challengeUserRepository.findByChallengeAndSiteUser(challenge, siteUser).ifPresent(challengeUser -> {
+
+            Challenge challenge1 = challengeUserRepository.findById (challengeUserId).get ().getChallenge ();
+            LocalDate openDate = challenge1.getOpenDate ().toLocalDate();
+            LocalDate closeDate = challenge1.getCloseDate ().toLocalDate ();
+
+            Period period = Period.between(openDate, closeDate);
+            int targetDays = period.getDays(); // 날짜 차이를 일 단위로 계산
+
+            long currentDays = uniqueAttendanceDays;
+
+            int achievementRate = (int) (((double) currentDays / (targetDays+1)) * 100);
             challengeUser.setAchievementRate(achievementRate);
             challengeUserRepository.save(challengeUser);
 

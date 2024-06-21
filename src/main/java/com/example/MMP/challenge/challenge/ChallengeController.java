@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -62,7 +63,7 @@ public class ChallengeController {
     @GetMapping("/create")
     public String challengeCreate(Model model) {
         model.addAttribute("challengeForm", new ChallengeForm());
-        return "/challenge/challengeCreate_form";
+        return "challenge/challengeCreate_form";
     }
 
     @PostMapping("/create")
@@ -80,6 +81,13 @@ public class ChallengeController {
                 challengeForm.getTargetWeightLoss(),
                 challengeForm.getTargetExerciseMinutes()
         );
+        return "redirect:/challenge/challenges";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String challengeDelete(@PathVariable("id") Long challengeId) {
+        Challenge challenge = challengeService.getChallenge(challengeId);
+        challengeService.delete(challenge);
         return "redirect:/challenge/challenges";
     }
 
@@ -120,7 +128,7 @@ public class ChallengeController {
 
         // 현재 날짜를 모델에 추가
         model.addAttribute("currentDate", LocalDate.now());
-        return "/challenge/challengeList";
+        return "challenge/challengeList";
     }
 
 
@@ -140,6 +148,8 @@ public class ChallengeController {
                 case "exerciseTime":
                     // 초기 운동 시간을 0으로 설정
                     challengeService.participateInChallengeWithExerciseTime(challengeId, principal, 0);
+                case "attendance":
+                    challengeService.participateInChallenge (challengeId,principal);
                     break;
                 default:
                     challengeService.participateInChallenge(challengeId, principal);
@@ -178,7 +188,7 @@ public class ChallengeController {
     @GetMapping("/updateWeight")
     public String updateWeightForm(@RequestParam("challengeId") Long challengeId, Model model) {
         model.addAttribute("challengeId", challengeId);
-        return "/challenge/weightForm";
+        return "challenge/weightForm";
     }
 
     // 변경된 몸무게 입력 처리

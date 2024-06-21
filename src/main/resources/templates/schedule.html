@@ -54,12 +54,54 @@
 
 <body>
 <div layout:fragment="content" class="content">
+
+<!--    <div class ="flex justify-center w-full">-->
+<!--        <div style="width: 60%;" class="flex flex-col">-->
+
+<!--            <div class="flex justify-center w-full">-->
+<!--                <p style="font-size: 1.5rem; color: white; font-weight: bold; text-align: center; margin: 10px 0; margin-bottom:0px">-->
+<!--                    현재 헬스장 사용 인원은-->
+<!--                    <a href="/attendance/checkin">-->
+<!--                    <span th:text="${presentCount}" style="font-size: 2rem; color: red;"></span> 명입니다-->
+<!--                    </a>-->
+<!--                </p>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; 조건에 따른 메시지 표시 &ndash;&gt;-->
+<!--            <div class="flex justify-center w-full">-->
+<!--                <div th:if="${presentCount} >= 0 and ${presentCount} <= 30">-->
+<!--                    <img src="https://i.imgur.com/AxP2Y2P.png" alt="쾌적 상태 이미지">-->
+<!--                </div>-->
+<!--                <div th:if="${presentCount} > 30 and ${presentCount} <= 70">-->
+<!--                    <img src="https://i.imgur.com/x9fF2NP.png" alt="양호 상태 이미지">-->
+<!--                </div>-->
+<!--                <div th:if="${presentCount} > 70 and ${presentCount} <= 100">-->
+<!--                    <img src="https://i.imgur.com/7fXhguJ.png" alt="양호 상태 이미지">-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash;        <div class="flex flex-col items-center space-y-4 mt-4">&ndash;&gt;-->
+<!--            &lt;!&ndash;            <input type="range" min="0" max="50" th:value="${presentCount}" class="range range-error" step="1" />&ndash;&gt;-->
+<!--            &lt;!&ndash;            <div class="w-full flex justify-between text-xs px-2">&ndash;&gt;-->
+<!--            &lt;!&ndash;                <span>쾌적(0명)</span>&ndash;&gt;-->
+<!--            &lt;!&ndash;                <span></span>&ndash;&gt;-->
+<!--            &lt;!&ndash;                <span>양호(25명)</span>&ndash;&gt;-->
+<!--            &lt;!&ndash;                <span></span>&ndash;&gt;-->
+<!--            &lt;!&ndash;                <span>가득(50명)</span>&ndash;&gt;-->
+<!--            &lt;!&ndash;            </div>&ndash;&gt;-->
+<!--            &lt;!&ndash;        </div>&ndash;&gt;-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <br>-->
+<!--    <br>-->
+
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
         <a class="btn btn-error text-white justify-start" th:href="@{/lesson/create}">추가</a>
+        <a href="/user/adminSignup">관리자회원가입</a>
     </div>
     <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
-        <a class="btn btn-error text-white justify-start" href="user/commandcenter">관리자 페이지</a>
+        <a class="btn btn-error text-white justify-start" href="/user/commandcenter">관리자 페이지</a>
         <a class="btn btn-error text-white justify-start" href="/user/adminSignup">관리자 회원가입</a>
     </div>
     <div class="main-content w-[100%]">
@@ -74,11 +116,13 @@
     </div>
 
     <div class="divider"></div>
+    <br>
+    <br>
 
     <footer class="footer footer-center p-10 bg-black border-red-600 border-solid border-2 text-primary-content">
         <aside class="flex items-center">
             <div>
-                <figure class="h-[150px] w-[200px]">
+                <figure class="h-[150px] w-[250px]">
                     <img th:src="@{'/uploads/'+ ${information.imagePath}}" alt="LOGO">
                 </figure>
                 <p class="font-bold" th:text="${information.healthName}"></p>
@@ -93,12 +137,19 @@
             <!-- 이미지 지도를 표시할 div 입니다 -->
             <div class="flex flex-col justify-end ml-4 text-black">
                 <div id="map" style="width:750px;height:350px;"></div>
-                <a href="https://map.kakao.com/?q=%EB%8C%80%EC%A0%84+%EC%BD%94%EB%A6%AC%EC%95%84%EC%95%84%EC%9D%B4%ED%8B%B0"
-                   target="_blank" class="mt-4 text-white">업체 위치</a>
-                <p class="text-white">
-                    <button onclick="setCenter()">지도 중심좌표 이동시키기</button>
-                    <button onclick="setDraggable(false)">지도 드래그 이동 끄기</button>
-                    <button onclick="setDraggable(true)">지도 드래그 이동 켜기</button>
+                <p class="text-white mt-1">
+                    <button onclick="window.open('https://map.kakao.com/?q=%EB%8C%80%EC%A0%84+%EC%BD%94%EB%A6%AC%EC%95%84%EC%95%84%EC%9D%B4%ED%8B%B0', '_blank')"
+                    class="btn btn-outline text-sm py-1 px-2 btn-error">
+                    업체 위치 카카오맵으로 찾기
+                    </button>
+                    <button class="btn btn-outline text-sm py-1 px-2 btn-error" onclick="setCenter()">지도 중심좌표 이동시키기
+                    </button>
+                    <button class="btn btn-outline text-sm py-1 px-2 btn-error" onclick="setDraggable(false)">지도 드래그 이동
+                        끄기
+                    </button>
+                    <button class="btn btn-outline text-sm py-1 px-2 btn-error" onclick="setDraggable(true)">지도 드래그 이동
+                        켜기
+                    </button>                
                 </p>
             </div>
             <div>
@@ -108,7 +159,7 @@
     </footer>
 
     <script type="text/javascript"
-            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e71195e7a1854be49ca6900abef2dd50&libraries=services"></script>
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a684d2a2290b724a699cedb79b03f657&libraries=services"></script>
     <script>
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div
             mapOption = {
@@ -224,6 +275,7 @@
 
             lessons.forEach(function (lesson) {
                 const endTime = new Date(lesson.lessonDate + 'T' + lesson.endTime);
+                const startTime = new Date(lesson.lessonDate + 'T' + lesson.startTime);
                 const currentTime = new Date();
 
                 const lessonDiv = document.createElement('div');
@@ -281,8 +333,9 @@
                 attendanceButton.classList.add('btn', 'w-full', 'h-full');
                 attendanceButton.textContent = `${lesson.attendanceList.length}/${lesson.headCount}`;
 
+                const disableTime = startTime - (60 * 60 * 1000);
                 // 종료 시간이 지났으면 버튼을 비활성화합니다.
-                if (endTime < currentTime) {
+                if (currentTime >= disableTime) {
                     attendanceButton.setAttribute('disabled', 'disabled');
                 }
 

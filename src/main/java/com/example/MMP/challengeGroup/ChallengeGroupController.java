@@ -2,19 +2,22 @@ package com.example.MMP.challengeGroup;
 
 import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.attendance.AttendanceRepository;
+import com.example.MMP.chat.ChatMessageService;
+import com.example.MMP.chat.ChatRoom;
+import com.example.MMP.chat.ChatRoomService;
+import com.example.MMP.security.UserDetail;
 import com.example.MMP.siteuser.SiteUser;
+import com.example.MMP.siteuser.SiteUserRepository;
 import com.example.MMP.siteuser.SiteUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,6 +30,10 @@ public class ChallengeGroupController {
     private final ChallengeGroupRepository groupRepository;
     private final SiteUserService userService;
     private final AttendanceRepository attendanceRepository;
+    private final SiteUserService siteUserService;
+    private final ChatRoomService chatRoomService;
+    private final SiteUserRepository siteUserRepository;
+    private final ChatMessageService chatMessageService;
 
     @GetMapping("/edit/{groupId}")
     public String editGroup(@PathVariable Long groupId, Model model, Principal principal) {
@@ -38,7 +45,7 @@ public class ChallengeGroupController {
                 return "error/403"; // 권한이 부족함을 알리는 적절한 뷰
             }
             model.addAttribute ("group", group);
-            return "/challenge/groupEdit";
+            return "challenge/groupEdit";
         } else {
             return "error/404";
         }
@@ -58,7 +65,13 @@ public class ChallengeGroupController {
     @PostMapping("/create")
     public ResponseEntity<ChallengeGroup> createGroup(@RequestParam String name, Principal principal) {
         try {
-            ChallengeGroup group = groupService.createGroup (name, principal);
+            SiteUser siteUser = siteUserService.getUser(principal.getName());
+            ChatRoom chatRoom = new ChatRoom();
+            chatRoomService.save(chatRoom);
+            chatRoom.getUserList().add(siteUser);
+            siteUser.getChatRoomList().add(chatRoom);
+            ChallengeGroup group = groupService.createGroup (name, principal,chatRoom);
+            chatMessageService.firstGroupChatMessage(siteUser,chatRoom,group.getName());
             return ResponseEntity.ok (group);
         } catch (Exception e) {
             // 예외가 발생하면 로그를 남기고 500 에러를 반환
@@ -73,19 +86,26 @@ public class ChallengeGroupController {
         return ResponseEntity.ok ().build ();
     }
 
+    @PostMapping("/{groupId}/leave")
+    public ResponseEntity<Void> leaveGroup(@PathVariable Long groupId, @RequestParam Long userId) {
+        groupService.removeGroup(groupId, userId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/list")
     public String getAllGroups(Model model, Principal principal) {
         List<ChallengeGroup> groups = groupService.getAllGroups ();
         model.addAttribute ("groups", groups);
 
         // 로그인된 사용자 정보 추가
-        String username = principal.getName ();
+        String username = principal.getName();
+        Optional<SiteUser> siteUsers = siteUserRepository.findByUserId (username);
 
-        SiteUser user = userService.getUserByUserNumber (username);
+        SiteUser user = siteUsers.get ();
 
         model.addAttribute ("user", user);
 
-        return "/challenge/groupList_form";
+        return "challenge/groupList_form";
     }
 
     @GetMapping("/sorted")
@@ -140,11 +160,33 @@ public class ChallengeGroupController {
             model.addAttribute ("sortedMembers", sortedMembers); // 정렬된 멤버 리스트 추가
             model.addAttribute ("memberAttendanceFormattedMap", memberAttendanceFormattedMap); // 멤버별 포맷된 출석 시간 추가
             model.addAttribute ("groupRank", groupRank); // 그룹 순위 추가
+            model.addAttribute ("groupLeader",group.getLeader ());
 
             return "challenge/groupDetail";
         } else {
             return "error/404"; // 그룹을 찾지 못한 경우
         }
+    }
+
+    @GetMapping("/groupTalk/{id}")
+    public String groupTalk(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetail userDetail, Model model){
+        SiteUser siteUser = siteUserService.getUser(userDetail.getUsername());
+        ChallengeGroup challengeGroup = groupService.getGroup(id);
+        List<SiteUser> memberList = new ArrayList<>(challengeGroup.getMembers());
+        ChatRoom chatRoom = chatRoomService.findById(challengeGroup.getChatRoom().getId());
+
+        model.addAttribute("challengeGroup",challengeGroup);
+        model.addAttribute("me",siteUser);
+        model.addAttribute("chatRoom",chatRoom);
+        model.addAttribute("memberList",memberList);
+        return "chat/groupchat";
+    }
+
+    @PostMapping("/delete/{groupId}")
+    public String challengeGroupDelete(@PathVariable Long groupId) {
+        ChallengeGroup challengeGroup = groupService.getGroup(groupId);
+        groupService.deleteGroup(challengeGroup);
+        return "redirect:/groupChallenge/list";
     }
 }
 

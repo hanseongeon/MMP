@@ -1,5 +1,8 @@
 package com.example.MMP.challengeGroup;
 
+import com.example.MMP.chat.ChatMessageService;
+import com.example.MMP.chat.ChatRoom;
+import com.example.MMP.chat.ChatRoomService;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
 import com.example.MMP.siteuser.SiteUserService;
@@ -10,10 +13,8 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
-
 import java.util.Map;
-
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -23,19 +24,25 @@ public class ChallengeGroupService {
     private final ChallengeGroupRepository groupRepository;
     private final SiteUserRepository userRepository;
     private final SiteUserService userService;
+    private final ChatRoomService chatRoomService;
+    private final ChatMessageService chatMessageService;
 
 
     // GroupService에 추가
     public boolean isLeader(Long groupId, String username) {
         ChallengeGroup group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("그룹을 찾을 수 없습니다."));
-        return group.getLeader().getName().equals(username);
+
+        String userName = group.getLeader ().getUserId ();
+
+        return group.getLeader ().getUserId ().equals (username);
     }
 
-    public ChallengeGroup createGroup(String name, Principal principal) {
+    public ChallengeGroup createGroup(String name, Principal principal, ChatRoom chatRoom) {
         String username = principal.getName();
-        SiteUser leader = userRepository.findByNumber (username);
+        Optional<SiteUser> siteUsers = userRepository.findByUserId (username);
 
+        SiteUser leader = siteUsers.get ();
 
         ChallengeGroup group = new ChallengeGroup();
         group.setName(name);
@@ -44,6 +51,10 @@ public class ChallengeGroupService {
 
         // 그룹에 리더를 멤버로 추가
         group.getMembers().add(leader);
+
+        group.setChatRoom(chatRoom);
+
+        leader.getChallengeGroups().add(group);
 
         return groupRepository.save(group);
     }
@@ -57,11 +68,39 @@ public class ChallengeGroupService {
             ChallengeGroup group = groupOpt.get();
             SiteUser user = userOpt.get();
             group.getMembers().add(user);
+
+            ChatRoom chatRoom = group.getChatRoom();
+            chatRoom.getUserList().add(user);
+            chatRoomService.save(chatRoom);
+
+            user.getChallengeGroups().add(group);
+
+            userService.save(user);
             groupRepository.save(group);
         } else{
             throw new IllegalArgumentException("그룹이나 유저를 찾을 수 없습니다.");
         }
     }
+
+    // 그룹 탈퇴 기능
+    public void removeGroup(Long groupId, Long userId) {
+        Optional<ChallengeGroup> groupOpt = groupRepository.findById(groupId);
+        Optional<SiteUser> userOpt = userRepository.findById(userId);
+
+        if (groupOpt.isPresent() && userOpt.isPresent()) {
+            ChallengeGroup group = groupOpt.get();
+            SiteUser user = userOpt.get();
+            group.getMembers().remove(user);
+            groupRepository.save(group);
+
+            ChatRoom chatRoom = chatRoomService.findById(group.getChatRoom().getId());
+            chatRoom.getUserList().remove(user);
+            chatRoomService.save(chatRoom);
+        } else {
+            throw new IllegalArgumentException("그룹이나 유저를 찾을 수 없습니다.");
+        }
+    }
+
     // 그룹 업데이트 메소드 추가
     public ChallengeGroup updateGroup(Long groupId, String name, String goal) {
         ChallengeGroup group = groupRepository.findById(groupId)
@@ -81,12 +120,6 @@ public class ChallengeGroupService {
 
     public List<ChallengeGroup> getAllGroupsSortedByMembers() {
         return groupRepository.findAllOrderByMembersCountDesc();
-    }
-
-    public void deleteGroup(Long groupId) {
-        ChallengeGroup group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("그룹을 찾을 수 없습니다."));
-        groupRepository.delete(group);
     }
 
     // 각 그룹의 총 운동 시간을 계산
@@ -126,6 +159,14 @@ public class ChallengeGroupService {
         }
 
         return groupRanks;
+    }
+
+    public void deleteGroup(ChallengeGroup challengeGroup) {
+        groupRepository.delete (challengeGroup);
+    }
+
+    public ChallengeGroup findByName(String cName) {
+        return groupRepository.findByName(cName);
     }
 }
 

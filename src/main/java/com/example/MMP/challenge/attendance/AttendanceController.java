@@ -32,7 +32,7 @@ public class AttendanceController {
 
     @GetMapping("/checkin")
     public String checkInPage() {
-        return "/challenge/attendanceCalendar";
+        return "challenge/attendanceCalendar";
     }
 
     // 출석 체크 처리
@@ -49,7 +49,7 @@ public class AttendanceController {
 
     // 출석 캘린더 페이지를 반환
     @GetMapping("/calendar")
-    public String getCalendarPage(Authentication authentication, Model model) {
+    public String getCalendarPage(Authentication authentication, Model model,Principal principal) {
         UserDetail userDetail = (UserDetail) authentication.getPrincipal();
         Long userId = userDetail.getId(); // 사용자 ID를 가져옵니다.
         List<Attendance> attendanceList = attendanceService.getUserAttendance(userId);
@@ -63,13 +63,31 @@ public class AttendanceController {
 
         long totalExerciseTime = attendanceService.calculateTotalExerciseTime(userId);
 
+        SiteUser siteUser = siteUserService.findById (userId);
+        List<ChallengeUser> challengeUsers = challengeUserRepository.findBySiteUser(siteUser);
+
+        if (!challengeUsers.isEmpty ()) {
+            for (ChallengeUser challengeUser : challengeUsers) {
+                if (challengeUser.getInitialDuration () != null) {
+                    Long challengeId = challengeUser.getChallenge().getId();
+                    Boolean expired = challengeRepository.findById(challengeId).get().isExpiration();
+                    if (expired) {
+                        continue;
+                    } else {
+                        Long challengeUserId = challengeUser.getId ();
+                        challengeService.updateExerciseAttendance (challengeId,challengeUserId,principal);
+                    }
+                }
+            }
+        }
+
         model.addAttribute("attendanceList", attendanceList);
         model.addAttribute("startTime", startTime);
         model.addAttribute("endTime", endTime);
         model.addAttribute("distinctAttendanceCount", distinctAttendanceCount);
         model.addAttribute("totalExerciseTime", totalExerciseTime);
 
-        return "/challenge/attendanceCalendar";
+        return "challenge/attendanceCalendar";
     }
 
     // 사용자의 출석 기록을 반환

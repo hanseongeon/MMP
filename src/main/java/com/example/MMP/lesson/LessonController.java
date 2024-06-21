@@ -1,35 +1,38 @@
 package com.example.MMP.lesson;
 
-import com.example.MMP.homeTraining.HomeTrainingForm;
-import com.example.MMP.homeTraining.category.Category;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
-import jakarta.persistence.EntityManager;
+import com.example.MMP.userPass.UserPtPass;
+import com.example.MMP.userPass.UserPtPassService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@EnableScheduling
 @RequestMapping("/lesson")
 public class LessonController {
     private final LessonService lessonService;
     private final SiteUserService siteUserService;
+
+
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     private String create(LessonForm lessonForm){
@@ -53,6 +56,8 @@ public class LessonController {
     public String detail(@PathVariable("id") Long id, Model model, Principal principal){
         Lesson lesson = lessonService.getLesson(id);
         String currentUsername = principal.getName();
+
+        SiteUser user = siteUserService.getUser(currentUsername);
 
         boolean isUserAttending = lesson.getAttendanceList().stream()
                 .anyMatch(attendant -> attendant.getUserId().equals(currentUsername));
@@ -96,6 +101,7 @@ public class LessonController {
         SiteUser siteUser = siteUserService.getUser(principal.getName());
 
         lessonService.reservation(lesson, siteUser);
+
         return "redirect:/lesson/detail/" + id;
     }
 
@@ -148,6 +154,7 @@ public class LessonController {
         }else {
             lessonList = siteUserService.getLessonList(siteUser);
         }
-        return lessonService.sortLessonsByDateDesc(lessonList);
+        return lessonService.sortLessonsByDateAndTimeDesc(lessonList);
     }
+
 }
