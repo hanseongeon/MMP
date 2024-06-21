@@ -5,6 +5,7 @@ import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.challengeGroup.ChallengeGroup;
 import com.example.MMP.chat.ChatRoom;
+import com.example.MMP.coupon.Coupon;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.lesson.Lesson;
 import com.example.MMP.point.Point;
@@ -12,22 +13,21 @@ import com.example.MMP.ptGroup.PtGroup;
 import com.example.MMP.transPass.TransPass;
 import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserPtPass;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Getter
 @Setter
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class SiteUser {
 
     @Id
@@ -110,19 +110,22 @@ public class SiteUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "chat_room_id")
     )
-
-    @JsonIgnore
+    @JsonBackReference
     private List<ChatRoom> chatRoomList = new ArrayList<>();
 
     @OneToMany(mappedBy = "acceptUser")
+    @JsonManagedReference
     private List<Alarm> alarmList = new ArrayList<>();
 
     private LocalDate createDate;
 
     @ManyToMany
     @JsonManagedReference
-    private Set<ChallengeGroup> challengeGroups = new HashSet<> ();
+    private Set<ChallengeGroup> challengeGroups = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "siteUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<ChallengeUser> challengeUsers = new ArrayList<>();
+
+//    private List<Coupon> couponList = new ArrayList<>();
 }
