@@ -25,7 +25,7 @@ private final PtPassService ptPassService;
             return "pass/ptpassmake";
         }
 
-        ptPassService.createPt(ptPassDto.getPassName(),ptPassDto.getPassTitle(),ptPassDto.getPassCount(),ptPassDto.getPassPrice(),ptPassDto.getPassDays());
-        return "redirect:/";
+        ptPassService.createPt(ptPassDto.getPassName(),ptPassDto.getPassTitle(),Integer.parseInt(ptPassDto.getPassCount()),Integer.parseInt(ptPassDto.getPassPrice()),Integer.parseInt(ptPassDto.getPassDays()));
+        return "redirect:/totalPass/list";
     }
 }
