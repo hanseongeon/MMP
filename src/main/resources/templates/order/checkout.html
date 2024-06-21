@@ -21,13 +21,6 @@
       <!-- 이용약관 UI -->
       <div id="agreement"></div>
       <!-- 쿠폰 체크박스 -->
-<<<<<<< HEAD
-      <div class="checkable typography--p" style="padding-left: 25px">
-        <label for="coupon-box" class="checkable__label typography--regular"><input id="coupon-box"
-            class="checkable__input" type="checkbox" aria-checked="true" disabled /><span
-            class="checkable__label-text">5,000원 쿠폰 적용</span></label>
-      </div>
-=======
       <select id="passSelect" name="pass">
         <option disabled selected>사용할 쿠폰을 선택해 주세요</option>
         <option th:if="${!#lists.isEmpty(couponList)}" th:each="coupon : ${couponList}" th:value="${coupon.discount}"
@@ -35,7 +28,6 @@
         </option>
       </select>
 
->>>>>>> 20f044843d8f206388e6cdbd96a6c2aaa26f126d
       <!-- 결제하기 버튼 -->
       <button class="button" id="payment-button" style="margin-top: 30px" disabled>결제하기</button>
     </div>
@@ -44,11 +36,7 @@
     const button = document.getElementById("payment-button");
     const coupon = document.getElementById("passSelect");
     const generateRandomString = () => window.btoa(Math.random()).slice(0, 20);
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 20f044843d8f206388e6cdbd96a6c2aaa26f126d
     var amount = [[${ Pass.passPrice }]];
     // ------  결제위젯 초기화 ------
     // TODO: clientKey는 개발자센터의 결제위젯 연동 키 > 클라이언트 키로 바꾸세요.
@@ -93,18 +81,6 @@
       var Name = "[[${Pass.passName}]]";
       // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
       // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
-<<<<<<< HEAD
-      paymentWidget.requestPayment({
-        orderId: customerKey,
-        orderName: "[[${Pass.passName}]]",
-        successUrl: window.location.origin + "/success/" + Name,
-        failUrl: window.location.origin + "/fail",
-        customerEmail: "[[${user.email}]]",
-        customerName: "[[${user.name}]]",
-        customerMobilePhone: "[[${user.number}]]",
-      });
-=======
-
 
       let selectBox = document.getElementById("passSelect");
       let selectedOption = selectBox.options[selectBox.selectedIndex];      
@@ -135,7 +111,6 @@
           customerMobilePhone: "[[${user.number}]]",
         });
       }
->>>>>>> 20f044843d8f206388e6cdbd96a6c2aaa26f126d
     });
   </script>
 </body>
