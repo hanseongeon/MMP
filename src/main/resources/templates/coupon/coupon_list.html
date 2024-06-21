@@ -9,12 +9,12 @@
     </div>
 
     <div class="relative inline-block">
-        <button id="toggleDropdown" class="dropbtn dropbtn-error bg-red-600 text-white text-lg py-2 px-4 rounded-lg">보유 쿠폰 목록</button>
+        <button id="toggleDropdown" class="dropbtn bg-black text-white text-lg py-2 px-4 rounded-lg bg-red-600 transition-colors duration-300">보유 쿠폰 목록</button>
         <div id="dropdownContent"
-            class="dropdown-content absolute hidden bg-white text-black shadow-lg rounded-lg mt-2 w-52">
-            <span th:each="userCop : ${userCouponList}" 
-                class="block py-2 px-4 text-black no-underline border-b border-gray-500"
-                th:text="${userCop.name}"></span>
+             class="dropdown-content absolute hidden bg-white text-black shadow-lg rounded-lg mt-2 w-52">
+            <span th:each="userCop : ${userCouponList}"
+                  class="block py-2 px-4 text-black no-underline border-b border-gray-500 hover:bg-black hover:text-white transition-colors duration-300"
+                  th:text="${userCop.name}"></span>
         </div>
     </div>
 
