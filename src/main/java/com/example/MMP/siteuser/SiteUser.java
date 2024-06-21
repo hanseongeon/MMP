@@ -124,5 +124,6 @@ public class SiteUser {
     private Set<ChallengeGroup> challengeGroups = new HashSet<> ();
 
     @OneToMany(mappedBy = "siteUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<ChallengeUser> challengeUsers = new ArrayList<>();
 }
