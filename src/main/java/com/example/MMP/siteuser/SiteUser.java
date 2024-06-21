@@ -123,10 +123,6 @@ public class SiteUser {
     private Set<ChallengeGroup> challengeGroups = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "siteUser", cascade = CascadeType.ALL, orphanRemoval = true)
-<<<<<<< HEAD
     @JsonBackReference
-=======
-    @JsonManagedReference
->>>>>>> f5104f278abcfe6837b0beacaa0906faa24b1a16
     private List<ChallengeUser> challengeUsers = new ArrayList<>();
 }
