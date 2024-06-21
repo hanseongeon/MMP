@@ -1,4 +1,5 @@
-<html layout:decorate="~{layout}">
+<html layout:decorate="~{layout}" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.w3.org/1999/xhtml">
 <div layout:fragment="content" class="w-full h-screen my-3 flex text-black flex-wrap gap-2 flex-col justify-start">
     <div class="flex items-center space-x-2 mt-2">
         <li class="flex border-2 items-center rounded-full bg-white p-2">
@@ -9,23 +10,14 @@
     </div>
 
     <div class="relative inline-block">
-        <button id="toggleDropdown" class="dropbtn bg-black text-white text-lg py-2 px-4 rounded-lg">보유 쿠폰 목록</button>
+        <button id="toggleDropdown" class="dropbtn bg-black text-white text-lg py-2 px-4 rounded-lg bg-red-600 transition-colors duration-300">보유 쿠폰 목록</button>
         <div id="dropdownContent"
-            class="dropdown-content absolute hidden bg-white text-black shadow-lg rounded-lg mt-2 w-52">
-            <span th:each="userCop : ${userCouponList}" 
-                class="block py-2 px-4 text-black no-underline border-b border-gray-500"
-                th:text="${userCop.name}"></span>
+             class="dropdown-content absolute hidden bg-white text-black shadow-lg rounded-lg mt-2 w-52">
+            <span th:each="userCop : ${userCouponList}"
+                  class="block py-2 px-4 text-black no-underline border-b border-gray-500 hover:bg-black hover:text-white transition-colors duration-300"
+                  th:text="${userCop.name}"></span>
         </div>
     </div>
-
-    <!-- <div class="dropdown inline-block relative">
-        <button class="dropbtn bg-black text-white text-lg py-2 px-4 rounded-lg">보유 쿠폰 목록</button>
-        <div class="dropdown-content absolute hidden bg-black text-white shadow-lg rounded-lg mt-2 w-52">
-            <a th:each="userCop : ${userCouponList}" th:href="@{'/coupon/' + ${userCop.id}}"
-               class="block py-2 px-4 text-white no-underline border-b border-gray-500 hover:bg-gray-700"
-               th:text="${userCop.name}"></a>
-        </div>
-    </div> -->
 
     <div class="flex justify-center">
         <div class="card-container flex flex-wrap">
