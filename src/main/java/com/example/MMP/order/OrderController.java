@@ -116,6 +116,7 @@ public class OrderController {
 
     @RequestMapping(value = "/success/{name}", method = RequestMethod.GET)
     public String paymentRequest(HttpServletRequest request, Model model, @PathVariable("name") String name, @AuthenticationPrincipal UserDetail userDetail, @RequestParam(value = "coupon") Long coupon) throws Exception {
+
         SiteUser siteUser = siteUserService.findByUserName(userDetail.getUsername());
         PtPass ptPass = ptPassService.findByName(name);
         if (ptPass != null) {
