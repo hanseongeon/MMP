@@ -5,6 +5,7 @@ import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.challengeGroup.ChallengeGroup;
 import com.example.MMP.chat.ChatRoom;
+import com.example.MMP.coupon.Coupon;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.lesson.Lesson;
 import com.example.MMP.point.Point;
@@ -123,6 +124,15 @@ public class SiteUser {
     private Set<ChallengeGroup> challengeGroups = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "siteUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonBackReference
     private List<ChallengeUser> challengeUsers = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_coupon",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "coupon_id")
+    )
+    @JsonBackReference
+    private List<Coupon> couponList = new ArrayList<>();
 }
