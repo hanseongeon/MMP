@@ -49,16 +49,8 @@ public class TrainerService {
         return trainerRepository.findById(id).orElse(null);
     }
 
-    public void delete(Long id) {
-        trainerRepository.deleteById(id);
-    }
-
-    public void update(Long id, String introduce) {
-        Trainer trainer = trainerRepository.findById(id).orElse(null);
-        if (trainer != null) {
-            trainer.setIntroduce(introduce);
-            trainerRepository.save(trainer);
-        }
+    public void delete(Trainer trainer) {
+        trainerRepository.delete(trainer);
     }
 
     public List<Trainer> findAll() {
@@ -74,5 +66,23 @@ public class TrainerService {
 
                 // 필터링된 트레이너들을 리스트로 수집합니다.
                 .collect(Collectors.toList());
+    }
+
+    public Trainer findById(Long id) {
+        Trainer trainer = trainerRepository.findById(id).orElseThrow();
+        return trainer;
+    }
+
+    public void update(Trainer trainer, String introduce, String classType, String specialization, String imagePath) {
+        trainer.setIntroduce(introduce);
+        trainer.setClassType(classType);
+        trainer.setSpecialization(specialization);
+
+        // keyword 생성 및 설정
+        String keyword = generateKeyword(trainer.getUserTrainer().getGender(), classType, specialization);
+        trainer.setKeyword(keyword);
+        trainer.setImagePath(imagePath);
+
+        trainerRepository.save(trainer);
     }
 }

@@ -12,7 +12,9 @@ public class TrainerForm {
     @NotEmpty(message = "트레이너 소개는 필수 입니다.")
     private String introduce;
 
+    @NotEmpty
     private String classType;
 
+    @NotEmpty
     private String specialization;
 }

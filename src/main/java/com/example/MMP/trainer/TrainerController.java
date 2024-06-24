@@ -5,6 +5,7 @@ import com.example.MMP.siteuser.SiteUserService;
 import com.example.MMP.wod.FileUploadUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.TriConsumer;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -94,18 +95,21 @@ public class TrainerController {
 
     @GetMapping("/checkDuplicate/{trainerId}")
     @ResponseBody
-    public boolean checkDuplicateTrainer(@PathVariable Long trainerId) {
+    public Trainer checkDuplicateTrainer(@PathVariable Long trainerId) {
         List<Trainer> trainerList = trainerService.getList();
         SiteUser userTrainer = siteUserService.findById(trainerId);
-        Boolean response = false;
-        for (Trainer trainer : trainerList){
-            if(userTrainer == trainer.getUserTrainer()){
-                response = true;
+        Trainer duplicateTrainer = null;
+
+        for (Trainer trainer : trainerList) {
+            SiteUser trainerUser = trainer.getUserTrainer();
+
+            // Null 체크와 userTrainer의 id 비교로 중복 확인
+            if (trainerUser != null && userTrainer == trainer.getUserTrainer()) {
+                duplicateTrainer = trainer;
                 break;
             }
         }
-
-        return response; // 이미 등록된 트레이너인 경우 false 반환
+        return duplicateTrainer; // 이미 등록된 트레이너인 경우 해당 트레이너 객체 반환
     }
 
     @GetMapping("/list")
@@ -114,40 +118,37 @@ public class TrainerController {
         model.addAttribute("trainerList", trainerList);
         return "trainer/trainer_list";
     }
-
-    @GetMapping("/detail/{id}")
-    public String detail(@PathVariable("id") Long id,
-                         Model model) {
-        Trainer trainer = trainerService.getTrainer(id);
-        model.addAttribute("trainer", trainer);
-        return "trainer/trainer_detail";
-    }
-
-    @PostMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id) {
-        trainerService.delete(id);
-        return "redirect:/trainer/form";
+        Trainer trainer = trainerService.findById(id);
+        trainerService.delete(trainer);
+        return "redirect:/trainer/list";
     }
-
-    @GetMapping("/update/{id}")
-    public String update(@PathVariable("id") Long id,
-                         TrainerForm trainerForm,
-                         Model model) {
-        Trainer trainer = trainerService.getTrainer(id);
-        model.addAttribute("trainer", trainer);
-        trainerForm.setIntroduce(trainer.getIntroduce());
-        return "trainer/trainer_create";
-    }
-
     @PostMapping("/update/{id}")
     public String update(@Valid TrainerForm trainerForm,
                          BindingResult bindingResult,
-                         @PathVariable("id") Long id) {
+                         @PathVariable("id") Long id, @RequestParam("image") MultipartFile image) {
         if (bindingResult.hasErrors()) {
             return "trainer/trainer_create";
         }
-        trainerService.update(id, trainerForm.getIntroduce());
-        return "redirect:/trainer/detail/" + id;
+        Trainer trainer = trainerService.getTrainer(id);
+        String fileName;
+        // 이미지 업로드 처리
+        if (image != null && !image.isEmpty()) {
+            fileName = StringUtils.cleanPath(image.getOriginalFilename());
+
+            try {
+                this.fileUploadUtil.saveFile(fileName, image);
+            } catch (Exception e) {
+                e.printStackTrace();
+                bindingResult.reject("fileUploadError", "이미지 업로드 중 오류가 발생했습니다.");
+                return "trainer/trainer_create";
+            }
+        }else {
+            fileName = trainer.getImagePath();
+        }
+        trainerService.update(trainer, trainerForm.getIntroduce(), trainerForm.getClassType(), trainerForm.getSpecialization(), fileName);
+        return "redirect:/trainer/list";
     }
 
     @PostMapping("/filter")
