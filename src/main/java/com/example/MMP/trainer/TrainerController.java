@@ -6,7 +6,6 @@ import com.example.MMP.wod.FileUploadUtil;
 import com.example.MMP.wod.OSType;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.util.TriConsumer;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -143,7 +142,6 @@ public class TrainerController {
                 bindingResult.reject("fileUploadError", "이미지 업로드 중 오류가 발생했습니다.");
                 return "trainer/trainer_create";
             }
-
         }else {
             fileName = trainer.getImagePath();
         }
