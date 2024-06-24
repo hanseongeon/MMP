@@ -5,6 +5,7 @@ import com.example.MMP.challenge.attendance.AttendanceRepository;
 import com.example.MMP.challenge.attendance.AttendanceService;
 import com.example.MMP.information.Information;
 import com.example.MMP.information.InformationService;
+import com.example.MMP.wod.OSType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
@@ -36,6 +37,7 @@ public class MainController {
                 }
             }
         }
+
 
         model.addAttribute ("information", information);
         model.addAttribute ("presentCount", presentCount);

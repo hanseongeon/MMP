@@ -63,7 +63,6 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement ->
                         sessionManagement
                                 .maximumSessions(1));
-
         return http.build();
     }
 
