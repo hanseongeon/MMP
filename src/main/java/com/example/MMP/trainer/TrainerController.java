@@ -3,6 +3,7 @@ package com.example.MMP.trainer;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
 import com.example.MMP.wod.FileUploadUtil;
+import com.example.MMP.wod.OSType;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.TriConsumer;
@@ -115,6 +116,9 @@ public class TrainerController {
     @GetMapping("/list")
     public String TrainerList(Model model) {
         List<Trainer> trainerList = trainerService.findAll();
+        OSType osType = OSType.getInstance();
+        String filePath = osType.getPath();
+        model.addAttribute("filePath", filePath);
         model.addAttribute("trainerList", trainerList);
         return "trainer/trainer_list";
     }
