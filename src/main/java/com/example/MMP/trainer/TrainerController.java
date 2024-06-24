@@ -35,11 +35,6 @@ public class TrainerController {
         return "trainer/trainer_form";
     }
 
-    @GetMapping("/category")
-    private String category() {
-        return "trainer/categoryFilter";
-    }
-
     @GetMapping("/create")
     private String createTrainer(TrainerForm trainerForm, Model model) {
         List<SiteUser> userTrainerList = siteUserService.getTrainerList();
@@ -148,6 +143,7 @@ public class TrainerController {
                 bindingResult.reject("fileUploadError", "이미지 업로드 중 오류가 발생했습니다.");
                 return "trainer/trainer_create";
             }
+
         }else {
             fileName = trainer.getImagePath();
         }
@@ -158,7 +154,8 @@ public class TrainerController {
     @PostMapping("/filter")
     public ResponseEntity<List<Trainer>> filterTrainers(@RequestBody FilterRequest filterRequest) {
         List<Trainer> trainerList = trainerService.findAll();
-        List<Trainer> filteredTrainers = trainerService.filterTrainers(trainerList, filterRequest);
+        List<Trainer> filteredTrainers;
+        filteredTrainers = trainerService.filterTrainers(trainerList, filterRequest);
 
         return ResponseEntity.ok(filteredTrainers);
     }

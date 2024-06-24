@@ -34,8 +34,6 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final ListPath<com.example.MMP.chat.ChatRoom, com.example.MMP.chat.QChatRoom> chatRoomList = this.<com.example.MMP.chat.ChatRoom, com.example.MMP.chat.QChatRoom>createList("chatRoomList", com.example.MMP.chat.ChatRoom.class, com.example.MMP.chat.QChatRoom.class, PathInits.DIRECT2);
 
-    public final ListPath<com.example.MMP.coupon.Coupon, com.example.MMP.coupon.QCoupon> couponList = this.<com.example.MMP.coupon.Coupon, com.example.MMP.coupon.QCoupon>createList("couponList", com.example.MMP.coupon.Coupon.class, com.example.MMP.coupon.QCoupon.class, PathInits.DIRECT2);
-
     public final DatePath<java.time.LocalDate> createDate = createDate("createDate", java.time.LocalDate.class);
 
     public final StringPath email = createString("email");
@@ -63,6 +61,8 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
     public final ListPath<com.example.MMP.homeTraining.HomeTraining, com.example.MMP.homeTraining.QHomeTraining> saveTraining = this.<com.example.MMP.homeTraining.HomeTraining, com.example.MMP.homeTraining.QHomeTraining>createList("saveTraining", com.example.MMP.homeTraining.HomeTraining.class, com.example.MMP.homeTraining.QHomeTraining.class, PathInits.DIRECT2);
 
     public final ListPath<com.example.MMP.transPass.TransPass, com.example.MMP.transPass.QTransPass> transPassList = this.<com.example.MMP.transPass.TransPass, com.example.MMP.transPass.QTransPass>createList("transPassList", com.example.MMP.transPass.TransPass.class, com.example.MMP.transPass.QTransPass.class, PathInits.DIRECT2);
+
+    public final ListPath<com.example.MMP.usercoupon.UserCoupon, com.example.MMP.usercoupon.QUserCoupon> userCouponList = this.<com.example.MMP.usercoupon.UserCoupon, com.example.MMP.usercoupon.QUserCoupon>createList("userCouponList", com.example.MMP.usercoupon.UserCoupon.class, com.example.MMP.usercoupon.QUserCoupon.class, PathInits.DIRECT2);
 
     public final ListPath<com.example.MMP.userPass.UserDayPass, com.example.MMP.userPass.QUserDayPass> userDayPassList = this.<com.example.MMP.userPass.UserDayPass, com.example.MMP.userPass.QUserDayPass>createList("userDayPassList", com.example.MMP.userPass.UserDayPass.class, com.example.MMP.userPass.QUserDayPass.class, PathInits.DIRECT2);
 
