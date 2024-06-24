@@ -105,7 +105,7 @@ public class TrainerController {
             }
         }
 
-        return response; // 이미 등록된 트레이너인 경우 true 반환
+        return response; // 이미 등록된 트레이너인 경우 false 반환
     }
 
     @GetMapping("/list")
