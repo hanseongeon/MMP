@@ -43,6 +43,7 @@ public class SiteUser {
 
     private String gender;
 
+    @Column(unique = true)
     private String number;
 
     private String birthDate;
@@ -137,4 +138,18 @@ public class SiteUser {
     private List<Coupon> couponList = new ArrayList<>();
 
     private int salary;
+
+    // 추천인 필드 추가
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "referrer_id")
+    @JsonBackReference
+    private SiteUser referrer;
+
+    @OneToMany(mappedBy = "referrer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<SiteUser> referrals = new ArrayList<>();
+
+    private int bonus;
+
+    private int performancePay;
 }
