@@ -116,6 +116,12 @@ public class SiteUserService {
         List<Lesson> lessonList = siteUser.getLessonList();
         return lessonList;
     }
+
+    public SiteUser saveSalary(Long id, int salary){
+        SiteUser targetUser = findById (id);
+        targetUser.setSalary (salary);
+        return siteUserRepository.save (targetUser);
+    }
 }
 
 

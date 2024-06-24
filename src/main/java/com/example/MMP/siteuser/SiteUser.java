@@ -135,4 +135,6 @@ public class SiteUser {
     )
     @JsonBackReference
     private List<Coupon> couponList = new ArrayList<>();
+
+    private int salary;
 }

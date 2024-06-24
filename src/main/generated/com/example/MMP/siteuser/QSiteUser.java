@@ -60,6 +60,8 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final ListPath<com.example.MMP.ptGroup.PtGroup, com.example.MMP.ptGroup.QPtGroup> ptGroupUser = this.<com.example.MMP.ptGroup.PtGroup, com.example.MMP.ptGroup.QPtGroup>createList("ptGroupUser", com.example.MMP.ptGroup.PtGroup.class, com.example.MMP.ptGroup.QPtGroup.class, PathInits.DIRECT2);
 
+    public final NumberPath<Integer> salary = createNumber("salary", Integer.class);
+
     public final ListPath<com.example.MMP.homeTraining.HomeTraining, com.example.MMP.homeTraining.QHomeTraining> saveTraining = this.<com.example.MMP.homeTraining.HomeTraining, com.example.MMP.homeTraining.QHomeTraining>createList("saveTraining", com.example.MMP.homeTraining.HomeTraining.class, com.example.MMP.homeTraining.QHomeTraining.class, PathInits.DIRECT2);
 
     public final ListPath<com.example.MMP.transPass.TransPass, com.example.MMP.transPass.QTransPass> transPassList = this.<com.example.MMP.transPass.TransPass, com.example.MMP.transPass.QTransPass>createList("transPassList", com.example.MMP.transPass.TransPass.class, com.example.MMP.transPass.QTransPass.class, PathInits.DIRECT2);
