@@ -133,6 +133,7 @@ public class SiteUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "coupon_id")
     )
+
     @JsonBackReference
     private List<Coupon> couponList = new ArrayList<>();
 }

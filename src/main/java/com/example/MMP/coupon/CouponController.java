@@ -4,13 +4,11 @@ import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -21,15 +19,16 @@ import java.util.List;
 public class CouponController {
     private final CouponService couponService;
     private final SiteUserService siteUserService;
+    private final CouponRepository couponRepository;
 
     @GetMapping("/create")
-    public String create(CouponForm couponForm){
+    public String create(CouponForm couponForm) {
         return "coupon/coupon_create";
     }
 
     @PostMapping("/create")
-    public String create(@Valid CouponForm couponForm, BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
+    public String create(@Valid CouponForm couponForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             return "coupon/coupon_create";
         }
         couponService.create(couponForm.getName(), Integer.parseInt(couponForm.getPoint()), Integer.parseInt(couponForm.getDiscount()));
@@ -37,8 +36,42 @@ public class CouponController {
         return "redirect:/coupon/list";
     }
 
+    @PostMapping("/delete/{id}")
+    public String delete(Coupon useCoupon) {
+        couponService.delete(useCoupon);
+        return "redirect:/trainer/form";
+    }
+
+    @GetMapping("/update/{id}")
+    public String update(@PathVariable("id") Long id,
+                         CouponForm couponForm,
+                         Model model) {
+        Coupon coupon = couponService.findById(id);
+        model.addAttribute("coupon", coupon);
+        coupon.setName(coupon.getName());
+        coupon.setPoint(coupon.getPoint());
+        coupon.setDiscount(coupon.getDiscount());
+        couponRepository.save(coupon);
+        return "redirect:/coupon/coupon_create";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/update/{id}")
+    public String update(@Valid CouponForm couponForm,
+                         BindingResult bindingResult,
+                         @PathVariable("id") Long id,
+                         Principal principal) {
+
+        if (bindingResult.hasErrors()) {
+            return "coupon/coupon_create";
+        }
+        Coupon coupon = couponService.getCoupon(id);
+        principal.getName();
+        return "redirect:/coupon/coupon_list";
+    }
+
     @GetMapping("/list")
-    public String list(Model model, Principal principal){
+    public String list(Model model, Principal principal) {
         List<Coupon> couponList = couponService.getAll();
         SiteUser siteUser = siteUserService.findByUserName(principal.getName());
         String points = String.valueOf(siteUser.getPoint().getPoints());
@@ -52,7 +85,7 @@ public class CouponController {
     }
 
     @GetMapping("/purchase/{id}")
-    public String purchase(@PathVariable("id") Long id, Model model, Principal principal){
+    public String purchase(@PathVariable("id") Long id, Model model, Principal principal) {
         Coupon coupon = couponService.getCoupon(id);
         List<Coupon> couponList = couponService.getAll();
         SiteUser siteUser = siteUserService.findByUserName(principal.getName());
