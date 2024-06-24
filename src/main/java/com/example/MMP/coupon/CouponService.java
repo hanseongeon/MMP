@@ -39,12 +39,4 @@ public class CouponService {
     public Coupon findById(Long id) {
         return couponRepository.findById(id).orElseThrow();
     }
-
-    public void update(Long id, String name, int point, int discount) {
-        Coupon coupon = couponRepository.findById(id).get();
-        coupon.setName(name);
-        coupon.setPoint(point);
-        coupon.setDiscount(discount);
-        couponRepository.save(coupon);
-    }
 }

@@ -1,30 +1,19 @@
-@PostMapping("/create")
-private String createTrainer(@Valid TrainerForm trainerForm,
-BindingResult bindingResult,
-@RequestParam("image") MultipartFile image,
-Model model) {
+<div class="card-container">
+    <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="pt:${ptPassList}">
+        <figure><img src="https://i.imgur.com/kW3S5se.png" alt="PT" /></figure>
+        <div class="card-body">
+            <h2 class="card-title" th:text="${pt.passName}"></h2>
+            <p th:text="${pt.passTitle}"></p>
+            <p th:text="'횟수 : '+${pt.passCount}"></p>
+            <p th:text="'가격 : '+${pt.passPrice}"></p>
+            <div class="card-actions justify-end">
+                <a th:href="@{|/checkout/${pt.passName}|}" class="btn btn-primary">Buy Now</a>
+                <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
+                    <a th:href="@{|/pt/update/${pt.passId}|}" class="btn">수정</a>
+                    <a th:href="@{|/pt/delete/${pt.passId}|}" class="btn">삭제</a>
+                </div>
+            </div>
+        </div>
 
-if (bindingResult.hasErrors()) {
-return "trainer/trainer_create";
-}
-
-if (image != null && !image.isEmpty()) {
-String fileName = StringUtils.cleanPath(image.getOriginalFilename());
-
-try {
-this.fileUploadUtil.saveFile(fileName, image);
-} catch (Exception e) {
-e.printStackTrace();
-bindingResult.reject("fileUploadError", "이미지 업로드 중 오류가 발생했습니다.");
-return "trainer/trainer_create";
-}
-
-trainerService.create(fileName, trainerForm.getTrainerName(), trainerForm.getIntroduce(),
-trainerForm.getGender(), trainerForm.getClassType(), trainerForm.getSpecialization());
-}
-
-List<Trainer> trainerList = trainerService.getList();
-    model.addAttribute("trainerList", trainerList);
-
-    return "redirect:/";
-    }
+    </div>
+</div>
