@@ -1,5 +1,6 @@
-package com.example.MMP.coupon;
+package com.example.MMP.usercoupon;
 
+import com.example.MMP.siteuser.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +8,8 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Coupon {
+public class UserCoupon {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,4 +20,7 @@ public class Coupon {
     private int point;
 
     private int discount;
+
+    @ManyToOne
+    private SiteUser siteUser;
 }

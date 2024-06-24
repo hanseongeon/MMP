@@ -69,7 +69,7 @@ public class SiteUserService {
         siteUser.setCreateDate (LocalDate.now ());
 
         if ("trainer".equals (userRole)) {
-            siteUser.setSalary (salary*10000);
+            siteUser.setSalary (salary * 10000);
         }
 
         // 추천인 설정
@@ -136,6 +136,7 @@ public class SiteUserService {
         return lessonList;
     }
 
+
     public SiteUser updateSalary(Long id, int salary, int bonus, int performancePay) {
         Optional<SiteUser> optionalUser = siteUserRepository.findById (id);
         if (optionalUser.isEmpty ()) {
@@ -149,6 +150,12 @@ public class SiteUserService {
 
         return siteUserRepository.save (targetUser);
     }
+
+    public List<SiteUser> getTrainerList() {
+        return siteUserRepository.findByUserRole ("trainer");
+
+    }
 }
+
 
 
