@@ -1,8 +1,11 @@
 package com.example.MMP.trainer;
 
+import com.example.MMP.siteuser.SiteUser;
+import com.example.MMP.siteuser.SiteUserService;
 import com.example.MMP.wod.FileUploadUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -19,6 +23,7 @@ import java.util.List;
 public class TrainerController {
 
     private final TrainerService trainerService;
+    private final SiteUserService siteUserService;
     private final FileUploadUtil fileUploadUtil;
 
     @GetMapping("/form")
@@ -34,7 +39,9 @@ public class TrainerController {
     }
 
     @GetMapping("/create")
-    private String createTrainer(TrainerForm trainerForm) {
+    private String createTrainer(TrainerForm trainerForm, Model model) {
+        List<SiteUser> userTrainerList = siteUserService.getTrainerList();
+        model.addAttribute("userTrainerList", userTrainerList);
         return "trainer/trainer_create";
     }
 
@@ -45,28 +52,60 @@ public class TrainerController {
                                  Model model) {
 
         if (bindingResult.hasErrors()) {
+            List<SiteUser> userTrainerList = siteUserService.getTrainerList();
+            model.addAttribute("userTrainerList", userTrainerList);
             return "trainer/trainer_create";
         }
+        // 사용자 정보 가져오기
+        SiteUser userTrainer = siteUserService.findById(trainerForm.getUserTrainerId());
 
-        if (image != null && !image.isEmpty()) {
-            String fileName = StringUtils.cleanPath(image.getOriginalFilename());
+        try {
+            // 이미지 업로드 처리
+            if (image != null && !image.isEmpty()) {
+                String fileName = StringUtils.cleanPath(image.getOriginalFilename());
 
-            try {
-                this.fileUploadUtil.saveFile(fileName, image);
-            } catch (Exception e) {
-                e.printStackTrace();
-                bindingResult.reject("fileUploadError", "이미지 업로드 중 오류가 발생했습니다.");
-                return "trainer/trainer_create";
+                try {
+                    this.fileUploadUtil.saveFile(fileName, image);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    bindingResult.reject("fileUploadError", "이미지 업로드 중 오류가 발생했습니다.");
+                    return "trainer/trainer_create";
+                }
+
+                trainerService.create(fileName, userTrainer, trainerForm.getIntroduce(),
+                        userTrainer.getGender(), trainerForm.getClassType(), trainerForm.getSpecialization());
             }
 
-            trainerService.create(fileName, trainerForm.getTrainerName(), trainerForm.getIntroduce(),
-                    trainerForm.getGender(), trainerForm.getClassType(), trainerForm.getSpecialization());
+            // 트레이너 목록 조회 및 모델에 추가
+            List<Trainer> trainerList = trainerService.getList();
+            model.addAttribute("trainerList", trainerList);
+
+            // 리다이렉트
+            return "redirect:/trainer/list";
+
+        } catch (DataIntegrityViolationException e) {
+            // 이미 등록된 트레이너를 등록하려고 시도할 경우 예외 처리
+            bindingResult.reject("duplicateTrainer", "이미 등록된 트레이너입니다.");
+            List<SiteUser> userTrainerList = siteUserService.getTrainerList();
+            model.addAttribute("userTrainerList", userTrainerList);
+            return "trainer/trainer_create";
+        }
+    }
+
+    @GetMapping("/checkDuplicate/{trainerId}")
+    @ResponseBody
+    public boolean checkDuplicateTrainer(@PathVariable Long trainerId) {
+        List<Trainer> trainerList = trainerService.getList();
+        SiteUser userTrainer = siteUserService.findById(trainerId);
+        Boolean response = false;
+        for (Trainer trainer : trainerList){
+            if(userTrainer == trainer.getUserTrainer()){
+                response = true;
+                break;
+            }
         }
 
-        List<Trainer> trainerList = trainerService.getList();
-        model.addAttribute("trainerList", trainerList);
-
-        return "redirect:/";
+        return response; // 이미 등록된 트레이너인 경우 true 반환
     }
 
     @GetMapping("/list")

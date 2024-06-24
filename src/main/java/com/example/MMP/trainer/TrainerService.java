@@ -1,5 +1,6 @@
 package com.example.MMP.trainer;
 
+import com.example.MMP.siteuser.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ public class TrainerService {
     private final TrainerRepository trainerRepository;
 
     public void create(String imagePath,
-                       String name,
+                       SiteUser userTrainer,
                        String introduce,
                        String gender,
                        String classType,
@@ -22,9 +23,8 @@ public class TrainerService {
 
         Trainer trainer = new Trainer();
         trainer.setImagePath(imagePath);
-        trainer.setTrainerName(name);
+        trainer.setUserTrainer(userTrainer);
         trainer.setIntroduce(introduce);
-        trainer.setGender(gender);
         trainer.setClassType(classType);
         trainer.setSpecialization(specialization);
 
@@ -64,6 +64,7 @@ public class TrainerService {
     public List<Trainer> findAll() {
         return this.trainerRepository.findAll();
     }
+
     public List<Trainer> filterTrainers(List<Trainer> trainers, FilterRequest filterRequest) {
         return trainers.stream()
                 .filter(trainer -> filterRequest.getKeyword() == null
