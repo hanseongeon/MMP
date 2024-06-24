@@ -1,12 +1,8 @@
 package com.example.MMP.coupon;
 
-import com.example.MMP.siteuser.SiteUser;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Entity
 @Getter
@@ -22,8 +18,4 @@ public class Coupon {
     private int point;
 
     private int discount;
-
-    @ManyToMany(mappedBy = "couponList")
-    @JsonManagedReference
-    private List<SiteUser> users;
 }
