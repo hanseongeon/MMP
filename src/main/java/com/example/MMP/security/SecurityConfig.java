@@ -11,6 +11,7 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
@@ -31,6 +32,10 @@ public class SecurityConfig {
                 .formLogin(formLogin ->
                         formLogin.loginPage("/user/login")
                                 .defaultSuccessUrl("/", true)
+                )
+                .sessionManagement(session -> session
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(true)
                 )
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
@@ -80,7 +85,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SessionRegistryImpl sessionRegistry() {
-        return new SessionRegistryImpl();
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
     }
 }
