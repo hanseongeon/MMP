@@ -1,0 +1,72 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="w-full h-[880px] flex items-center my-3">
+    <div class="bg-gray-700 rounded-lg p-8 shadow-lg w-full max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-center text-white">급여 정산</h1>
+        <form action="/user/createSalary" method="post" class="space-y-6">
+            <div class="flex flex-wrap -mx-4">
+                <div class="w-full sm:w-1/2 px-4 mb-4">
+                    <label for="name" class="block text-sm font-medium mb-2">유저 이름</label>
+                    <input type="text" id="name" name="name" th:value="${userName}"
+                        class="w-full p-2.5 bg-gray-800 border border-gray-600 rounded-md" readonly>
+                </div>
+                <div class="w-full sm:w-1/2 px-4 mb-4">
+                    <label for="number" class="block text-sm font-medium mb-2">유저 핸드폰번호</label>
+                    <input type="text" id="number" name="number" th:value="${number}"
+                        class="w-full p-2.5 bg-gray-800 border border-gray-600 rounded-md" readonly>
+                </div>
+            </div>
+            <div class="flex flex-wrap -mx-4">
+                <div class="w-full sm:w-1/2 px-4 mb-4">
+                    <label for="salary" class="block text-sm font-medium mb-2">기본급</label>
+                    <input type="text" id="salary" name="salary" th:value="${siteUser.salary}"
+                        class="w-full p-2.5 bg-gray-800 border border-gray-600 rounded-md" placeholder="기본급을 입력하세요">
+                </div>
+                <div class="w-full sm:w-1/2 px-4 mb-4">
+                    <label for="bonus" class="block text-sm font-medium mb-2">상여금</label>
+                    <input type="text" id="bonus" name="bonus" th:value="${lastSalary.bonus}"
+                        class="w-full p-2.5 bg-gray-800 border border-gray-600 rounded-md" placeholder="상여금을 입력하세요">
+                </div>
+            </div>
+            <div class="flex flex-wrap -mx-4">
+                <div class="w-full sm:w-1/3 px-4 mb-4">
+                    <label for="referralCount" class="block text-sm font-medium mb-2">추천인 수</label>
+                    <input type="text" id="referralCount" name="referralCount" th:value="${referralCount}"
+                        class="w-full p-2.5 bg-gray-800 border border-gray-600 rounded-md" readonly>
+                </div>
+                <div class="w-full sm:w-1/3 px-4 mb-4">
+                    <label for="incentive" class="block text-sm font-medium mb-2">인센티브</label>
+                    <input type="text" id="incentive" name="incentive" th:value="${lastSalary.incentive}"
+                        class="w-full p-2.5 bg-gray-800 border border-gray-600 rounded-md" placeholder="인센티브를 입력하세요">
+                </div>
+                <div class="w-full sm:w-1/3 px-4 mb-4">
+                    <label for="performancePay" class="block text-sm font-medium mb-2">성과금</label>
+                    <input type="text" id="performancePay" name="performancePay" th:value="${performancePay}"
+                        class="w-full p-2.5 bg-gray-800 border border-gray-600 rounded-md" placeholder="성과금을 입력하세요">
+                </div>
+            </div>
+            <button type="submit"
+                class="w-full py-3 bg-error hover:bg-blue-700 text-white font-semibold rounded-md transition duration-300">
+                제출
+            </button>
+        </form>
+        <p th:if="${error}" th:text="${error}" class="text-red-500 text-sm mt-4"></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function calculatePerformancePay() {
+                var referralCount = document.getElementById('referralCount').value || 0;
+                var incentive = document.getElementById('incentive').value || 0;
+                var performancePay = referralCount * incentive;
+                document.getElementById('performancePay').value = performancePay;
+            }
+
+            document.getElementById('referralCount').addEventListener('input', calculatePerformancePay);
+            document.getElementById('incentive').addEventListener('input', calculatePerformancePay);
+
+            calculatePerformancePay();
+        });
+    </script>
+</div>
+
+</html>

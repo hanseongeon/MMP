@@ -29,8 +29,16 @@ public class WodController {
 
     @GetMapping("/form")
     private String wod(Model model){
-        List<Wod> wodList = wodService.getList();
+        List<Wod> wodList = wodService.getAllWodsByCreateDateDesc();
+        // 현재 운영 체제에 따른 OSType 가져오기
+        OSType osType = OSType.getInstance();
+        // OSType에서 파일 저장 경로 가져오기
+        String filePath = osType.getPath();
+        boolean my = false;
+
         model.addAttribute("wodList", wodList);
+        model.addAttribute("filePath", filePath);
+        model.addAttribute("my", my);
 
         return "wod/wod_form";
     }
@@ -74,6 +82,9 @@ public class WodController {
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable("id") Long id, Model model){
         Wod wod = wodService.getWod(id);
+        OSType osType = OSType.getInstance();
+        String filePath = osType.getPath();
+        model.addAttribute("filePath", filePath);
         model.addAttribute("wod", wod);
         model.addAttribute("commentList", wod.getCommentList());
         for (int a=0; a<wod.getLikeList().size();a++){
@@ -143,5 +154,16 @@ public class WodController {
         response.put("success", true);
         response.put("likeCount", likeCount);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/myWod")
+    public String myWodList(Model model, Principal principal){
+        SiteUser user = siteUserService.getUser(principal.getName());
+        List<Wod> myWodList = wodService.getWodListByCreateDateDesc(user);
+        boolean my = true;
+
+        model.addAttribute("wodList",myWodList);
+        model.addAttribute("my", my);
+        return "wod/wod_form";
     }
 }

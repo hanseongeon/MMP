@@ -52,6 +52,18 @@
                         <a class="nav-link" tabindex="0" sec:authorize="isAuthenticated()"
                             th:href="@{/user/profile}">프로필</a>
                     </li>
+
+                    <!-- 추후 막을 예정-->
+                    <li th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}"
+                        class="nav-item">
+                        <a class="nav-link" tabindex="0" sec:authorize="isAuthenticated()"
+                            th:href="@{/user/userList}">회원 리스트</a>
+                    </li>
+                    <li th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}"
+                        class="nav-item">
+                        <a class="nav-link" tabindex="0" sec:authorize="isAuthenticated()"
+                            th:href="@{/user/trainerList}">트레이너 리스트</a>
+                    </li>
                     <li th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}"
                         tabindex="0">
                         <a href="/ptGroup/join">회원 추가하기</a>
@@ -113,8 +125,11 @@
 
 
         function showAlarm(alarmDto) {
+            let alarmDetails = document.getElementById('dropdown');
+            alarmDetails.setAttribute('open', true);
             const gotalk = document.querySelectorAll('.gotalk')
             gotalk.forEach((talk) => {
+                const maxLength = 5;
                 const sender = alarmDto.sender;
                 const url = talk.querySelector(".talk-url").innerText;
                 if (url === sender) {
@@ -127,7 +142,8 @@
 
                     const alarm = talk.querySelector('.alarm');
                     const alarmMessage = alarm.querySelector(".alarmMessage");
-                    alarmMessage.innerText = alarmDto.message;
+                    const fommatAlarm = truncateString(alarmDto.message,maxLength);
+                    alarmMessage.innerText = fommatAlarm;
 
                     let alarmCnt = alarm.querySelector(".alarmCnt");
                     if (alarmCnt === null) {
@@ -144,6 +160,15 @@
             $("#toast").append(
                 toastr.info(alarmDto.sender + '님의 메세지 : ' + alarmDto.message)
             );
+        }
+
+
+        function truncateString(str, maxLength) {
+            if (str.length > maxLength) {
+                return str.substring(0, maxLength) + "...";
+            } else {
+                return str;
+            }
         }
 
         // 페이지 로드 후 실행되는 부분

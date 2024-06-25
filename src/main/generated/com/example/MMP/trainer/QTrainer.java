@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -17,11 +18,11 @@ public class QTrainer extends EntityPathBase<Trainer> {
 
     private static final long serialVersionUID = -1514390611L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QTrainer trainer = new QTrainer("trainer");
 
     public final StringPath classType = createString("classType");
-
-    public final StringPath gender = createString("gender");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -33,18 +34,27 @@ public class QTrainer extends EntityPathBase<Trainer> {
 
     public final StringPath specialization = createString("specialization");
 
-    public final StringPath trainerName = createString("trainerName");
+    public final com.example.MMP.siteuser.QSiteUser userTrainer;
 
     public QTrainer(String variable) {
-        super(Trainer.class, forVariable(variable));
+        this(Trainer.class, forVariable(variable), INITS);
     }
 
     public QTrainer(Path<? extends Trainer> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QTrainer(PathMetadata metadata) {
-        super(Trainer.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QTrainer(PathMetadata metadata, PathInits inits) {
+        this(Trainer.class, metadata, inits);
+    }
+
+    public QTrainer(Class<? extends Trainer> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.userTrainer = inits.isInitialized("userTrainer") ? new com.example.MMP.siteuser.QSiteUser(forProperty("userTrainer"), inits.get("userTrainer")) : null;
     }
 
 }

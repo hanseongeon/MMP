@@ -1,25 +1,17 @@
 package com.example.MMP.security;
 
-import com.example.MMP.point.Point;
 import com.example.MMP.siteuser.SiteUser;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 
-public class UserDetail implements UserDetails {
+public class UserDetail extends User {
     private final SiteUser siteUser;
 
-    private final Collection<? extends GrantedAuthority> authorities;
-
     public UserDetail(SiteUser siteUser, Collection<? extends GrantedAuthority> authorities) {
-            this.siteUser = siteUser;
-            this.authorities = authorities;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        super(siteUser.getUserId(), siteUser.getPassword(), authorities);
+        this.siteUser = siteUser;
     }
 
     @Override
@@ -32,32 +24,17 @@ public class UserDetail implements UserDetails {
         return siteUser.getUserId();
     }
 
-    public int getPoints(){
-        return siteUser.getPoint ().getPoints ();
+    public int getPoints() {
+        return siteUser.getPoint().getPoints();
     }
 
-    public String getNumber(){return siteUser.getNumber();}
+    public String getNumber() {
+        return siteUser.getNumber();
 
-    public Long getId(){return siteUser.getId ();}
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public Long getId() {
+        return siteUser.getId();
     }
 
 }
