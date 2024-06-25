@@ -7,7 +7,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,14 +23,14 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                        .requestMatchers("/user/**").permitAll().anyRequest().authenticated())
+                .authorizeHttpRequests ((authorizeHttpRequests) -> authorizeHttpRequests
+                        .requestMatchers ("/user/**", "/ttt").permitAll ().anyRequest ().authenticated ())
 //                .formLogin((formLogin) -> formLogin
 //                        .loginPage("/user/login")
 //                        .defaultSuccessUrl("/"))
-                .formLogin(formLogin ->
-                        formLogin.loginPage("/user/login")
-                                .defaultSuccessUrl("/", true)
+                .formLogin (formLogin ->
+                        formLogin.loginPage ("/user/login")
+                                .defaultSuccessUrl ("/", true)
                 )
                 .sessionManagement(session -> session
                         .maximumSessions(1)
@@ -63,7 +62,8 @@ public class SecurityConfig {
                         new AntPathRequestMatcher("/weight/**"),
                         new AntPathRequestMatcher("/upload_image/**"),
                         new AntPathRequestMatcher("/ptGroup/**"),
-                        new AntPathRequestMatcher("/trainer/**")
+                        new AntPathRequestMatcher("/trainer/**"),
+                        new AntPathRequestMatcher ("/salary/**")
                 ));
 //                    .sessionManagement(sessionManagement -> sessionManagement
 //                            .maximumSessions(1) // 동시 세션 수를 1로 제한
@@ -71,21 +71,23 @@ public class SecurityConfig {
 //                            .sessionRegistry(sessionRegistry())
 //                    );
 
-        return http.build();
+        return http.build ();
     }
+
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder ();
     }
 
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+        return authenticationConfiguration.getAuthenticationManager ();
     }
 
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
     }
+
 }
