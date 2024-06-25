@@ -190,8 +190,6 @@ public class ChallengeGroupController {
         model.addAttribute("memberNumber",memberNumber);
 
 
-
-
         return "chat/groupchat";
     }
 
