@@ -129,7 +129,6 @@
                         <th class="text-white">멤버 이름</th>
                         <th class="text-white">멤버 가입일</th>
                         <th class="text-white">오늘의 운동 시간</th>
-                        <!-- 조건부로 리더 권한 위임 칼럼을 추가 -->
                         <th th:if="${isLeader}" class="text-white">리더 권한 위임</th>
                     </tr>
                     </thead>
@@ -141,7 +140,7 @@
                         </td>
                         <td th:text="${member.name}">Name Placeholder</td>
                         <td th:text="${member.createDate}">Date Placeholder</td>
-                        <td th:text="${totalTimeByMember[member.id]}">Attendance Placeholder</td>
+                        <td th:attr="data-time=${totalTimeByMember[member.id]}" class="time-cell">기본 텍스트</td>
                         <td th:if="${isLeader}">
                             <form th:action="@{/groupChallenge/changeLeader}" method="post">
                                 <input type="hidden" name="groupId" th:value="${group.id}"/>
@@ -159,17 +158,24 @@
     </br>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-             function calculateDday(createDate) {
-                 const currentDate = new Date();
-                 const groupCreateDate = new Date(createDate);
-                 const timeDiff = groupCreateDate - currentDate;
-                 const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                 return dayDiff > 0 ? `D-${dayDiff}` : `D+${Math.abs(dayDiff)+1}`;
-             }
+            function calculateDday(createDate) {
+                const today = new Date();
+                // 오늘 날짜에서 시간, 분, 초, 밀리초를 제거
+                const currentDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                const groupCreateDate = new Date(createDate);
+                // 이벤트 날짜에서 시간, 분, 초, 밀리초 제거
+                const targetDate = new Date(groupCreateDate.getFullYear(), groupCreateDate.getMonth(), groupCreateDate.getDate());
 
-             const groupCreateDate = /*[[${group.createDate}]]*/ '[[${group.createDate}]]'; // Thymeleaf 문법으로 서버 데이터를 삽입합니다.
-             document.getElementById('dDay').innerText = calculateDday(groupCreateDate);
-         });
+                const timeDiff = targetDate - currentDate;
+                const dayDiff = Math.round(timeDiff / (1000 * 3600 * 24));
+
+                // 이벤트 날짜가 미래에 있으면 D-, 과거에 있으면 D+로 표시
+                return dayDiff > 0 ? `D-${dayDiff}` : `D+${Math.abs(dayDiff)}`;
+            }
+
+            const groupCreateDate = /*[[${group.createDate}]]*/ '[[${group.createDate}]]';
+            document.getElementById('dDay').innerText = calculateDday(groupCreateDate);
+        });
     </script>
 
     <script th:inline="javascript">
@@ -185,6 +191,21 @@
             });
         });
     </script>
-    </body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+      const timeCells = document.querySelectorAll('.time-cell');
+      timeCells.forEach(cell => {
+          const totalSeconds = parseInt(cell.getAttribute('data-time'), 10);
+          const hours = Math.floor(totalSeconds / 3600);
+          const minutes = Math.floor((totalSeconds % 3600) / 60);
+          const seconds = totalSeconds % 60;
+          if (!isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)) {
+              cell.textContent = `${hours}시 ${minutes}분 ${seconds}초`;
+          } else {
+              cell.textContent = '0시 0분 0초'; // 데이터가 없거나 유효하지 않은 경우
+          }
+      });
+  });
+    </script>
 </div>
 </html>
