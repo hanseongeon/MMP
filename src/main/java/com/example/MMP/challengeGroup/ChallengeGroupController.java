@@ -161,6 +161,7 @@ public class ChallengeGroupController {
                             .thenComparing (SiteUser::getUserId, Comparator.nullsLast (Comparator.naturalOrder ())))
                     .collect (Collectors.toList ());
 
+
 // 리더를 맨 위로 올리기 위해서 멤버 리스트에서 리더를 분리하고 맨 앞에 추가
             SiteUser leader = group.getLeader ();
             sortedMembers.removeIf (member -> member.getId ().equals (leader.getId ()));
