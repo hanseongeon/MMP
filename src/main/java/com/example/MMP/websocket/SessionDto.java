@@ -8,4 +8,6 @@ import lombok.Setter;
 public class SessionDto {
 
     private String name;
+
+    private String sort;
 }
