@@ -29,7 +29,8 @@
                                 <div class="flex items-center">
                                     <div class="chat-header">
                                         [[${list.sender.name}]]
-                                        <time class="text-xs opacity-50" th:text="${#temporals.format(list.sendTime, 'yyyy-MM-dd').equals(#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')) ? #temporals.format(list.sendTime, 'a HH:mm') : #temporals.format(list.sendTime, 'yyyy-MM-dd')}"></time>
+                                        <time class="text-xs opacity-50"
+                                            th:text="${#temporals.format(list.sendTime, 'yyyy-MM-dd').equals(#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')) ? #temporals.format(list.sendTime, 'a HH:mm') : #temporals.format(list.sendTime, 'yyyy-MM-dd')}"></time>
                                     </div>
                                 </div>
                                 <div class="chat-bubble mr-2" th:if="${list.message != null}" th:text="${list.message}">
@@ -41,7 +42,8 @@
                                 <div class="flex">
                                     <div class="chat-header">
                                         [[${list.sender.name}]]
-                                        <time class="text-xs opacity-50" th:text="${#temporals.format(list.sendTime, 'yyyy-MM-dd').equals(#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')) ? #temporals.format(list.sendTime, 'a HH:mm') : #temporals.format(list.sendTime, 'yyyy-MM-dd')}"></time>
+                                        <time class="text-xs opacity-50"
+                                            th:text="${#temporals.format(list.sendTime, 'yyyy-MM-dd').equals(#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')) ? #temporals.format(list.sendTime, 'a HH:mm') : #temporals.format(list.sendTime, 'yyyy-MM-dd')}"></time>
                                     </div>
                                 </div>
                                 <div class="chat-bubble mr-2" th:if="${list.message != null}" th:text="${list.message}">
@@ -197,7 +199,7 @@
                 return `${ampm} ${formattedHours}:${formattedMinutes}`;
             }
 
-        
+
 
         </script>
     </div>

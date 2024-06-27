@@ -14,7 +14,8 @@
                 <option disabled selected>양도할 이용권을 선택해주세요.</option>
                 <option th:each="pt : ${user.userPtPassList}" th:value="${pt.id}" th:text="${pt.passName}" class="Pt">
                 </option>
-                <option th:each="day : ${user.userDayPassList}" th:value="${day.id}" th:text="${day.passName}" class="Day">
+                <option th:each="day : ${user.userDayPassList}" th:value="${day.id}" th:text="${day.passName}"
+                    class="Day">
                 </option>
             </select>
             <input type="submit" class="btn" value="양도하기">
@@ -44,7 +45,7 @@
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
                         },
-                        body: JSON.stringify({ passSort: targetSort,passId: targetNo })
+                        body: JSON.stringify({ passSort: targetSort, passId: targetNo })
                     })
                         .then(response => response.json())
                         .then(data => {
@@ -106,9 +107,9 @@
                             } else {
                                 const cardContainer = document.getElementById('cardContainer');
                                 cardContainer.innerHTML = ''; // 기존 내용을 지우고 새로 추가
-                                
-                                 // 새로운 인풋 생성(컨트롤러에서 Pt인지 Day인지 구분을 위해)
-                                 const deleteInput = document.getElementById('delete');
+
+                                // 새로운 인풋 생성(컨트롤러에서 Pt인지 Day인지 구분을 위해)
+                                const deleteInput = document.getElementById('delete');
                                 deleteInput.innerHTML = '';
                                 const inputSort = document.createElement('input');
                                 inputSort.type = 'hidden';

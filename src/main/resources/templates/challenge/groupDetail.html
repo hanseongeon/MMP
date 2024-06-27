@@ -78,7 +78,8 @@
                             method="post" class="inline">
                             <button type="submit" class="btn btn-error btn-xs">삭제</button>
                         </form> -->
-                        <a th:href="@{|/groupChallenge/${group.id}/tags/${groupTag.id}/delete|}" class="btn btn-error btn-xs">삭제</a>
+                        <a th:href="@{|/groupChallenge/${group.id}/tags/${groupTag.id}/delete|}"
+                            class="btn btn-error btn-xs">삭제</a>
                     </li>
                 </ul>
                 <a href="#my_modal_8" class="btn">태그추가</a>
@@ -95,7 +96,8 @@
                         <h3 class="font-bold text-lg mt-4 text-black">태그 목록</h3>
                         <div class="flex gap-2 w-full h-[100px] overflow-y-auto border-4 rounded-lg">
                             <div th:each="tag : ${tags}">
-                                <a href="#" class="btn btn-xs giveTag" th:text="'#'+ ${tag.name}" th:data-id="${tag.id}"></a>
+                                <a href="#" class="btn btn-xs giveTag" th:text="'#'+ ${tag.name}"
+                                    th:data-id="${tag.id}"></a>
                             </div>
                         </div>
                         <div class="modal-action">
@@ -120,23 +122,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="member : ${sortedMembers}">
-                        <td>
-                            <img th:if="${member.id == group.leader.id}" src="https://i.imgur.com/MFN5KfE.png" style="width: 30px; height: 30px;"/>
-                            <img th:unless="${member.id == group.leader.id}" src="https://i.imgur.com/psxIWLS.png" style="width: 30px; height: 30px;"/>
-                        </td>
-                        <td th:text="${member.name}">Name Placeholder</td>
-                        <td th:text="${member.createDate}">Date Placeholder</td>
-                        <td th:attr="data-time=${totalTimeByMember[member.id]}" class="time-cell">기본 텍스트</td>
-                        <td th:if="${isLeader}">
-                            <form th:if="${member.id != group.leader.id}" th:action="@{/groupChallenge/changeLeader}" method="post">
-                                <input type="hidden" name="groupId" th:value="${group.id}"/>
-                                <input type="hidden" name="newLeaderId" th:value="${member.id}"/>
-                                <button type="submit" class="btn btn-neutral">권한 위임</button>
-                            </form>
-                        </td>
-                    </tr>
-                    </tr>
+                        <tr th:each="member : ${sortedMembers}">
+                            <td>
+                                <img th:if="${member.id == group.leader.id}" src="https://i.imgur.com/MFN5KfE.png"
+                                    style="width: 30px; height: 30px;" />
+                                <img th:unless="${member.id == group.leader.id}" src="https://i.imgur.com/psxIWLS.png"
+                                    style="width: 30px; height: 30px;" />
+                            </td>
+                            <td th:text="${member.name}">Name Placeholder</td>
+                            <td th:text="${member.createDate}">Date Placeholder</td>
+                            <td th:attr="data-time=${totalTimeByMember[member.id]}" class="time-cell">기본 텍스트</td>
+                            <td th:if="${isLeader}">
+                                <form th:if="${member.id != group.leader.id}"
+                                    th:action="@{/groupChallenge/changeLeader}" method="post">
+                                    <input type="hidden" name="groupId" th:value="${group.id}" />
+                                    <input type="hidden" name="newLeaderId" th:value="${member.id}" />
+                                    <button type="submit" class="btn btn-neutral">권한 위임</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tr>
                     </tbody>
                 </table>
             </div>

@@ -63,7 +63,6 @@
             flex: 0 0 auto;
             margin-right: 20px;
         }
-
     </style>
 </head>
 <div layout:fragment="content" class="w-full h-[780px]">
@@ -82,13 +81,14 @@
                         <p th:text="'가격 : '+${pt.passPrice}"></p>
                         <div class="card-actions justify-end">
                             <a th:href="@{|/checkout/${pt.passName}|}" class="btn btn-primary">Buy Now</a>
-                            <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
+                            <div
+                                th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
                                 <a th:href="@{|/pt/update/${pt.passId}|}" class="btn">수정</a>
                                 <a th:href="@{|/pt/delete/${pt.passId}|}" class="btn">삭제</a>
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -106,7 +106,8 @@
                         <p th:text="'가격 : '+${day.passPrice}"></p>
                         <div class="card-actions justify-end">
                             <a th:href="@{|/checkout/${day.passName}|}" class="btn btn-primary">Buy Now</a>
-                            <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
+                            <div
+                                th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
                                 <a th:href="@{|/day/update/${day.passId}|}" class="btn">수정</a>
                                 <a th:href="@{|/day/delete/${day.passId}|}" class="btn">삭제</a>
                             </div>
