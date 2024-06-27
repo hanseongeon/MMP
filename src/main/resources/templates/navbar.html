@@ -83,7 +83,7 @@
             if (aa.name === "anonymousUser") {
                 return null;
             }
-
+            
             return aa.name;
 
         }
@@ -149,7 +149,21 @@
                     let alarmCnt = alarm.querySelector(".alarmCnt");
                     if (alarmCnt === null) {
                         alarmCnt = document.createElement('p');
-                        alarmCnt.classList.add('alarmCnt', 'notification-badge');
+                        alarmCnt.classList.add(
+                            'alarmCnt',
+                            'inline-flex',
+                            'items-center',
+                            'justify-center',
+                            'min-w-[20px]',
+                            'p-[5px]',
+                            'h-[20px]',
+                            'text-xs',
+                            'font-bold',
+                            'text-white',
+                            'text-center',
+                            'rounded-full',
+                            'bg-red-500'
+                        );
                         alarmCnt.innerText = alarmDto.alarmCnt;
                         alarm.appendChild(alarmCnt);
                     } else {
@@ -175,6 +189,9 @@
 
         // 페이지 로드 후 실행되는 부분
         document.addEventListener('DOMContentLoaded', function () {
+            const prSocket = new SockJS("http://localhost:8088/ws-stomp");
+            prSocket.close();
+            console.log("이전 연결을 해제");
             // 페이지 로드 시 로그인 여부를 확인하고 웹소켓에 연결
             connectIfLoggedIn();
         });

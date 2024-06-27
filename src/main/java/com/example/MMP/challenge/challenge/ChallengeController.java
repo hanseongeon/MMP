@@ -84,7 +84,7 @@ public class ChallengeController {
         return "redirect:/challenge/challenges";
     }
 
-    @PostMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String challengeDelete(@PathVariable("id") Long challengeId) {
         Challenge challenge = challengeService.getChallenge(challengeId);
         challengeService.delete(challenge);
@@ -97,6 +97,8 @@ public class ChallengeController {
         List<Long> participatedChallengeIds = new ArrayList<>();
         List<ChallengeUser> challengeUsers = new ArrayList<>();
         Map<Long, Double> challengeAchievementRates = new HashMap<> ();
+
+
 
         if (principal != null) {
             String userId = principal.getName();
@@ -160,8 +162,8 @@ public class ChallengeController {
         return "redirect:/challenge/challenges";
     }
 
-    @PostMapping("/expiration")
-    private String expiration(@RequestParam("challengeId") Long challengeId){
+    @GetMapping("/expiration/{challengeId}")
+    private String expiration(@PathVariable("challengeId") Long challengeId){
         challengeService.expiration (challengeId);
 
         return "redirect:/challenge/challenges";
