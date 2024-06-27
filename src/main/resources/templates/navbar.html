@@ -64,10 +64,6 @@
                         <a class="nav-link" tabindex="0" sec:authorize="isAuthenticated()"
                             th:href="@{/user/trainerList}">트레이너 리스트</a>
                     </li>
-                    <li th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}"
-                        tabindex="0">
-                        <a href="/ptGroup/join">회원 추가하기</a>
-                    </li>
                     <li class="nav-item" tabindex="0" sec:authorize="isAuthenticated()">
                         <a th:href="@{/user/changePassword}">비밀번호 변경</a>
                     </li>
@@ -129,7 +125,10 @@
 
         function showAlarm(alarmDto) {
             let alarmDetails = document.getElementById('dropdown');
-            alarmDetails.setAttribute('open', true);
+            console.log(alarmDetails);
+            if (alarmDetails !== null) {
+                alarmDetails.setAttribute('open', true);
+            }
             const gotalk = document.querySelectorAll('.gotalk')
             gotalk.forEach((talk) => {
                 const maxLength = 5;
@@ -145,7 +144,7 @@
 
                     const alarm = talk.querySelector('.alarm');
                     const alarmMessage = alarm.querySelector(".alarmMessage");
-                    const fommatAlarm = truncateString(alarmDto.message,maxLength);
+                    const fommatAlarm = truncateString(alarmDto.message, maxLength);
                     alarmMessage.innerText = fommatAlarm;
 
                     let alarmCnt = alarm.querySelector(".alarmCnt");
@@ -160,8 +159,10 @@
                 }
 
             });
+            const toastMessageLength = 5;
+            const toastMessage = truncateString(alarmDto.message, toastMessageLength);
             $("#toast").append(
-                toastr.info(alarmDto.sender + '님의 메세지 : ' + alarmDto.message)
+                toastr.info(alarmDto.sender + '님의 메세지 : ' + toastMessage)
             );
         }
 
@@ -176,6 +177,9 @@
 
         // 페이지 로드 후 실행되는 부분
         document.addEventListener('DOMContentLoaded', function () {
+            const prSocket = new SockJS("http://localhost:8088/ws-stomp");
+            prSocket.close();
+            console.log("이전 연결을 해제");
             // 페이지 로드 시 로그인 여부를 확인하고 웹소켓에 연결
             connectIfLoggedIn();
         });
@@ -192,8 +196,5 @@
 
             return `${period} ${formattedHours}:${formattedMinutes}`;
         }
-
-
-
     </script>
 </nav>
