@@ -64,10 +64,6 @@
                         <a class="nav-link" tabindex="0" sec:authorize="isAuthenticated()"
                             th:href="@{/user/trainerList}">트레이너 리스트</a>
                     </li>
-                    <li th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}"
-                        tabindex="0">
-                        <a href="/ptGroup/join">회원 추가하기</a>
-                    </li>
                     <li class="nav-item" tabindex="0" sec:authorize="isAuthenticated()">
                         <a th:href="@{/user/changePassword}">비밀번호 변경</a>
                     </li>
@@ -197,8 +193,5 @@
 
             return `${period} ${formattedHours}:${formattedMinutes}`;
         }
-
-
-
     </script>
 </nav>
