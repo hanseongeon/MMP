@@ -76,8 +76,8 @@
                                         <div class="alarm flex gap-10">
                                             <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500">
                                             </p>
-                                            <p class="alarmCnt inline-flex items-center justify-center min-w-[20px] p-[5px] h-[20px] text-xs font-bold text-white text-center rounded-full bg-red-500" th:if="${chatroom.alarmCnt != 0}"
-                                                th:text="${chatroom.alarmCnt}"></p>
+                                            <p class="alarmCnt inline-flex items-center justify-center min-w-[20px] p-[5px] h-[20px] text-xs font-bold text-white text-center rounded-full bg-red-500"
+                                                th:if="${chatroom.alarmCnt != 0}" th:text="${chatroom.alarmCnt}"></p>
                                         </div>
                                     </div>
                                     <div th:if="${chatDto != null}" th:each="chatroom : ${chatDto['many']}"
@@ -91,8 +91,8 @@
                                         <div class="alarm flex gap-10">
                                             <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500"></p>
 
-                                            <p class="alarmCnt inline-flex items-center justify-center min-w-[20px] p-[5px] h-[20px] text-xs font-bold text-white text-center rounded-full bg-red-500" th:if="${chatroom.alarmCnt != 0}"
-                                                th:text="${chatroom.alarmCnt}"></p>
+                                            <p class="alarmCnt inline-flex items-center justify-center min-w-[20px] p-[5px] h-[20px] text-xs font-bold text-white text-center rounded-full bg-red-500"
+                                                th:if="${chatroom.alarmCnt != 0}" th:text="${chatroom.alarmCnt}"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -109,8 +109,8 @@
                                         <div class="alarm flex gap-10">
                                             <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500">
                                             </p>
-                                            <p class="alarmCnt inline-flex items-center justify-center min-w-[20px] p-[5px] h-[20px] text-xs font-bold text-white text-center rounded-full bg-red-500" th:if="${chatroom.alarmCnt != 0}"
-                                                th:text="${chatroom.alarmCnt}"></p>
+                                            <p class="alarmCnt inline-flex items-center justify-center min-w-[20px] p-[5px] h-[20px] text-xs font-bold text-white text-center rounded-full bg-red-500"
+                                                th:if="${chatroom.alarmCnt != 0}" th:text="${chatroom.alarmCnt}"></p>
                                         </div>
                                     </div>
                                     <div th:if="${chatDto != null}" th:each="chatroom : ${chatDto['many']}"
@@ -124,8 +124,8 @@
                                         <div class="alarm flex gap-10">
                                             <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500">
                                             </p>
-                                            <p class="alarmCnt inline-flex items-center justify-center min-w-[20px] p-[5px] h-[20px] text-xs font-bold text-white text-center rounded-full bg-red-500" th:if="${chatroom.alarmCnt != 0}"
-                                                th:text="${chatroom.alarmCnt}"></p>
+                                            <p class="alarmCnt inline-flex items-center justify-center min-w-[20px] p-[5px] h-[20px] text-xs font-bold text-white text-center rounded-full bg-red-500"
+                                                th:if="${chatroom.alarmCnt != 0}" th:text="${chatroom.alarmCnt}"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -166,7 +166,8 @@
                             <button
                                 class="absolute top-1/2 transform -translate-y-1/2 w-10 h-10 bg-black bg-opacity-50 text-white border-none rounded-full cursor-pointer z-10 -left-6"
                                 id="ptScrollLeftButton">&#8249;</button>
-                            <div class="w-full card-container border-gray-300 relative">
+                            <div
+                                class="w-full card-container flex flex-nowrap overflow-hidden border-gray-300 relative">
                                 <div class="wodCard card bg-base-100 shadow-2xl m-4 block h-[300px] w-[250px]"
                                     th:each="wod:${topTenWodList}">
                                     <div th:replace="~{wod/wodCard :: wodCard(${wod})}"></div>
@@ -234,8 +235,9 @@
                             <button
                                 class="absolute top-1/2 transform -translate-y-1/2 w-10 h-10 bg-black bg-opacity-50 text-white border-none rounded-full cursor-pointer z-10 -left-6"
                                 id="ptScrollLeftButton2">&#8249;</button>
-                            <div class="w-full card-container2 border-gray-300 relative">
-                                <div class="htCard card bg-base-100 shadow-2xl m-4 block h-[280px] w-[450px]"
+                            <div
+                                class="w-full card-container2 flex flex-nowrap overflow-hidden border-gray-300 relative">
+                                <div class="htCard card bg-base-100 shadow-2xl m-4 block h-[300px] w-[300px] item flex-none"
                                     th:each="homeTraining:${saveTraining}">
                                     <div th:replace="~{homeTraining/htCard :: htCard(${homeTraining})}"></div>
                                 </div>
@@ -310,7 +312,8 @@
                             <button
                                 class="absolute top-1/2 transform -translate-y-1/2 w-10 h-10 bg-black bg-opacity-50 text-white border-none rounded-full cursor-pointer z-10 -left-6"
                                 id="ptScrollLeftButton3">&#8249;</button>
-                            <div class="w-full card-container3 border-gray-300 relative">
+                            <div
+                                class="w-full card-container3 flex flex-nowrap overflow-hidden border-gray-300 relative">
                                 <div th:replace="~{pass/passDto :: passDto(${user})}"></div>
                             </div>
                             <button
