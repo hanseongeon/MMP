@@ -85,6 +85,7 @@ public class WebsocketController {
                 }
             }
         }
+
         if(sessionDto.getSort().equals("out")) {
             for (String name : subscriberIds) {
                 if (name.equals(sessionDto.getName())) {
