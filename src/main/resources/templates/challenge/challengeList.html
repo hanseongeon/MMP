@@ -145,7 +145,7 @@
                                 <div th:each="challengeUser : ${challengeUsers}"
                                     th:if="${challengeUser.challenge.id == challenge.id}">
                                     <img th:if="${challengeUser.achievementRate <= 0}"
-                                        th:src="@{'/images/imagesachievegit ment_0.png'}" alt="Achievement Image"
+                                        th:src="@{'/images/imagesachievegitment_0.png'}" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate > 0 and challengeUser.achievementRate < 25}"
                                         th:src="@{'/images/imagesachievement_t25.png'}" alt="Achievement Image"
